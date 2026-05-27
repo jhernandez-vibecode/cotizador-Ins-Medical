@@ -1021,6 +1021,7 @@ a:hover { text-decoration: underline; }
     </div>
     <div class="hdr-badge">Seguros Digitales SDI</div>
     <span class="hdr-user">Agente: <strong id="hdr-agent-email">—</strong></span>
+    <button class="hdr-out" id="btn-new-hdr" style="background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.32)">+ Nueva cotización</button>
     <button class="hdr-out" id="btn-logout">Cerrar sesión</button>
   </header>
 
@@ -3245,16 +3246,19 @@ function bindHandlers() {
     showPaso("hist");
   });
 
-  $("#btn-new").addEventListener("click", () => {
+  function iniciarNuevaCotizacion() {
     if (state.cotizacionId && state.asegurados.length) {
-      if (!confirm("¿Iniciar una nueva cotización? La actual ya está guardada en el historial.")) return;
+      if (!confirm("¿Iniciar una nueva cotización? Si la actual no la guardaste aún, se descartará el borrador.")) return;
     }
     state = clone(ESTADO_INICIAL);
     clearDraft();
     bindCliForm();
     renderAsegList();
     showPaso(1);
-  });
+    toast("Nueva cotización iniciada", "success");
+  }
+  $("#btn-new").addEventListener("click", iniciarNuevaCotizacion);
+  $("#btn-new-hdr").addEventListener("click", iniciarNuevaCotizacion);
 
   // Cerrar modales con Esc
   document.addEventListener("keydown", (e) => {
