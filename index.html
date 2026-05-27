@@ -3056,7 +3056,8 @@ function persistCurrentCot(linkOverride) {
     primaMax: Math.max(...Object.values(payload.productos).map(p => p.primaTotal)),
     estado: existing ? existing.estado : "pendiente",
     link,
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    state: clone(state)   // estado completo para edición posterior
   };
   if (existing) Object.assign(existing, record);
   else hist.unshift(record);
@@ -3094,6 +3095,7 @@ function renderHistorial() {
         </div>
         <div class="hist-actions">
           <button class="hist-act primary" data-act="abrir" data-id="${escapeHtml(h.id)}">Abrir</button>
+          <button class="hist-act" data-act="edit"  data-id="${escapeHtml(h.id)}">Editar</button>
           <button class="hist-act" data-act="copy"  data-id="${escapeHtml(h.id)}">Copiar enlace</button>
           ${h.estado === "pendiente" ? `<button class="hist-act" data-act="aceptar" data-id="${escapeHtml(h.id)}">Marcar aceptada</button>` : ""}
           <button class="hist-act danger" data-act="del" data-id="${escapeHtml(h.id)}">Eliminar</button>
@@ -3109,6 +3111,17 @@ function renderHistorial() {
       const h = hist2.find(x => x.id === id);
       if (!h) return;
       if (act === "abrir") window.open(h.link, "_blank");
+      else if (act === "edit") {
+        if (!h.state) { toast("Cotización antigua sin datos editables. Inicie una nueva.", "error"); return; }
+        if (state.cotizacionId && state.cotizacionId !== h.id && state.asegurados.length) {
+          if (!confirm("Hay otra cotización en edición. ¿Descartarla y abrir esta para editar?")) return;
+        }
+        state = clone(h.state);
+        bindCliForm();
+        renderAsegList();
+        showPaso(2);
+        toast("Editando COT-" + h.id, "success");
+      }
       else if (act === "copy") {
         navigator.clipboard.writeText(h.link).then(() => toast("Enlace copiado", "success"));
       }
