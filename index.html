@@ -1579,11 +1579,10 @@ const PERIODOS_ESPERA_COLS = [
 ];
 
 // Documentos base para emisión (todos los asegurados)
+// La Autorización de Consulta de Expedientes está integrada en la Solicitud nueva.
 const DOCS_BASE = [
-  { id: "solicitud",      nombre: "Solicitud de Seguro INS Medical",   archivo: "docs/solicitud-ins-medical.pdf",     desc: "Formulario principal del titular y dependientes. Vigencia 60 días naturales." },
-  { id: "declaracion",    nombre: "Declaración de Salud",              archivo: "docs/declaracion-salud.pdf",          desc: "Declaración jurada de estado de salud. Una por cada asegurado mayor de edad." },
-  { id: "autorizacion",   nombre: "Autorización Consulta Expedientes", archivo: "docs/autorizacion-expedientes.pdf",   desc: "Permite al INS verificar información en CCSS y otras fuentes oficiales de salud." },
-  { id: "beneficios",     nombre: "Solicitud de Beneficios (reclamos)", archivo: "docs/solicitud-beneficios.pdf",      desc: "Para cuando necesite gestionar un reembolso de gastos médicos ante el INS." }
+  { id: "solicitud",   nombre: "Solicitud de Seguro INS Medical", archivo: "docs/solicitud-ins-medical.pdf", desc: "Formulario principal del titular y dependientes. Incluye la autorización de consulta de expedientes. Vigencia 60 días naturales." },
+  { id: "declaracion", nombre: "Declaración de Salud",            archivo: "docs/declaracion-salud.pdf",     desc: "Declaración jurada de estado de salud. Una por cada asegurado mayor de edad." }
 ];
 
 // Disparadores por edad (calcular_documentos)
@@ -1620,15 +1619,13 @@ function calcularDocumentos(asegurados) {
 
 // Material informativo (PDFs descargables del producto)
 const DOCS_INFO = [
-  { nombre: "Condiciones Generales INS Medical",  archivo: "docs/condiciones-generales-ins-medical.pdf", desc: "Contrato base del seguro: definiciones, exclusiones, procedimientos y derechos del asegurado." },
-  { nombre: "Manual INS Medical",                  archivo: "docs/manual-ins-medical.pdf",                desc: "Guía completa del producto: cómo usar el seguro, red médica, autorización y reembolso." },
+  { nombre: "Condiciones Generales INS Medical",   archivo: "docs/condiciones-generales-ins-medical.pdf", desc: "Contrato base del seguro: definiciones, exclusiones, procedimientos y derechos del asegurado." },
   { nombre: "Medicina Virtual — Guía de uso",      archivo: "docs/medicina-virtual.pdf",                  desc: "Cómo acceder a consultas médicas por video 24/7. Sin costo ni deducible para el asegurado." },
   { nombre: "Cobertura Cáncer",                    archivo: "docs/cobertura-cancer.pdf",                  desc: "Detalle de la cobertura complementaria de cáncer: diagnóstico, tratamientos y reclamo." },
   { nombre: "Cobertura Enfermedades Graves",       archivo: "docs/cobertura-enfermedades-graves.pdf",     desc: "Amparo adicional para enfermedades de alto costo: infarto, ACV, insuficiencia renal." },
   { nombre: "Odontología de Emergencia",           archivo: "docs/cobertura-odontologia-emergencia.pdf",  desc: "Alcance de la cobertura dental por accidente o emergencia." },
   { nombre: "Procedimiento Grandes Deducibles",    archivo: "docs/procedimiento-grandes-deducibles.pdf",  desc: "Guía específica para asegurados con deducible alto: pago directo al hospital y acumulación." },
-  { nombre: "Formulario de Pre-Autorización",      archivo: "docs/formulario-preautorizacion.pdf",        desc: "Para cirugías y hospitalizaciones programadas. Enviar al INS con 3 días hábiles de anticipación." },
-  { nombre: "Portafolio Hospital del Trauma (INS)", archivo: "docs/portafolio-hospital-trauma.pdf",        desc: "Catálogo de servicios del Hospital del Trauma del INS. Puede elegirlo como proveedor con la red INS." }
+  { nombre: "Portafolio Hospital del Trauma (INS)", archivo: "docs/portafolio-hospital-trauma.pdf",       desc: "Catálogo de servicios del Hospital del Trauma del INS. Puede elegirlo como proveedor con la red INS." }
 ];
 
 /* ═══════════════════════════════════════════════════════════════
