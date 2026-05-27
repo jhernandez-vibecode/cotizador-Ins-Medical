@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>INS Medical — Mockup A: Institucional Azul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:        #0B2358;
+  --navy-deep:   #071740;
+  --navy-mid:    #1E4FC0;
+  --navy-light:  #EBF2FF;
+  --navy-line:   #C7D9F5;
+  --green:       #15803D;
+  --green-deep:  #0F5C2D;
+  --green-light: #DCFCE7;
+  --amber:       #B45309;
+  --amber-light: #FEF3C7;
+  --ink:         #0F172A;
+  --ink-2:       #1E3A5F;
+  --ink-3:       #64748B;
+  --line:        #CBD5E1;
+  --line-2:      #E2E8F0;
+  --surface:     #F1F5F9;
+  --white:       #FFFFFF;
+  --r:           8px;
+  --rl:          12px;
+  --sh:          0 1px 3px rgba(11,35,88,.1), 0 1px 2px rgba(11,35,88,.06);
+  --sh-md:       0 4px 16px rgba(11,35,88,.13);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--surface);color:var(--ink);line-height:1.5}
+
+/* HEADER */
+.hdr{background:var(--navy);color:#fff;display:flex;align-items:center;padding:0 24px;height:56px;gap:12px}
+.hdr-logo{display:flex;align-items:center;gap:10px;flex:1}
+.logo-icon{width:32px;height:32px;background:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Serif',serif;font-weight:600;font-size:12px;color:#fff;letter-spacing:-.5px;flex-shrink:0}
+.logo-txt{font-family:'IBM Plex Serif',serif;font-size:17px;font-weight:500;color:#fff}
+.logo-txt span{color:#86C5FE;font-weight:400}
+.hdr-agent{font-size:13px;color:rgba(255,255,255,.65)}
+.hdr-agent strong{color:#fff}
+.hdr-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit}
+
+/* TAB BAR */
+.tabs{background:var(--white);border-bottom:1px solid var(--line);display:flex;padding:0 24px}
+.tab{padding:14px 24px;font-size:13px;font-weight:500;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center;gap:7px;user-select:none}
+.tab.active{color:var(--navy-mid);border-bottom-color:var(--navy-mid)}
+.tab.done{color:var(--green)}
+.tab-n{width:20px;height:20px;border-radius:50%;background:var(--line-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.tab.active .tab-n{background:var(--navy-mid);color:#fff}
+.tab.done .tab-n{background:var(--green);color:#fff}
+
+/* MAIN */
+.main{max-width:1120px;margin:0 auto;padding:24px}
+.sec-hdr{margin-bottom:18px}
+.sec-title{font-family:'IBM Plex Serif',serif;font-size:20px;font-weight:500;color:var(--navy)}
+.sec-sub{font-size:13px;color:var(--ink-3);margin-top:2px}
+
+/* ASEGURADOS */
+.aseg-row{display:flex;align-items:center;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.aseg-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-3);margin-right:4px}
+.chip{display:flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--line);padding:5px 12px 5px 6px;border-radius:100px;font-size:13px}
+.chip-av{width:22px;height:22px;border-radius:50%;background:var(--navy-light);color:var(--navy-mid);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.chip-nm{font-weight:500}
+.chip-ag{color:var(--ink-3);font-size:12px}
+
+/* PRODUCTS GRID */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+
+.pcard{background:var(--white);border:2px solid var(--line);border-radius:var(--rl);overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.pcard.sel{border-color:var(--navy-mid);box-shadow:var(--sh-md)}
+.pcard.sel.gd{border-color:var(--green)}
+
+.pcard-hd{padding:14px 16px 12px;border-bottom:1px solid var(--line-2)}
+.pcard-cr{display:flex;align-items:flex-start;gap:10px}
+.pcard-ck{width:18px;height:18px;border-radius:4px;background:var(--navy-mid);border:2px solid var(--navy-mid);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;flex-shrink:0;margin-top:2px}
+.sel.gd .pcard-ck{background:var(--green);border-color:var(--green)}
+.pcard-nm{font-family:'IBM Plex Serif',serif;font-size:15px;font-weight:500;color:var(--navy);line-height:1.25}
+.pcard-tg{font-size:12px;color:var(--ink-3);margin-top:2px}
+.badge{display:inline-block;background:var(--navy-light);color:var(--navy-mid);font-size:11px;font-weight:600;padding:2px 9px;border-radius:100px;margin-top:7px}
+.sel.gd .badge{background:var(--green-light);color:var(--green-deep)}
+
+.pcard-bd{padding:14px 16px;border-bottom:1px solid var(--line-2)}
+.fld-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-3);margin-bottom:6px}
+.sel-input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r);font-family:inherit;font-size:13px;color:var(--ink);background:var(--surface);cursor:pointer;outline:none}
+.sel-input:focus{border-color:var(--navy-mid)}
+
+.pcard-primas{padding:14px 16px}
+.prima-r{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:13px}
+.prima-r+.prima-r{border-top:1px solid var(--line-2)}
+.prima-nm{color:var(--ink-2)}
+.prima-rel{font-size:11px;color:var(--ink-3)}
+.prima-amt{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500}
+
+.pcard-tot{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--navy-light);border-top:1px solid var(--navy-line)}
+.sel.gd .pcard-tot{background:var(--green-light);border-top-color:#86EFAC}
+.tot-lbl{font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px}
+.sel.gd .tot-lbl{color:var(--green-deep)}
+.tot-amt{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:var(--navy)}
+.sel.gd .tot-amt{color:var(--green)}
+.tot-cur{font-size:11px;color:var(--ink-3);margin-left:2px;font-family:'IBM Plex Sans',sans-serif}
+
+/* SEND BAND */
+.send-band{background:var(--white);border:1px solid var(--line);border-radius:var(--rl);padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.send-lbl{font-size:13px;color:var(--ink-3);flex:1;min-width:180px}
+.send-cks{display:flex;gap:16px;flex-wrap:wrap}
+.send-ck{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer}
+.ck-box{width:16px;height:16px;border-radius:3px;background:var(--navy-mid);border:2px solid var(--navy-mid);flex-shrink:0}
+.send-btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{padding:9px 16px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;border:none;font-family:inherit}
+.btn-pri{background:var(--navy-mid);color:#fff}
+.btn-out{background:var(--white);color:var(--navy-mid);border:1.5px solid var(--navy-mid)}
+.btn-wa{background:#128C7E;color:#fff}
+
+/* DIVIDER */
+.mdiv{max-width:1120px;margin:28px auto 0;padding:0 24px}
+.mdiv-in{display:flex;align-items:center;justify-content:center;gap:14px;background:var(--amber-light);border:1px dashed var(--amber);border-radius:var(--rl);padding:10px 20px;font-size:12px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+
+/* ======= CLIENT VIEW ======= */
+.cv{background:var(--white)}
+
+.cv-hero{background:linear-gradient(160deg,var(--navy-deep) 0%,var(--navy) 60%,#1A3FA8 100%);color:#fff;padding:40px 24px 36px;text-align:center}
+.cv-eyebrow{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#86C5FE;margin-bottom:8px}
+.cv-title{font-family:'IBM Plex Serif',serif;font-size:28px;font-weight:500;line-height:1.2}
+.cv-sub{font-size:14px;color:rgba(255,255,255,.6);margin-top:8px}
+.cv-chips{display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+.cv-chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:4px 13px;border-radius:100px;font-size:12px;color:rgba(255,255,255,.9)}
+
+/* COMPARISON TABLE */
+.comp-wrap{max-width:1120px;margin:0 auto;padding:32px 24px 24px}
+.comp-hdr{display:grid;grid-template-columns:210px repeat(3,1fr);border:1px solid var(--line);border-radius:var(--rl) var(--rl) 0 0;overflow:hidden}
+.comp-corner{background:var(--surface);border-right:1px solid var(--line);padding:16px;display:flex;align-items:flex-end}
+.comp-corner-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-3)}
+.comp-ph{padding:16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;background:var(--white)}
+.comp-ph:last-child{border-right:none}
+.comp-ph-nm{font-family:'IBM Plex Serif',serif;font-size:15px;font-weight:500;color:var(--navy);margin-bottom:2px}
+.comp-ph-cov{font-size:12px;color:var(--ink-3)}
+.comp-ph-ded{display:inline-block;background:var(--navy-light);color:var(--navy-mid);font-size:11px;font-weight:600;padding:2px 9px;border-radius:100px;margin-top:7px}
+.comp-ph-ded.gd{background:var(--green-light);color:var(--green-deep)}
+.comp-ph-price{font-family:'IBM Plex Mono',monospace;font-size:23px;font-weight:600;color:var(--navy);margin-top:10px}
+.comp-ph-price.gd{color:var(--green)}
+.comp-ph-psub{font-size:11px;color:var(--ink-3)}
+
+.comp-body{border:1px solid var(--line);border-top:none;border-radius:0 0 var(--rl) var(--rl);overflow:hidden}
+.comp-sh{background:var(--navy);color:rgba(255,255,255,.9);padding:8px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;grid-column:1/-1}
+.comp-row{display:grid;grid-template-columns:210px repeat(3,1fr);border-bottom:1px solid var(--line-2)}
+.comp-row:last-child{border-bottom:none}
+.comp-row:nth-child(even){background:var(--surface)}
+.cc{padding:10px 14px;font-size:13px;border-right:1px solid var(--line-2);display:flex;align-items:center}
+.cc:last-child{border-right:none}
+.cc-lbl{color:var(--ink-2);font-weight:500}
+.cc-val{font-family:'IBM Plex Mono',monospace;font-size:12.5px;justify-content:center;text-align:center}
+.cc-val.hl{color:var(--navy-mid);font-weight:600}
+.cc-val.gd-val{color:var(--green);font-weight:600}
+
+/* PAYMENT */
+.pay-wrap{max-width:1120px;margin:0 auto;padding:0 24px 32px}
+.pay-title{font-family:'IBM Plex Serif',serif;font-size:18px;font-weight:500;color:var(--navy);margin-bottom:14px}
+.pay-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.pay-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;text-align:center}
+.pay-card.best{background:var(--navy-light);border-color:var(--navy-mid)}
+.pay-badge{display:inline-block;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:1px 10px;border-radius:100px;margin-bottom:6px;letter-spacing:.3px}
+.pay-form{font-size:14px;font-weight:600;color:var(--ink-2);margin-bottom:3px}
+.pay-rcg{font-size:11px;color:var(--ink-3)}
+.pay-amounts{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.pay-prod{font-size:11px;text-transform:uppercase;letter-spacing:.3px;color:var(--ink-3);margin-top:4px}
+.pay-amt{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--navy)}
+
+/* FOOTER */
+.cv-foot{background:var(--navy-deep);color:rgba(255,255,255,.65);padding:28px 24px;text-align:center;font-size:12px;line-height:1.7}
+.cv-foot strong{color:#fff}
+.foot-contact{display:flex;justify-content:center;gap:24px;margin-bottom:12px;flex-wrap:wrap;font-size:13px}
+.foot-disc{font-size:11px;max-width:620px;margin:12px auto 0;color:rgba(255,255,255,.4)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ AGENT VIEW ═══════════════ -->
+
+<header class="hdr">
+  <div class="hdr-logo">
+    <div class="logo-icon">M+</div>
+    <span class="logo-txt">INS Medical <span>Cotizador</span></span>
+  </div>
+  <span class="hdr-agent">Agente: <strong>jhernandez@segurosdelins.com</strong></span>
+  <button class="hdr-btn">Salir</button>
+</header>
+
+<nav class="tabs">
+  <div class="tab done">
+    <div class="tab-n">✓</div>
+    Paso 1 — Asegurados
+  </div>
+  <div class="tab active">
+    <div class="tab-n">2</div>
+    Paso 2 — Productos
+  </div>
+  <div class="tab">
+    <div class="tab-n">3</div>
+    Paso 3 — Enviar
+  </div>
+</nav>
+
+<div class="main">
+  <div class="sec-hdr">
+    <div class="sec-title">Selección de Productos y Deducibles</div>
+    <div class="sec-sub">Elija el deducible para cada producto — la prima se calcula automáticamente por asegurado.</div>
+  </div>
+
+  <div class="aseg-row">
+    <span class="aseg-lbl">Asegurados:</span>
+    <div class="chip"><div class="chip-av">JC</div><span class="chip-nm">Juan Carlos</span><span class="chip-ag">48a · M</span></div>
+    <div class="chip"><div class="chip-av">AM</div><span class="chip-nm">Alba María</span><span class="chip-ag">45a · F</span></div>
+    <div class="chip"><div class="chip-av">SH</div><span class="chip-nm">Sebastián</span><span class="chip-ag">22a · M</span></div>
+  </div>
+
+  <div class="grid-3">
+
+    <!-- REGIONAL -->
+    <div class="pcard sel">
+      <div class="pcard-hd">
+        <div class="pcard-cr">
+          <div class="pcard-ck">✓</div>
+          <div>
+            <div class="pcard-nm">INS Medical Regional</div>
+            <div class="pcard-tg">Cobertura en CR y Centroamérica</div>
+            <div class="badge">Suma Asegurada $200,000</div>
+          </div>
+        </div>
+      </div>
+      <div class="pcard-bd">
+        <div class="fld-lbl">Deducible anual por persona</div>
+        <select class="sel-input">
+          <option>Sin deducible (prórroga)</option>
+          <option>Deducible $200</option>
+          <option>Deducible $300</option>
+          <option>Deducible $400</option>
+          <option>Deducible $500</option>
+          <option selected>Deducible $1,000</option>
+        </select>
+      </div>
+      <div class="pcard-primas">
+        <div class="fld-lbl">Prima anual por asegurado</div>
+        <div class="prima-r">
+          <div><div class="prima-nm">Juan Carlos</div><div class="prima-rel">Titular · 48 años</div></div>
+          <div class="prima-amt">$1,854</div>
+        </div>
+        <div class="prima-r">
+          <div><div class="prima-nm">Alba María</div><div class="prima-rel">Cónyuge · 45 años</div></div>
+          <div class="prima-amt">$1,713</div>
+        </div>
+        <div class="prima-r">
+          <div><div class="prima-nm">Sebastián</div><div class="prima-rel">Hijo · 22 años</div></div>
+          <div class="prima-amt">$713</div>
+        </div>
+      </div>
+      <div class="pcard-tot">
+        <span class="tot-lbl">Prima familiar / año</span>
+        <span class="tot-amt">$4,280<span class="tot-cur">USD</span></span>
+      </div>
+    </div>
+
+    <!-- INTERNACIONAL -->
+    <div class="pcard sel">
+      <div class="pcard-hd">
+        <div class="pcard-cr">
+          <div class="pcard-ck">✓</div>
+          <div>
+            <div class="pcard-nm">INS Medical Internacional</div>
+            <div class="pcard-tg">Cobertura mundial</div>
+            <div class="badge">Suma Asegurada $2,000,000</div>
+          </div>
+        </div>
+      </div>
+      <div class="pcard-bd">
+        <div class="fld-lbl">Deducible anual por persona</div>
+        <select class="sel-input">
+          <option>Sin deducible (prórroga)</option>
+          <option>Deducible $200</option>
+          <option>Deducible $300</option>
+          <option>Deducible $400</option>
+          <option>Deducible $500</option>
+          <option selected>Deducible $1,000</option>
+        </select>
+      </div>
+      <div class="pcard-primas">
+        <div class="fld-lbl">Prima anual por asegurado</div>
+        <div class="prima-r">
+          <div><div class="prima-nm">Juan Carlos</div><div class="prima-rel">Titular · 48 años</div></div>
+          <div class="prima-amt">$2,312</div>
+        </div>
+        <div class="prima-r">
+          <div><div class="prima-nm">Alba María</div><div class="prima-rel">Cónyuge · 45 años</div></div>
+          <div class="prima-amt">$2,145</div>
+        </div>
+        <div class="prima-r">
+          <div><div class="prima-nm">Sebastián</div><div class="prima-rel">Hijo · 22 años</div></div>
+          <div class="prima-amt">$895</div>
+        </div>
+      </div>
+      <div class="pcard-tot">
+        <span class="tot-lbl">Prima familiar / año</span>
+        <span class="tot-amt">$5,352<span class="tot-cur">USD</span></span>
+      </div>
+    </div>
+
+    <!-- GRANDES DEDUCIBLES -->
+    <div class="pcard sel gd">
+      <div class="pcard-hd">
+        <div class="pcard-cr">
+          <div class="pcard-ck">✓</div>
+          <div>
+            <div class="pcard-nm">Grandes Deducibles</div>
+            <div class="pcard-tg">Cobertura mundial · Prima reducida</div>
+            <div class="badge">Suma Asegurada $2,000,000</div>
+          </div>
+        </div>
+      </div>
+      <div class="pcard-bd">
+        <div class="fld-lbl">Deducible anual por persona</div>
+        <select class="sel-input">
+          <option selected>Deducible $5,000</option>
+          <option>Deducible $10,000</option>
+          <option>Deducible $15,000</option>
+        </select>
+      </div>
+      <div class="pcard-primas">
+        <div class="fld-lbl">Prima anual por asegurado</div>
+        <div class="prima-r">
+          <div><div class="prima-nm">Juan Carlos</div><div class="prima-rel">Titular · 48 años</div></div>
+          <div class="prima-amt">$1,502</div>
+        </div>
+        <div class="prima-r">
+          <div><div class="prima-nm">Alba María</div><div class="prima-rel">Cónyuge · 45 años</div></div>
+          <div class="prima-amt">$1,387</div>
+        </div>
+        <div class="prima-r">
+          <div><div class="prima-nm">Sebastián</div><div class="prima-rel">Hijo · 22 años</div></div>
+          <div class="prima-amt">$561</div>
+        </div>
+      </div>
+      <div class="pcard-tot">
+        <span class="tot-lbl">Prima familiar / año</span>
+        <span class="tot-amt">$3,450<span class="tot-cur">USD</span></span>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <div class="send-band">
+    <div class="send-lbl">Incluir en la cotización:</div>
+    <div class="send-cks">
+      <label class="send-ck"><div class="ck-box"></div> Regional</label>
+      <label class="send-ck"><div class="ck-box"></div> Internacional</label>
+      <label class="send-ck"><div class="ck-box"></div> Grandes Deducibles</label>
+    </div>
+    <div class="send-btns">
+      <button class="btn btn-wa">WhatsApp</button>
+      <button class="btn btn-out">Copiar enlace</button>
+      <button class="btn btn-pri">✉ Enviar por correo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DIVIDER ═══════════════ -->
+<div class="mdiv">
+  <div class="mdiv-in">↓&nbsp;&nbsp;VISTA CLIENTE — lo que recibe el cliente en el correo / enlace&nbsp;&nbsp;↓</div>
+</div>
+
+<!-- ═══════════════ CLIENT VIEW ═══════════════ -->
+<div class="cv">
+
+  <div class="cv-hero">
+    <div class="cv-eyebrow">Cotización INS Medical · 27 mayo 2026</div>
+    <div class="cv-title">Su cotización está lista,<br>Juan Carlos</div>
+    <div class="cv-sub">Comparativo de 3 planes para 3 asegurados · Válido 30 días</div>
+    <div class="cv-chips">
+      <div class="cv-chip">Juan Carlos · 48 años</div>
+      <div class="cv-chip">Alba María · 45 años</div>
+      <div class="cv-chip">Sebastián · 22 años</div>
+    </div>
+  </div>
+
+  <div class="comp-wrap">
+    <div class="comp-hdr">
+      <div class="comp-corner"><span class="comp-corner-lbl">Cobertura</span></div>
+      <div class="comp-ph">
+        <div class="comp-ph-nm">Regional</div>
+        <div class="comp-ph-cov">CR y Centroamérica</div>
+        <div class="comp-ph-ded">Ded. $1,000</div>
+        <div class="comp-ph-price">$4,280 <span style="font-size:13px;font-weight:400;color:var(--ink-3)">USD/año</span></div>
+        <div class="comp-ph-psub">3 asegurados</div>
+      </div>
+      <div class="comp-ph">
+        <div class="comp-ph-nm">Internacional</div>
+        <div class="comp-ph-cov">Cobertura mundial</div>
+        <div class="comp-ph-ded">Ded. $1,000</div>
+        <div class="comp-ph-price">$5,352 <span style="font-size:13px;font-weight:400;color:var(--ink-3)">USD/año</span></div>
+        <div class="comp-ph-psub">3 asegurados</div>
+      </div>
+      <div class="comp-ph" style="border-right:none">
+        <div class="comp-ph-nm">Grandes Deducibles</div>
+        <div class="comp-ph-cov">Mundial · Prima reducida</div>
+        <div class="comp-ph-ded gd">Ded. $5,000</div>
+        <div class="comp-ph-price gd">$3,450 <span style="font-size:13px;font-weight:400;color:var(--ink-3)">USD/año</span></div>
+        <div class="comp-ph-psub">3 asegurados</div>
+      </div>
+    </div>
+
+    <div class="comp-body">
+      <!-- Section: Principales -->
+      <div class="comp-row"><div class="comp-sh">Coberturas Principales</div></div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Suma Asegurada Anual</div>
+        <div class="cc cc-val">$200,000</div>
+        <div class="cc cc-val hl">$2,000,000</div>
+        <div class="cc cc-val hl">$2,000,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Deducible anual (por persona)</div>
+        <div class="cc cc-val">$1,000</div>
+        <div class="cc cc-val">$1,000</div>
+        <div class="cc cc-val gd-val">$5,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Coaseguro ambulatorio en red</div>
+        <div class="cc cc-val">20%</div>
+        <div class="cc cc-val">20%</div>
+        <div class="cc cc-val">20%</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Coaseguro ambulatorio fuera de red</div>
+        <div class="cc cc-val">30%</div>
+        <div class="cc cc-val">30%</div>
+        <div class="cc cc-val">30%</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Habitación diaria (fuera de red · CR)</div>
+        <div class="cc cc-val">$500/día</div>
+        <div class="cc cc-val">$500/día</div>
+        <div class="cc cc-val">$500/día</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Habitación diaria (fuera de red · mundial)</div>
+        <div class="cc cc-val" style="color:var(--ink-3)">N/A</div>
+        <div class="cc cc-val">$1,000/día</div>
+        <div class="cc cc-val">$1,000/día</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">UCI/Cuidados intensivos (fuera de red · CR)</div>
+        <div class="cc cc-val">$1,000/día</div>
+        <div class="cc cc-val">$1,000/día</div>
+        <div class="cc cc-val">$1,000/día</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">UCI/Cuidados intensivos (fuera de red · mundial)</div>
+        <div class="cc cc-val" style="color:var(--ink-3)">N/A</div>
+        <div class="cc cc-val">$1,500/día</div>
+        <div class="cc cc-val">$1,500/día</div>
+      </div>
+
+      <!-- Section: Maternidad -->
+      <div class="comp-row"><div class="comp-sh">Maternidad y Recién Nacido</div></div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Parto normal / aborto</div>
+        <div class="cc cc-val">$3,000</div>
+        <div class="cc cc-val">$3,500</div>
+        <div class="cc cc-val">$3,500</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Cesárea o parto múltiple</div>
+        <div class="cc cc-val">$3,500</div>
+        <div class="cc cc-val hl">$4,500</div>
+        <div class="cc cc-val hl">$4,500</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Complicaciones del embarazo</div>
+        <div class="cc cc-val">$1,000</div>
+        <div class="cc cc-val hl">$1,500</div>
+        <div class="cc cc-val hl">$1,500</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Prematurez (max 20 sesiones)</div>
+        <div class="cc cc-val">$100,000</div>
+        <div class="cc cc-val">$100,000</div>
+        <div class="cc cc-val">$100,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Enfermedades congénitas (max 20 sesiones)</div>
+        <div class="cc cc-val">$25,000</div>
+        <div class="cc cc-val hl">$50,000</div>
+        <div class="cc cc-val hl">$50,000</div>
+      </div>
+
+      <!-- Section: Especiales -->
+      <div class="comp-row"><div class="comp-sh">Coberturas Especiales</div></div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Trasplantes de órganos</div>
+        <div class="cc cc-val">$200,000</div>
+        <div class="cc cc-val hl">$500,000</div>
+        <div class="cc cc-val hl">$500,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Epidemias y pandemias (base)</div>
+        <div class="cc cc-val">$7,500</div>
+        <div class="cc cc-val hl">$15,000</div>
+        <div class="cc cc-val hl">$15,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Epidemias y pandemias (prima adicional)</div>
+        <div class="cc cc-val">$75,000</div>
+        <div class="cc cc-val hl">$200,000</div>
+        <div class="cc cc-val hl">$200,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Salud mental</div>
+        <div class="cc cc-val">$1,000</div>
+        <div class="cc cc-val">$1,000</div>
+        <div class="cc cc-val">$1,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Deportes de riesgo</div>
+        <div class="cc cc-val">$10,000</div>
+        <div class="cc cc-val">$10,000</div>
+        <div class="cc cc-val">$10,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Asistencia al viajero (por viaje)</div>
+        <div class="cc cc-val">$10,000</div>
+        <div class="cc cc-val">$10,000</div>
+        <div class="cc cc-val">$10,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Aparatos de apoyo</div>
+        <div class="cc cc-val">$10,000</div>
+        <div class="cc cc-val">$10,000</div>
+        <div class="cc cc-val">$10,000</div>
+      </div>
+
+      <!-- Section: Fallecimiento -->
+      <div class="comp-row"><div class="comp-sh">Beneficios por Fallecimiento</div></div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Beneficio por fallecimiento</div>
+        <div class="cc cc-val">$2,500</div>
+        <div class="cc cc-val hl">$5,000</div>
+        <div class="cc cc-val hl">$5,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Beneficio de sepelio</div>
+        <div class="cc cc-val">$2,500</div>
+        <div class="cc cc-val hl">$5,000</div>
+        <div class="cc cc-val hl">$5,000</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc cc-lbl">Repatriación de restos</div>
+        <div class="cc cc-val">$100/día · 10d</div>
+        <div class="cc cc-val hl">$5,000</div>
+        <div class="cc cc-val hl">$5,000</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT -->
+  <div class="pay-wrap">
+    <div class="pay-title">Opciones de pago — Regional $4,280 / Internacional $5,352 / Grandes Deducibles $3,450</div>
+    <div class="pay-grid">
+      <div class="pay-card best">
+        <div class="pay-badge">MEJOR OPCIÓN</div>
+        <div class="pay-form">Anual</div>
+        <div class="pay-rcg">Sin recargo</div>
+        <div class="pay-amounts">
+          <div class="pay-prod">Regional</div><div class="pay-amt">$4,280</div>
+          <div class="pay-prod">Internacional</div><div class="pay-amt">$5,352</div>
+          <div class="pay-prod">Grandes Ded.</div><div class="pay-amt">$3,450</div>
+        </div>
+      </div>
+      <div class="pay-card">
+        <div class="pay-form">Semestral</div>
+        <div class="pay-rcg">+5% · c/6 meses</div>
+        <div class="pay-amounts">
+          <div class="pay-prod">Regional</div><div class="pay-amt">$2,247</div>
+          <div class="pay-prod">Internacional</div><div class="pay-amt">$2,810</div>
+          <div class="pay-prod">Grandes Ded.</div><div class="pay-amt">$1,811</div>
+        </div>
+      </div>
+      <div class="pay-card">
+        <div class="pay-form">Trimestral</div>
+        <div class="pay-rcg">+7% · c/3 meses</div>
+        <div class="pay-amounts">
+          <div class="pay-prod">Regional</div><div class="pay-amt">$1,145</div>
+          <div class="pay-prod">Internacional</div><div class="pay-amt">$1,432</div>
+          <div class="pay-prod">Grandes Ded.</div><div class="pay-amt">$923</div>
+        </div>
+      </div>
+      <div class="pay-card">
+        <div class="pay-form">Mensual</div>
+        <div class="pay-rcg">+9% · c/mes</div>
+        <div class="pay-amounts">
+          <div class="pay-prod">Regional</div><div class="pay-amt">$389</div>
+          <div class="pay-prod">Internacional</div><div class="pay-amt">$487</div>
+          <div class="pay-prod">Grandes Ded.</div><div class="pay-amt">$314</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="cv-foot">
+    <div class="foot-contact">
+      <div>📱 <strong>8822-1348</strong></div>
+      <div>✉ <strong>jhernandez@segurosdelins.com</strong></div>
+      <div>🌐 segurosdelins.com</div>
+    </div>
+    <div>Juan Carlos Hernández · Agente INS · Cód. 14654</div>
+    <div class="foot-disc">
+      Cotización con fines informativos, válida por 30 días. Primas en USD. Las coberturas, condiciones y exclusiones están sujetas a las Condiciones Generales y Particulares vigentes del INS. Registro SUGESE: P16-35-A01-113. Puede haber diferencias en los montos finales. Consulte a su agente para información oficial.
+    </div>
+  </footer>
+
+</div><!-- /cv -->
+
+</body>
+</html>

@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>INS Medical — Mockup B: Medical Modern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:       #2563EB;
+  --blue-dark:  #1E3A8A;
+  --blue-mid:   #3B82F6;
+  --blue-light: #DBEAFE;
+  --reg:        #5B91D0;
+  --reg-dark:   #2E6FA8;
+  --reg-light:  #E0EFFA;
+  --reg-line:   #BFDBEE;
+  --blue-pale:  #EFF6FF;
+  --teal:       #0F766E;
+  --teal-light: #CCFBF1;
+  --green:      #059669;
+  --green-dark: #047857;
+  --green-light:#D1FAE5;
+  --red:        #DC2626;
+  --bg:         #F8FAFC;
+  --white:      #FFFFFF;
+  --ink:        #1E293B;
+  --ink-2:      #334155;
+  --ink-3:      #64748B;
+  --ink-4:      #94A3B8;
+  --line:       #E2E8F0;
+  --line-2:     #F1F5F9;
+  --r:          12px;
+  --rl:         16px;
+  --rxl:        20px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+
+/* HEADER — gradient */
+.hdr{background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 100%);color:#fff;display:flex;align-items:center;padding:0 28px;height:60px;gap:14px}
+.hdr-logo{display:flex;align-items:center;gap:12px;flex:1}
+.logo-mark{width:36px;height:36px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;letter-spacing:-1px;flex-shrink:0}
+.logo-name{font-size:17px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.logo-name span{color:rgba(255,255,255,.55);font-weight:400;font-size:15px}
+.hdr-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);padding:4px 12px;border-radius:100px;font-size:12px;color:rgba(255,255,255,.8)}
+.hdr-user{font-size:13px;color:rgba(255,255,255,.65)}
+.hdr-user strong{color:#fff;font-weight:600}
+.hdr-out{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:500}
+
+/* STEPPER */
+.stepper{background:var(--white);border-bottom:1px solid var(--line);padding:0 28px;display:flex;align-items:stretch}
+.step{display:flex;align-items:center;gap:10px;padding:16px 20px;font-size:13px;font-weight:500;color:var(--ink-4);border-bottom:3px solid transparent;transition:all .15s;cursor:pointer;user-select:none}
+.step.active{color:var(--blue);border-bottom-color:var(--blue)}
+.step.done{color:var(--green)}
+.step-dot{width:24px;height:24px;border-radius:50%;background:var(--line-2);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;transition:all .15s}
+.step.active .step-dot{background:var(--blue);border-color:var(--blue);color:#fff}
+.step.done .step-dot{background:var(--green);border-color:var(--green);color:#fff}
+.step-div{width:32px;height:1px;background:var(--line);align-self:center;flex-shrink:0}
+
+/* MAIN */
+.main{max-width:1140px;margin:0 auto;padding:28px}
+
+.page-hdr{margin-bottom:22px}
+.page-title{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.page-sub{font-size:13px;color:var(--ink-3);margin-top:3px}
+
+/* ASEGURADOS PILLS */
+.aseg-bar{display:flex;align-items:center;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.aseg-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-4);margin-right:4px}
+.pill{display:flex;align-items:center;gap:7px;background:var(--white);border:1.5px solid var(--line);padding:5px 13px 5px 7px;border-radius:100px;font-size:13px;box-shadow:0 1px 3px rgba(30,58,138,.06)}
+.pill-av{width:24px;height:24px;border-radius:50%;background:var(--blue-light);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
+.pill-nm{font-weight:600;color:var(--ink)}
+.pill-info{color:var(--ink-3);font-size:12px}
+
+/* PRODUCTS GRID */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+
+/* Each product card */
+.pc{background:var(--white);border:1.5px solid var(--line);border-radius:var(--rxl);overflow:hidden;box-shadow:0 1px 4px rgba(30,58,138,.06);transition:box-shadow .2s,border-color .2s}
+.pc.sel{border-color:var(--blue-mid);box-shadow:0 4px 20px rgba(37,99,235,.14)}
+.pc.sel.reg{border-color:var(--reg);box-shadow:0 4px 20px rgba(91,145,208,.14)}
+.pc.sel.gd{border-color:var(--green);box-shadow:0 4px 20px rgba(5,150,105,.14)}
+
+/* Color accent bar at top */
+.pc-bar{height:4px;background:var(--blue)}
+.pc.sel .pc-bar{background:linear-gradient(90deg,var(--blue) 0%,var(--blue-mid) 100%)}
+.pc.sel.reg .pc-bar{background:linear-gradient(90deg,var(--reg-dark) 0%,var(--reg) 100%)}
+.pc.sel.gd .pc-bar{background:linear-gradient(90deg,var(--green) 0%,var(--teal) 100%)}
+
+/* Card header */
+.pc-hd{padding:18px 18px 14px;border-bottom:1px solid var(--line-2)}
+.pc-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.pc-ckwrap{width:22px;height:22px;border-radius:6px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.sel.reg .pc-ckwrap{background:var(--reg)}
+.sel.gd .pc-ckwrap{background:var(--green)}
+.pc-ck{font-size:12px;color:#fff;font-weight:700}
+.pc-nm{font-size:15px;font-weight:700;color:var(--ink);line-height:1.25;letter-spacing:-.2px}
+.pc-tg{font-size:12px;color:var(--ink-3);margin-top:2px}
+.pc-pill{display:inline-flex;align-items:center;gap:5px;background:var(--blue-pale);color:var(--blue);font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.2px}
+.sel.reg .pc-pill{background:var(--reg-light);color:var(--reg-dark)}
+.sel.gd .pc-pill{background:var(--green-light);color:var(--green-dark)}
+
+/* Deductible picker */
+.pc-bd{padding:14px 18px;border-bottom:1px solid var(--line-2)}
+.f-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);margin-bottom:7px}
+.f-sel{width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:var(--r);font-family:inherit;font-size:13px;color:var(--ink);background:var(--bg);cursor:pointer;outline:none;font-weight:500;appearance:auto}
+.f-sel:focus{border-color:var(--blue);background:var(--white)}
+.sel.gd .f-sel:focus{border-color:var(--green)}
+
+/* Primas list */
+.pc-primas{padding:14px 18px}
+.pr-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px}
+.pr-row+.pr-row{border-top:1px solid var(--line-2)}
+.pr-nm{font-weight:600;color:var(--ink-2)}
+.pr-rel{font-size:11px;color:var(--ink-4);font-weight:400}
+.pr-amt{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--ink)}
+
+/* Total footer */
+.pc-tot{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;background:var(--blue-pale);border-top:1.5px solid var(--blue-light)}
+.sel.reg .pc-tot{background:var(--reg-light);border-top-color:var(--reg-line)}
+.sel.gd .pc-tot{background:var(--green-light);border-top-color:#A7F3D0}
+.tot-lbl{font-size:12px;font-weight:700;color:var(--blue-dark);text-transform:uppercase;letter-spacing:.4px}
+.sel.reg .tot-lbl{color:var(--reg-dark)}
+.sel.gd .tot-lbl{color:var(--green-dark)}
+.tot-num{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--blue-dark)}
+.sel.reg .tot-num{color:var(--reg-dark)}
+.sel.gd .tot-num{color:var(--green-dark)}
+.tot-cur{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:var(--ink-3);margin-left:3px;font-weight:500}
+
+/* SEND BAR */
+.send-bar{background:var(--white);border:1.5px solid var(--line);border-radius:var(--rl);padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:0 1px 3px rgba(30,58,138,.05)}
+.send-txt{font-size:13px;color:var(--ink-3);flex:1;min-width:160px;font-weight:500}
+.send-cks{display:flex;gap:14px;flex-wrap:wrap}
+.ck{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;font-weight:500}
+.ck-box{width:17px;height:17px;border-radius:4px;background:var(--blue);flex-shrink:0}
+.send-btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{padding:9px 18px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;display:flex;align-items:center;gap:7px;transition:opacity .1s}
+.btn:hover{opacity:.88}
+.b-pri{background:var(--blue);color:#fff}
+.b-out{background:var(--white);color:var(--blue);border:1.5px solid var(--blue)}
+.b-wa{background:#128C7E;color:#fff}
+
+/* DIVIDER */
+.div-wrap{max-width:1140px;margin:30px auto 0;padding:0 28px}
+.div-in{display:flex;align-items:center;justify-content:center;gap:12px;background:#FFF7ED;border:1.5px dashed #F97316;border-radius:var(--rl);padding:10px 20px;font-size:12px;color:#C2410C;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+
+/* ======= CLIENT VIEW ======= */
+.cv{background:var(--white)}
+
+/* HERO */
+.cv-hero{background:linear-gradient(150deg,#0F2567 0%,#1E3A8A 35%,#1D4ED8 70%,#2563EB 100%);color:#fff;padding:48px 28px 44px;text-align:center;position:relative;overflow:hidden}
+.cv-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none}
+.cv-ey{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;font-weight:600}
+.cv-ttl{font-size:30px;font-weight:800;line-height:1.2;letter-spacing:-.5px}
+.cv-sub{font-size:14px;color:rgba(255,255,255,.55);margin-top:8px;font-weight:400}
+.cv-chips{display:flex;justify-content:center;gap:8px;margin-top:18px;flex-wrap:wrap}
+.cv-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);padding:5px 14px;border-radius:100px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500}
+
+/* COMPARISON */
+.cmp-wrap{max-width:1140px;margin:0 auto;padding:36px 28px 24px}
+.cmp-ttl{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.3px;margin-bottom:18px}
+
+/* Pricing overview cards */
+.price-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.price-card{background:var(--white);border:1.5px solid var(--line);border-radius:var(--rl);padding:20px 18px;text-align:center;position:relative;overflow:hidden}
+.price-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue)}
+.price-card.reg::before{background:linear-gradient(90deg,var(--reg-dark) 0%,var(--reg) 100%)}
+.price-card.gd::before{background:linear-gradient(90deg,var(--green) 0%,var(--teal) 100%)}
+.price-card-nm{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.price-card-cov{font-size:12px;color:var(--ink-3)}
+.price-card-ded{display:inline-block;background:var(--blue-pale);color:var(--blue);font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;margin:8px 0}
+.price-card.reg .price-card-ded{background:var(--reg-light);color:var(--reg-dark)}
+.price-card.gd .price-card-ded{background:var(--green-light);color:var(--green-dark)}
+.price-card-price{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--blue-dark);line-height:1}
+.price-card.reg .price-card-price{color:var(--reg-dark)}
+.price-card.gd .price-card-price{color:var(--green-dark)}
+.price-card-psub{font-size:11px;color:var(--ink-3);margin-top:4px;font-weight:400}
+.price-card-cta{margin-top:12px;padding:8px 16px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;width:100%}
+.price-card.reg .price-card-cta{background:var(--reg)}
+.price-card.gd .price-card-cta{background:var(--green)}
+.best-tag{position:absolute;top:12px;right:12px;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:.3px}
+
+/* Coverage table */
+.cov-table-wrap{border:1.5px solid var(--line);border-radius:var(--rl);overflow:hidden}
+.cov-hdr{display:grid;grid-template-columns:220px repeat(3,1fr);background:var(--blue-dark);color:#fff}
+.cov-hdr-lbl{padding:13px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.55)}
+.cov-hdr-nm{padding:13px 16px;font-size:13px;font-weight:700;text-align:center;border-left:1px solid rgba(255,255,255,.1)}
+.cov-body{}
+.cov-sec{display:grid;grid-template-columns:220px repeat(3,1fr);background:linear-gradient(90deg,var(--blue) 0%,var(--blue-mid) 100%)}
+.cov-sec-lbl{padding:7px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.9);grid-column:1/-1}
+.cov-row{display:grid;grid-template-columns:220px repeat(3,1fr);border-bottom:1px solid var(--line-2)}
+.cov-row:last-child{border-bottom:none}
+.cov-row:nth-child(even){background:var(--bg)}
+.cc{padding:10px 16px;font-size:13px;display:flex;align-items:center;border-left:1px solid var(--line-2)}
+.cc:first-child{border-left:none}
+.cc-lbl{color:var(--ink-2);font-weight:500}
+.cc-val{font-family:'JetBrains Mono',monospace;font-size:12.5px;justify-content:center;text-align:center}
+.cc-val.hl{color:var(--blue);font-weight:600}
+.cc-val.gd{color:var(--green);font-weight:600}
+.cc-val.na{color:var(--ink-4)}
+
+/* PAYMENT SECTION */
+.pay-wrap{max-width:1140px;margin:0 auto;padding:0 28px 36px}
+.pay-hdr{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.3px;margin-bottom:16px}
+
+.pay-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.ptab{padding:7px 16px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;background:var(--white);border:1.5px solid var(--line);color:var(--ink-3);transition:all .15s}
+.ptab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+
+.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.pay-card{background:var(--white);border:1.5px solid var(--line);border-radius:var(--rl);padding:16px;text-align:center;position:relative;overflow:hidden}
+.pay-card.rec{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.pay-card.rec::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue)}
+.pay-rec-tag{display:inline-block;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 10px;border-radius:100px;margin-bottom:8px;letter-spacing:.3px}
+.pay-frm{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.pay-rcg{font-size:11px;color:var(--ink-3);font-weight:400}
+.pay-rows{margin-top:12px;display:flex;flex-direction:column;gap:5px}
+.pay-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;border-bottom:1px solid var(--line-2)}
+.pay-row:last-child{border-bottom:none}
+.pay-prd{color:var(--ink-3);font-weight:500}
+.pay-amt{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--ink)}
+
+/* INS LOGO TOP BAR in client hero */
+.ins-topbar{border-bottom:1px solid rgba(255,255,255,.1);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+.ins-topbar-l{display:flex;align-items:center;gap:12px}
+.ins-logo-img{height:30px;width:auto;display:block;filter:brightness(0) invert(1);opacity:.9}
+.ins-topbar-sep{width:1px;height:22px;background:rgba(255,255,255,.2)}
+.ins-topbar-prod{font-size:15px;font-weight:600;color:#fff;letter-spacing:-.2px}
+.ins-topbar-agent{font-size:12px;color:rgba(255,255,255,.55)}
+.ins-topbar-r{font-size:11.5px;color:rgba(255,255,255,.4)}
+
+/* DISCLAIMER */
+.fine-wrap{max-width:1140px;margin:0 auto;padding:0 28px 20px}
+.fine{background:#FFF7ED;border:1px solid #FED7AA;border-radius:var(--rl);padding:18px 22px;font-size:12px;color:#7C3D12;line-height:1.7}
+.fine strong{color:#9A3412;font-weight:600}
+
+/* TOOLTIPS de cobertura */
+.has-tip{position:relative;display:inline-flex;align-items:center;gap:5px;cursor:help}
+.tip-ico{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-size:9px;font-weight:800;flex-shrink:0;line-height:1}
+.has-tip:hover .tip-ico,.has-tip:focus .tip-ico{background:var(--blue);color:#fff}
+.has-tip::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 8px);background:#1E293B;color:#fff;font-size:11.5px;line-height:1.55;padding:9px 13px;border-radius:var(--r);width:270px;z-index:200;opacity:0;pointer-events:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:400;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.has-tip::before{content:'';position:absolute;left:8px;top:calc(100% + 2px);border:6px solid transparent;border-bottom-color:#1E293B;opacity:0;z-index:200}
+.has-tip:hover::after,.has-tip:focus::after{opacity:1}
+.has-tip:hover::before,.has-tip:focus::before{opacity:1}
+
+/* WAITING PERIODS */
+.wait-wrap{max-width:1140px;margin:0 auto;padding:0 28px 28px}
+.wait-box{background:var(--white);border:1.5px solid var(--line);border-radius:var(--rl);overflow:hidden}
+.wait-hd{padding:20px 24px;background:var(--blue-pale);border-bottom:1px solid var(--blue-light)}
+.wait-hd h3{font-size:17px;font-weight:700;color:var(--blue-dark);letter-spacing:-.2px}
+.wait-hd p{font-size:13px;color:var(--ink-3);margin-top:3px}
+.wait-grid{display:grid;grid-template-columns:1fr 1fr 1fr;padding:18px 24px;gap:0}
+.wait-col{padding:0 18px;border-right:1px solid var(--line-2)}
+.wait-col:first-child{padding-left:0}
+.wait-col:last-child{border-right:none}
+.wait-col-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line-2)}
+.wait-row{display:flex;justify-content:space-between;padding:6px 0;font-size:12.5px;border-bottom:1px solid var(--line-2)}
+.wait-row:last-child{border-bottom:none}
+.wait-k{color:var(--ink-2)}
+.wait-v{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--blue-dark);font-size:12px}
+.wait-v.long{color:var(--red)}
+.wait-note{padding:12px 24px;background:var(--bg);border-top:1px solid var(--line-2);font-size:12px;color:var(--ink-3);line-height:1.6}
+.wait-note strong{color:var(--ink-2)}
+
+/* DOCUMENTS SECTION */
+.docs-wrap{max-width:1140px;margin:0 auto;padding:0 28px 28px}
+.docs-box{background:var(--white);border:1.5px solid var(--line);border-radius:var(--rl);overflow:hidden}
+.docs-hd{padding:22px 24px;background:linear-gradient(135deg,var(--blue-pale) 0%,var(--white) 70%);border-bottom:1px solid var(--blue-light)}
+.docs-hd h3{font-size:17px;font-weight:700;color:var(--blue-dark);letter-spacing:-.2px}
+.docs-hd h3 em{font-style:italic;color:var(--blue)}
+.docs-hd p{font-size:13px;color:var(--ink-3);margin-top:4px;max-width:60ch;line-height:1.55}
+.docs-body{padding:20px 24px}
+.docs-sec{margin-bottom:20px}
+.docs-sec:last-child{margin-bottom:0}
+.docs-sec-lbl{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);margin-bottom:10px}
+.docs-pin{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.docs-pin.base{background:var(--green)}
+.docs-pin.cond{background:var(--blue)}
+.docs-pin.info{background:var(--ink-3)}
+.docs-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.doc-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--bg);border:1px solid var(--line-2);border-radius:var(--r)}
+.doc-icon{width:40px;height:40px;border-radius:8px;background:var(--white);border:1px solid var(--line);display:grid;place-items:center;flex-shrink:0;position:relative}
+.doc-icon::after{content:"PDF";font-size:8px;font-weight:700;color:var(--blue);position:absolute;bottom:4px;left:50%;transform:translateX(-50%);letter-spacing:.3px}
+.doc-icon::before{content:"";position:absolute;top:6px;left:50%;transform:translateX(-50%);width:16px;height:13px;border:1.5px solid var(--blue);border-radius:2px}
+.doc-icon.aviso::before,.doc-icon.aviso::after{display:none}
+.doc-icon.aviso{font-size:22px;font-weight:300;color:var(--blue-dark)}
+.doc-info{flex:1;min-width:0}
+.doc-nm{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px;line-height:1.3}
+.doc-desc{font-size:11.5px;color:var(--ink-3);line-height:1.5}
+.doc-dl{display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:var(--blue);color:#fff;border-radius:7px;font-size:13px;font-weight:700;text-decoration:none;flex-shrink:0;margin-top:2px}
+.docs-trigger-chip{background:var(--blue-pale);color:var(--blue-dark);font-size:10.5px;padding:2px 8px;border-radius:4px;font-weight:600;text-transform:none;letter-spacing:0;font-family:'JetBrains Mono',monospace}
+.docs-note{margin-top:16px;padding:12px 16px;background:var(--bg);border-left:3px solid var(--blue);border-radius:0 var(--r) var(--r) 0;font-size:12px;color:var(--ink-2);line-height:1.65}
+.docs-note strong{color:var(--ink);display:block;margin-bottom:2px}
+
+/* SDI FOOTER */
+.sdi-foot-wrap{max-width:1140px;margin:0 auto;padding:0 28px 36px}
+.sdi-foot{background:var(--blue-dark);border-radius:var(--rl);padding:24px 28px;text-align:center;color:#fff}
+.sdi-mark{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+.sdi-word{font-size:20px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.sdi-bars{display:inline-flex;flex-direction:column;gap:3px}
+.sdi-bars i{display:block;width:20px;height:3px;background:#fff;border-radius:1px}
+.sdi-line{font-size:12px;color:#93C5FD;margin:4px 0;line-height:1.55}
+.sdi-line strong{color:#fff;font-weight:600}
+.sdi-line.sub{font-size:11px;color:#60A5FA}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ AGENT VIEW ══════════════════ -->
+
+<header class="hdr">
+  <div class="hdr-logo">
+    <img src="https://cotizador.appsegurosdigitales.com/img/ins-logo.png" alt="INS" style="height:28px;width:auto;filter:brightness(0) invert(1);opacity:.9;flex-shrink:0">
+    <span style="width:1px;height:22px;background:rgba(255,255,255,.25);flex-shrink:0"></span>
+    <span class="logo-name">INS Medical <span>/ Cotizador</span></span>
+  </div>
+  <div class="hdr-badge">Seguros Digitales SDI</div>
+  <div class="hdr-user">Agente: <strong>jhernandez@segurosdelins.com</strong></div>
+  <button class="hdr-out">Cerrar sesión</button>
+</header>
+
+<nav class="stepper">
+  <div class="step done">
+    <div class="step-dot">✓</div>
+    Asegurados
+  </div>
+  <div class="step-div"></div>
+  <div class="step active">
+    <div class="step-dot">2</div>
+    Productos
+  </div>
+  <div class="step-div"></div>
+  <div class="step">
+    <div class="step-dot">3</div>
+    Enviar
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-hdr">
+    <div class="page-title">Seleccione los productos a cotizar</div>
+    <div class="page-sub">Elija el deducible de cada producto — la prima se calcula en tiempo real por asegurado y edad.</div>
+  </div>
+
+  <div class="aseg-bar">
+    <span class="aseg-tag">Asegurados:</span>
+    <div class="pill"><div class="pill-av">JC</div><span class="pill-nm">Juan Carlos</span><span class="pill-info">48a · M</span></div>
+    <div class="pill"><div class="pill-av">AM</div><span class="pill-nm">Alba María</span><span class="pill-info">45a · F</span></div>
+    <div class="pill"><div class="pill-av">SH</div><span class="pill-nm">Sebastián</span><span class="pill-info">22a · M</span></div>
+  </div>
+
+  <div class="grid">
+
+    <!-- REGIONAL -->
+    <div class="pc sel reg">
+      <div class="pc-bar"></div>
+      <div class="pc-hd">
+        <div class="pc-top">
+          <div class="pc-ckwrap"><span class="pc-ck">✓</span></div>
+          <div>
+            <div class="pc-nm">INS Medical Regional</div>
+            <div class="pc-tg">Cobertura CR y Centroamérica</div>
+          </div>
+        </div>
+        <div class="pc-pill">Suma Asegurada $200,000 USD</div>
+      </div>
+      <div class="pc-bd">
+        <div class="f-lbl">Deducible anual por persona</div>
+        <select class="f-sel">
+          <option>Sin deducible (prórroga)</option>
+          <option>Deducible $200</option>
+          <option>Deducible $300</option>
+          <option>Deducible $400</option>
+          <option>Deducible $500</option>
+          <option selected>Deducible $1,000</option>
+        </select>
+      </div>
+      <div class="pc-primas">
+        <div class="f-lbl">Prima anual por asegurado</div>
+        <div class="pr-row">
+          <div><div class="pr-nm">Juan Carlos</div><div class="pr-rel">Titular · 48 años · M</div></div>
+          <div class="pr-amt">$1,854</div>
+        </div>
+        <div class="pr-row">
+          <div><div class="pr-nm">Alba María</div><div class="pr-rel">Cónyuge · 45 años · F</div></div>
+          <div class="pr-amt">$1,713</div>
+        </div>
+        <div class="pr-row">
+          <div><div class="pr-nm">Sebastián</div><div class="pr-rel">Hijo · 22 años · M</div></div>
+          <div class="pr-amt">$713</div>
+        </div>
+      </div>
+      <div class="pc-tot">
+        <span class="tot-lbl">Prima familiar / año</span>
+        <span class="tot-num">$4,280<span class="tot-cur">USD</span></span>
+      </div>
+    </div>
+
+    <!-- INTERNACIONAL -->
+    <div class="pc sel">
+      <div class="pc-bar"></div>
+      <div class="pc-hd">
+        <div class="pc-top">
+          <div class="pc-ckwrap"><span class="pc-ck">✓</span></div>
+          <div>
+            <div class="pc-nm">INS Medical Internacional</div>
+            <div class="pc-tg">Cobertura mundial</div>
+          </div>
+        </div>
+        <div class="pc-pill">Suma Asegurada $2,000,000 USD</div>
+      </div>
+      <div class="pc-bd">
+        <div class="f-lbl">Deducible anual por persona</div>
+        <select class="f-sel">
+          <option>Sin deducible (prórroga)</option>
+          <option>Deducible $200</option>
+          <option>Deducible $300</option>
+          <option>Deducible $400</option>
+          <option>Deducible $500</option>
+          <option selected>Deducible $1,000</option>
+        </select>
+      </div>
+      <div class="pc-primas">
+        <div class="f-lbl">Prima anual por asegurado</div>
+        <div class="pr-row">
+          <div><div class="pr-nm">Juan Carlos</div><div class="pr-rel">Titular · 48 años · M</div></div>
+          <div class="pr-amt">$2,312</div>
+        </div>
+        <div class="pr-row">
+          <div><div class="pr-nm">Alba María</div><div class="pr-rel">Cónyuge · 45 años · F</div></div>
+          <div class="pr-amt">$2,145</div>
+        </div>
+        <div class="pr-row">
+          <div><div class="pr-nm">Sebastián</div><div class="pr-rel">Hijo · 22 años · M</div></div>
+          <div class="pr-amt">$895</div>
+        </div>
+      </div>
+      <div class="pc-tot">
+        <span class="tot-lbl">Prima familiar / año</span>
+        <span class="tot-num">$5,352<span class="tot-cur">USD</span></span>
+      </div>
+    </div>
+
+    <!-- GRANDES DEDUCIBLES -->
+    <div class="pc sel gd">
+      <div class="pc-bar"></div>
+      <div class="pc-hd">
+        <div class="pc-top">
+          <div class="pc-ckwrap"><span class="pc-ck">✓</span></div>
+          <div>
+            <div class="pc-nm">Grandes Deducibles</div>
+            <div class="pc-tg">Mundial · Prima significativamente menor</div>
+          </div>
+        </div>
+        <div class="pc-pill">Suma Asegurada $2,000,000 USD</div>
+      </div>
+      <div class="pc-bd">
+        <div class="f-lbl">Deducible anual por persona</div>
+        <select class="f-sel">
+          <option selected>Deducible $5,000</option>
+          <option>Deducible $10,000</option>
+          <option>Deducible $15,000</option>
+        </select>
+      </div>
+      <div class="pc-primas">
+        <div class="f-lbl">Prima anual por asegurado</div>
+        <div class="pr-row">
+          <div><div class="pr-nm">Juan Carlos</div><div class="pr-rel">Titular · 48 años · M</div></div>
+          <div class="pr-amt">$1,502</div>
+        </div>
+        <div class="pr-row">
+          <div><div class="pr-nm">Alba María</div><div class="pr-rel">Cónyuge · 45 años · F</div></div>
+          <div class="pr-amt">$1,387</div>
+        </div>
+        <div class="pr-row">
+          <div><div class="pr-nm">Sebastián</div><div class="pr-rel">Hijo · 22 años · M</div></div>
+          <div class="pr-amt">$561</div>
+        </div>
+      </div>
+      <div class="pc-tot">
+        <span class="tot-lbl">Prima familiar / año</span>
+        <span class="tot-num">$3,450<span class="tot-cur">USD</span></span>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <div class="send-bar">
+    <div class="send-txt">Incluir en la cotización:</div>
+    <div class="send-cks">
+      <label class="ck"><div class="ck-box"></div> Regional</label>
+      <label class="ck"><div class="ck-box"></div> Internacional</label>
+      <label class="ck"><div class="ck-box"></div> Grandes Deducibles</label>
+    </div>
+    <div class="send-btns">
+      <button class="btn b-wa">WhatsApp</button>
+      <button class="btn b-out">Copiar enlace</button>
+      <button class="btn b-pri">✉ Enviar por correo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DIVIDER ═══════════════ -->
+<div class="div-wrap">
+  <div class="div-in">↓&nbsp;&nbsp;VISTA CLIENTE — lo que recibe el cliente en el correo / enlace&nbsp;&nbsp;↓</div>
+</div>
+
+<!-- ═══════════════ CLIENT VIEW ═══════════════ -->
+<div class="cv">
+
+  <div class="cv-hero">
+    <div class="ins-topbar">
+      <div class="ins-topbar-l">
+        <img src="https://cotizador.appsegurosdigitales.com/img/ins-logo.png" alt="INS" class="ins-logo-img">
+        <div class="ins-topbar-sep"></div>
+        <span class="ins-topbar-prod">INS Medical</span>
+        <div class="ins-topbar-sep"></div>
+        <span class="ins-topbar-agent">Cotización preparada por Juan Carlos Hernández · Agente INS · Cód. 110113</span>
+      </div>
+      <div class="ins-topbar-r">N.º COT-2026-001 · 27 mayo 2026 · vigencia 30 días</div>
+    </div>
+    <div class="cv-ey">Cotización INS Medical · 27 mayo 2026</div>
+    <div class="cv-ttl">Hola Juan Carlos,<br>su cotización está lista</div>
+    <div class="cv-sub">Comparamos 3 planes para 3 asegurados · Vigente 30 días</div>
+    <div class="cv-chips">
+      <div class="cv-chip">Juan Carlos · 48 años</div>
+      <div class="cv-chip">Alba María · 45 años</div>
+      <div class="cv-chip">Sebastián · 22 años</div>
+    </div>
+  </div>
+
+  <div class="cmp-wrap">
+    <div class="cmp-ttl">Resumen de planes y precios</div>
+
+    <!-- Pricing cards -->
+    <div class="price-cards">
+      <div class="price-card reg">
+        <div class="price-card-nm">INS Medical Regional</div>
+        <div class="price-card-cov">Cobertura CR y Centroamérica</div>
+        <div class="price-card-ded">Ded. $1,000 por persona</div>
+        <div class="price-card-price">$4,280</div>
+        <div class="price-card-psub">USD / año · 3 asegurados</div>
+        <button class="price-card-cta">Solicitar este plan</button>
+      </div>
+      <div class="price-card">
+        <div class="price-card-nm">INS Medical Internacional</div>
+        <div class="price-card-cov">Cobertura mundial</div>
+        <div class="price-card-ded">Ded. $1,000 por persona</div>
+        <div class="price-card-price">$5,352</div>
+        <div class="price-card-psub">USD / año · 3 asegurados</div>
+        <button class="price-card-cta">Solicitar este plan</button>
+      </div>
+      <div class="price-card gd">
+        <div class="best-tag">MEJOR PRECIO</div>
+        <div class="price-card-nm">Grandes Deducibles</div>
+        <div class="price-card-cov">Cobertura mundial · prima reducida</div>
+        <div class="price-card-ded">Ded. $5,000 por persona</div>
+        <div class="price-card-price">$3,450</div>
+        <div class="price-card-psub">USD / año · 3 asegurados</div>
+        <button class="price-card-cta">Solicitar este plan</button>
+      </div>
+    </div>
+
+    <!-- Coverage table -->
+    <div class="cov-table-wrap">
+      <div class="cov-hdr">
+        <div class="cov-hdr-lbl">Cobertura</div>
+        <div class="cov-hdr-nm">Regional</div>
+        <div class="cov-hdr-nm">Internacional</div>
+        <div class="cov-hdr-nm">Grandes Ded.</div>
+      </div>
+      <div class="cov-body">
+
+        <div class="cov-row"><div class="cov-sec-lbl">Coberturas Principales</div></div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Tope máximo anual de gastos médicos cubiertos por persona: hospitalización, cirugías, consultas, exámenes y tratamientos. Es el techo global del plan.">Suma Asegurada Anual <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$200,000</div>
+          <div class="cc cc-val hl">$2,000,000</div>
+          <div class="cc cc-val hl">$2,000,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Monto que cada asegurado asume por año antes de que el INS empiece a pagar. Se aplica máximo 3 deducibles por familia al año.">Deducible anual <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$1,000</div>
+          <div class="cc cc-val">$1,000</div>
+          <div class="cc cc-val gd">$5,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Porcentaje del gasto que usted asume al atenderse en proveedores dentro de la red del INS. Máximo coaseguro anual: $10,000 en CR/CA y $50,000 en el resto del mundo.">Coaseguro ambulatorio en red <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">20%</div>
+          <div class="cc cc-val">20%</div>
+          <div class="cc cc-val">20%</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Porcentaje que usted asume fuera de la red del INS. Tope de consulta: $50 general, $90 especialista. El INS cubre el resto.">Coaseguro fuera de red <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">30%</div>
+          <div class="cc cc-val">30%</div>
+          <div class="cc cc-val">30%</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Monto máximo diario por habitación normal al hospitalizarse fuera de la red del INS en Costa Rica y Centroamérica.">Habitación diaria (fuera de red · CR) <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$500/día</div>
+          <div class="cc cc-val">$500/día</div>
+          <div class="cc cc-val">$500/día</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Monto máximo diario por habitación normal al hospitalizarse fuera de la red en el resto del mundo. Solo aplica a Internacional y Grandes Deducibles.">Habitación diaria (fuera de red · mundial) <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val na">—</div>
+          <div class="cc cc-val hl">$1,000/día</div>
+          <div class="cc cc-val hl">$1,000/día</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Monto máximo diario en Unidad de Cuidados Intensivos fuera de la red. En CR/CA: $1,000/día. En el resto del mundo: $1,500/día (solo Internacional y Grandes Deducibles).">UCI / Cuidados Intensivos <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$1,000/día CR</div>
+          <div class="cc cc-val">$1,000 CR · $1,500 mundial</div>
+          <div class="cc cc-val">$1,000 CR · $1,500 mundial</div>
+        </div>
+
+        <div class="cov-row"><div class="cov-sec-lbl">Maternidad y Recién Nacido</div></div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Gastos del parto vaginal o interrupción médica del embarazo. Período de espera: 13 meses desde el inicio de la póliza.">Parto normal / aborto <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$3,000</div>
+          <div class="cc cc-val">$3,500</div>
+          <div class="cc cc-val">$3,500</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Gastos del parto por cesárea o partos múltiples. Período de espera: 13 meses. El Internacional y Grandes Deducibles cubren $1,000 más.">Cesárea o parto múltiple <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$3,500</div>
+          <div class="cc cc-val hl">$4,500</div>
+          <div class="cc cc-val hl">$4,500</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Complicaciones médicas graves durante el embarazo. Período de espera: 13 meses. No incluye parto normal ni cesárea.">Complicaciones del embarazo <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$1,000</div>
+          <div class="cc cc-val hl">$1,500</div>
+          <div class="cc cc-val hl">$1,500</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Atención del recién nacido prematuro o de bajo peso en unidad neonatal. Máximo 20 sesiones por condición. Sin período de espera.">Prematurez (máx 20 sesiones) <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$100,000</div>
+          <div class="cc cc-val">$100,000</div>
+          <div class="cc cc-val">$100,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Enfermedades presentes desde el nacimiento en hijos nacidos durante la vigencia de la póliza. Máximo 20 sesiones. Internacional cubre el doble.">Enfermedades congénitas <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$25,000</div>
+          <div class="cc cc-val hl">$50,000</div>
+          <div class="cc cc-val hl">$50,000</div>
+        </div>
+
+        <div class="cov-row"><div class="cov-sec-lbl">Coberturas Especiales</div></div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Trasplante de órganos cubiertos: cirugía, donante, medicamentos antirechazo y seguimiento postrasplante. Período de espera: 24 meses.">Trasplantes de órganos <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$200,000</div>
+          <div class="cc cc-val hl">$500,000</div>
+          <div class="cc cc-val hl">$500,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Cobertura incluida en la póliza base para enfermedades epidémicas o pandémicas declaradas por autoridades de salud.">Epidemias / pandemias (base) <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$7,500</div>
+          <div class="cc cc-val hl">$15,000</div>
+          <div class="cc cc-val hl">$15,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Cobertura ampliada disponible pagando una prima adicional. El Internacional y Grandes Deducibles ofrecen un techo hasta 2.6x mayor que el Regional.">Epidemias / pandemias (prima adicional) <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$75,000</div>
+          <div class="cc cc-val hl">$200,000</div>
+          <div class="cc cc-val hl">$200,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Consultas psiquiátricas, terapias y medicación bajo prescripción de psiquiatra o médico especialista. Incluye internamiento cuando sea necesario.">Salud mental <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$1,000</div>
+          <div class="cc cc-val">$1,000</div>
+          <div class="cc cc-val">$1,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Lesiones por actividades deportivas no competitivas (recreativas o amateur). Fútbol competitivo en liga formal tiene su propia cobertura.">Deportes de riesgo <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$10,000</div>
+          <div class="cc cc-val">$10,000</div>
+          <div class="cc cc-val">$10,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Asistencia médica y de emergencia fuera de Costa Rica por viaje: telemedicina, traslados, gestión de crisis y apoyo legal. Límite por viaje por asegurado.">Asistencia al viajero <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$10,000/viaje</div>
+          <div class="cc cc-val">$10,000/viaje</div>
+          <div class="cc cc-val">$10,000/viaje</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Sillas de ruedas, prótesis, órtesis y equipos médicos prescritos para la recuperación o rehabilitación del asegurado.">Aparatos de apoyo médico <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$10,000</div>
+          <div class="cc cc-val">$10,000</div>
+          <div class="cc cc-val">$10,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Fútbol practicado en liga formal o torneo organizado. No cubre cuando el deporte es la fuente principal de ingresos del asegurado.">Fútbol competitivo <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$10,000</div>
+          <div class="cc cc-val">$10,000</div>
+          <div class="cc cc-val">$10,000</div>
+        </div>
+
+        <div class="cov-row"><div class="cov-sec-lbl">Beneficios por Fallecimiento</div></div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Indemnización pagada al beneficiario designado por fallecimiento del asegurado. Es adicional a los gastos médicos cubiertos.">Beneficio por fallecimiento <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$2,500</div>
+          <div class="cc cc-val hl">$5,000</div>
+          <div class="cc cc-val hl">$5,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Auxilio para gastos fúnebres, pagado al beneficiario. Se paga adicionalmente al beneficio por fallecimiento.">Beneficio de sepelio <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$2,500</div>
+          <div class="cc cc-val hl">$5,000</div>
+          <div class="cc cc-val hl">$5,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Traslado de los restos mortales al país de origen del asegurado. Regional: $100/día máximo 10 días. Internacional y Grandes Deducibles: hasta $5,000 total.">Repatriación de restos <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">$100/día (10d)</div>
+          <div class="cc cc-val hl">$5,000</div>
+          <div class="cc cc-val hl">$5,000</div>
+        </div>
+        <div class="cov-row">
+          <div class="cc cc-lbl"><span class="has-tip" data-tip="Si el titular fallece, el INS exonera el pago de primas por 12 meses para que los dependientes continúen asegurados.">Relajación de primas (titular fallece) <span class="tip-ico">i</span></span></div>
+          <div class="cc cc-val">12 meses</div>
+          <div class="cc cc-val">12 meses</div>
+          <div class="cc cc-val">12 meses</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT OPTIONS -->
+  <div class="pay-wrap">
+    <div class="pay-hdr">Opciones de pago</div>
+    <div class="pay-grid">
+      <div class="pay-card rec">
+        <div class="pay-rec-tag">RECOMENDADO</div>
+        <div class="pay-frm">Anual</div>
+        <div class="pay-rcg">Sin recargo · pago único</div>
+        <div class="pay-rows">
+          <div class="pay-row"><span class="pay-prd">Regional</span><span class="pay-amt">$4,280</span></div>
+          <div class="pay-row"><span class="pay-prd">Internacional</span><span class="pay-amt">$5,352</span></div>
+          <div class="pay-row"><span class="pay-prd">Grandes Ded.</span><span class="pay-amt">$3,450</span></div>
+        </div>
+      </div>
+      <div class="pay-card">
+        <div class="pay-frm">Semestral</div>
+        <div class="pay-rcg">+5% · cada 6 meses</div>
+        <div class="pay-rows">
+          <div class="pay-row"><span class="pay-prd">Regional</span><span class="pay-amt">$2,247</span></div>
+          <div class="pay-row"><span class="pay-prd">Internacional</span><span class="pay-amt">$2,810</span></div>
+          <div class="pay-row"><span class="pay-prd">Grandes Ded.</span><span class="pay-amt">$1,811</span></div>
+        </div>
+      </div>
+      <div class="pay-card">
+        <div class="pay-frm">Trimestral</div>
+        <div class="pay-rcg">+7% · cada 3 meses</div>
+        <div class="pay-rows">
+          <div class="pay-row"><span class="pay-prd">Regional</span><span class="pay-amt">$1,145</span></div>
+          <div class="pay-row"><span class="pay-prd">Internacional</span><span class="pay-amt">$1,432</span></div>
+          <div class="pay-row"><span class="pay-prd">Grandes Ded.</span><span class="pay-amt">$923</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERÍODOS DE ESPERA -->
+  <div class="wait-wrap">
+    <div class="wait-box">
+      <div class="wait-hd">
+        <h3>Períodos de espera</h3>
+        <p>Tiempo que debe transcurrir desde el inicio de la póliza antes de que una cobertura específica entre en vigor. Los accidentes no tienen período de espera.</p>
+      </div>
+      <div class="wait-grid">
+        <div class="wait-col">
+          <div class="wait-col-title">General</div>
+          <div class="wait-row"><span class="wait-k">CR y Centroamérica</span><span class="wait-v">30 días</span></div>
+          <div class="wait-row"><span class="wait-k">Resto del mundo</span><span class="wait-v">60 días</span></div>
+          <div class="wait-row"><span class="wait-k">Maternidad</span><span class="wait-v long">13 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Trasplantes</span><span class="wait-v long">24 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Accidentes</span><span class="wait-v" style="color:var(--green)">Sin espera</span></div>
+        </div>
+        <div class="wait-col">
+          <div class="wait-col-title">Condiciones de 10 meses</div>
+          <div class="wait-row"><span class="wait-k">Cataratas y glaucoma</span><span class="wait-v">10 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Amígdalas, adenoides, septoplastia</span><span class="wait-v">10 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Enfermedades tiroideas</span><span class="wait-v">10 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Cálculos biliares y vías biliares</span><span class="wait-v">10 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Cálculos vías urinarias</span><span class="wait-v">10 meses</span></div>
+        </div>
+        <div class="wait-col">
+          <div class="wait-col-title">Condiciones de 10 meses (cont.)</div>
+          <div class="wait-row"><span class="wait-k">Enfermedades de próstata</span><span class="wait-v">10 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Aparato genital femenino y mama</span><span class="wait-v">10 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Hemorroides y fisura anal</span><span class="wait-v">10 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Asma</span><span class="wait-v">10 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Hernias (todos los tipos)</span><span class="wait-v">10 meses</span></div>
+          <div class="wait-row"><span class="wait-k">Enfermedades de rodilla</span><span class="wait-v">10 meses</span></div>
+        </div>
+      </div>
+      <div class="wait-note"><strong>Nota:</strong> Los períodos de espera de 10 meses aplican aunque la causa sea un accidente o emergencia. Preexistencias no declaradas no están cubiertas.</div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTOS PARA EMISIÓN -->
+  <div class="docs-wrap">
+    <div class="docs-box">
+      <div class="docs-hd">
+        <h3>Documentos para <em>iniciar el aseguramiento</em></h3>
+        <p>Cuando decida proceder con cualquiera de los planes, estos son los formularios que necesitamos completar. <strong>Su agente le acompaña en todo el proceso.</strong></p>
+      </div>
+      <div class="docs-body">
+
+        <!-- Base docs -->
+        <div class="docs-sec">
+          <div class="docs-sec-lbl"><span class="docs-pin base"></span>Para todos los asegurados · 3 documentos base</div>
+          <div class="docs-list">
+            <div class="doc-item">
+              <div class="doc-icon"></div>
+              <div class="doc-info">
+                <div class="doc-nm">Solicitud de Seguro INS Medical</div>
+                <div class="doc-desc">Formulario principal del titular y dependientes. Vigencia 60 días naturales.</div>
+              </div>
+              <a class="doc-dl" href="#" title="Descargar">↓</a>
+            </div>
+            <div class="doc-item">
+              <div class="doc-icon"></div>
+              <div class="doc-info">
+                <div class="doc-nm">Declaración de Salud</div>
+                <div class="doc-desc">Declaración jurada de estado de salud. Una por cada asegurado mayor de edad.</div>
+              </div>
+              <a class="doc-dl" href="#" title="Descargar">↓</a>
+            </div>
+            <div class="doc-item">
+              <div class="doc-icon"></div>
+              <div class="doc-info">
+                <div class="doc-nm">Autorización Consulta Expedientes</div>
+                <div class="doc-desc">Permite al INS verificar información en CCSS y otras fuentes oficiales de salud.</div>
+              </div>
+              <a class="doc-dl" href="#" title="Descargar">↓</a>
+            </div>
+            <div class="doc-item">
+              <div class="doc-icon"></div>
+              <div class="doc-info">
+                <div class="doc-nm">Solicitud de Beneficios (reclamos)</div>
+                <div class="doc-desc">Para cuando necesite gestionar un reembolso de gastos médicos ante el INS.</div>
+              </div>
+              <a class="doc-dl" href="#" title="Descargar">↓</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conditional: age 66-70 -->
+        <div class="docs-sec">
+          <div class="docs-sec-lbl"><span class="docs-pin cond"></span>Asegurados de 66 a 70 años <span class="docs-trigger-chip">si aplica por edad</span></div>
+          <div class="docs-list">
+            <div class="doc-item" style="grid-column:span 2;background:#EFF6FF;border-color:var(--blue-light)">
+              <div class="doc-icon aviso">📞</div>
+              <div class="doc-info">
+                <div class="doc-nm">Telesuscripción INS</div>
+                <div class="doc-desc">Entrevista telefónica coordinada por el INS con el asegurado. No requiere documento físico; su agente coordina la llamada una vez recibida la solicitud.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conditional: age 71+ -->
+        <div class="docs-sec">
+          <div class="docs-sec-lbl"><span class="docs-pin cond"></span>Asegurados de 71 años o más <span class="docs-trigger-chip">si aplica por edad</span></div>
+          <div class="docs-list">
+            <div class="doc-item">
+              <div class="doc-icon"></div>
+              <div class="doc-info">
+                <div class="doc-nm">Boleta Examen Físico</div>
+                <div class="doc-desc">Examen médico presencial firmado por médico autorizado por el INS. Vigencia 90 días.</div>
+              </div>
+              <a class="doc-dl" href="#" title="Descargar">↓</a>
+            </div>
+            <div class="doc-item">
+              <div class="doc-icon"></div>
+              <div class="doc-info">
+                <div class="doc-nm">Boleta de Laboratorios</div>
+                <div class="doc-desc">Perfil completo: glucosa, hemoglobina A1c, colesterol, creatinina, transaminasas y más. Vigencia 90 días.</div>
+              </div>
+              <a class="doc-dl" href="#" title="Descargar">↓</a>
+            </div>
+            <div class="doc-item">
+              <div class="doc-icon"></div>
+              <div class="doc-info">
+                <div class="doc-nm">Boleta Electrocardiograma</div>
+                <div class="doc-desc">ECG de 12 derivaciones realizado en proveedor autorizado por el INS. Vigencia 90 días.</div>
+              </div>
+              <a class="doc-dl" href="#" title="Descargar">↓</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="docs-note">
+          <strong>Nota sobre cuestionarios médicos adicionales</strong>
+          Si al llenar la Declaración de Salud algún asegurado indica condiciones previas (hipertensión, diabetes, cardiopatías, etc.), el INS puede solicitar cuestionarios específicos adicionales. Su agente le indicará cuáles corresponden según las respuestas. Las pruebas tienen vigencia de 90 días naturales.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTOS INFORMATIVOS -->
+  <div class="docs-wrap">
+    <div class="docs-box">
+      <div class="docs-hd">
+        <h3>Material informativo del <em>producto</em></h3>
+        <p>Documentos oficiales del INS para que conozca en detalle las condiciones, coberturas y procedimientos de su seguro.</p>
+      </div>
+      <div class="docs-body">
+        <div class="docs-list">
+          <div class="doc-item">
+            <div class="doc-icon"></div>
+            <div class="doc-info">
+              <div class="doc-nm">Condiciones Generales INS Medical</div>
+              <div class="doc-desc">Contrato base del seguro: definiciones, exclusiones, procedimientos y derechos del asegurado.</div>
+            </div>
+            <a class="doc-dl" href="#" title="Descargar">↓</a>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon"></div>
+            <div class="doc-info">
+              <div class="doc-nm">Manual INS Medical</div>
+              <div class="doc-desc">Guía completa del producto: cómo usar el seguro, red médica, procesos de autorización y reembolso.</div>
+            </div>
+            <a class="doc-dl" href="#" title="Descargar">↓</a>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon"></div>
+            <div class="doc-info">
+              <div class="doc-nm">Medicina Virtual — Guía de uso</div>
+              <div class="doc-desc">Cómo acceder a consultas médicas por video 24/7. Sin costo ni deducible para el asegurado.</div>
+            </div>
+            <a class="doc-dl" href="#" title="Descargar">↓</a>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon"></div>
+            <div class="doc-info">
+              <div class="doc-nm">Cobertura Cáncer</div>
+              <div class="doc-desc">Detalle de la cobertura complementaria de cáncer: diagnóstico, tratamientos cubiertos y proceso de reclamo.</div>
+            </div>
+            <a class="doc-dl" href="#" title="Descargar">↓</a>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon"></div>
+            <div class="doc-info">
+              <div class="doc-nm">Cobertura Enfermedades Graves</div>
+              <div class="doc-desc">Amparo adicional para enfermedades de alto costo: infarto, ACV, insuficiencia renal y otras condiciones críticas.</div>
+            </div>
+            <a class="doc-dl" href="#" title="Descargar">↓</a>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon"></div>
+            <div class="doc-info">
+              <div class="doc-nm">Odontología de Emergencia</div>
+              <div class="doc-desc">Alcance de la cobertura dental por accidente o emergencia: procedimientos cubiertos y cómo gestionarla.</div>
+            </div>
+            <a class="doc-dl" href="#" title="Descargar">↓</a>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon"></div>
+            <div class="doc-info">
+              <div class="doc-nm">Procedimiento Grandes Deducibles</div>
+              <div class="doc-desc">Guía específica para asegurados con deducible alto: cómo funciona el pago directo al hospital y el proceso de acumulación del deducible.</div>
+            </div>
+            <a class="doc-dl" href="#" title="Descargar">↓</a>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon"></div>
+            <div class="doc-info">
+              <div class="doc-nm">Formulario de Pre-Autorización</div>
+              <div class="doc-desc">Para cirugías y hospitalizaciones programadas. Enviar al INS con 3 días hábiles de anticipación.</div>
+            </div>
+            <a class="doc-dl" href="#" title="Descargar">↓</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA AGENTE -->
+  <div class="cta-strip">
+    <div class="cta-title">¿Tiene preguntas? Contácteme</div>
+    <div class="cta-sub">Juan Carlos Hernández · Agente Autorizado INS · Cód. 110113</div>
+    <div class="cta-btns">
+      <button class="cta-btn cta-wa">📱 WhatsApp 8822-1348</button>
+      <button class="cta-btn cta-pri">✉ jhernandez@segurosdelins.com</button>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="fine-wrap">
+    <div class="fine">
+      <strong>Información importante.</strong> Esta cotización es de carácter informativo y se basa en las tarifas oficiales del Instituto Nacional de Seguros vigentes a la fecha indicada. Mantiene vigencia por 30 días naturales. Las primas mostradas <strong>no incluyen el impuesto al valor agregado (IVA 2 %, tarifa especial para seguros de personas, Ley 9635 de Costa Rica)</strong>. La aceptación final del riesgo y la emisión de la póliza corresponden al INS conforme a la Ley Reguladora del Contrato de Seguros y al producto registrado bajo norma SUGESE P16-35-A01-113.
+    </div>
+  </div>
+
+  <!-- FOOTER SDI -->
+  <div class="sdi-foot-wrap">
+    <div class="sdi-foot">
+      <div class="sdi-mark">
+        <span class="sdi-word">Seguros Digitales</span>
+        <span class="sdi-bars"><i></i><i></i><i></i></span>
+      </div>
+      <p class="sdi-line">Esta cotización pertenece a <strong>Seguros Digitales SDI<sup>®</sup></strong></p>
+      <p class="sdi-line sub">Agente Juan Carlos Hernández · Lic. SUGESE 08-1318 · Cód. 110113 · 8822-1348 · jhernandez@segurosdelins.com</p>
+      <p class="sdi-line sub">© 2026 Propiedad intelectual de Juan Carlos Hernández</p>
+    </div>
+  </div>
+
+</div><!-- /cv -->
+
+</body>
+</html>

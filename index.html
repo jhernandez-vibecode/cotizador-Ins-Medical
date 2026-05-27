@@ -1,0 +1,3380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Cotizador INS Medical — Seguros Digitales SDI. Cotización familiar de seguros de gastos médicos." />
+<title>INS Medical · Cotizador · Seguros Digitales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* ═══════════════════════ DESIGN TOKENS ═══════════════════════ */
+:root {
+  --blue:        #2563EB;
+  --blue-dark:   #1E3A8A;
+  --blue-mid:    #3B82F6;
+  --blue-light:  #DBEAFE;
+  --blue-pale:   #EFF6FF;
+  --reg:         #5B91D0;
+  --reg-dark:    #2E6FA8;
+  --reg-light:   #E0EFFA;
+  --reg-line:    #BFDBEE;
+  --teal:        #0F766E;
+  --teal-light:  #CCFBF1;
+  --green:       #059669;
+  --green-dark:  #047857;
+  --green-light: #D1FAE5;
+  --amber:       #B45309;
+  --amber-light: #FEF3C7;
+  --red:         #DC2626;
+  --red-light:   #FEE2E2;
+  --bg:          #F8FAFC;
+  --white:       #FFFFFF;
+  --ink:         #1E293B;
+  --ink-2:       #334155;
+  --ink-3:       #64748B;
+  --ink-4:       #94A3B8;
+  --line:        #E2E8F0;
+  --line-2:      #F1F5F9;
+  --r:           12px;
+  --rl:          16px;
+  --rxl:         20px;
+  --sh:          0 1px 3px rgba(30,58,138,.08);
+  --sh-md:       0 4px 12px rgba(30,58,138,.10);
+  --sh-lg:       0 8px 24px rgba(30,58,138,.14);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; min-height: 100vh; }
+button, input, select, textarea { font-family: inherit; color: inherit; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ═══════════════════════ VIEW ROUTING ═══════════════════════ */
+[data-view] { display: none; }
+[data-view].active { display: block; }
+
+/* ═══════════════════════ LOADING ═══════════════════════ */
+.loading {
+  min-height: 100vh; display: grid; place-items: center;
+  font-size: 14px; color: var(--ink-3);
+}
+.loading .spinner {
+  width: 36px; height: 36px; border: 3px solid var(--line);
+  border-top-color: var(--blue); border-radius: 50%;
+  animation: spin 0.9s linear infinite; margin: 0 auto 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════ LOGIN ═══════════════════════ */
+.login-wrap {
+  min-height: 100vh; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
+  padding: 24px;
+}
+.login-card {
+  background: var(--white); border-radius: var(--rxl);
+  padding: 40px 36px; max-width: 420px; width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+  text-align: center;
+}
+.login-card .ins-logo { height: 36px; margin: 0 auto 22px; display: block; }
+.login-card h1 {
+  font-size: 24px; font-weight: 700; color: var(--ink);
+  letter-spacing: -.3px; margin-bottom: 8px;
+}
+.login-card .sub { font-size: 14px; color: var(--ink-3); margin-bottom: 28px; }
+.login-card .gsi-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 12px 20px; background: var(--white);
+  border: 1.5px solid var(--line); border-radius: var(--r);
+  font-size: 14px; font-weight: 600; color: var(--ink-2);
+  cursor: pointer; transition: border-color .15s, box-shadow .15s;
+}
+.login-card .gsi-btn:hover { border-color: var(--blue); box-shadow: var(--sh-md); }
+.login-card .gsi-icon { width: 18px; height: 18px; }
+.login-card .footnote { font-size: 11px; color: var(--ink-4); margin-top: 24px; line-height: 1.5; }
+
+/* ═══════════════════════ BLOQUEADO ═══════════════════════ */
+.bloq-wrap {
+  min-height: 100vh; display: grid; place-items: center;
+  background: var(--bg); padding: 24px;
+}
+.bloq-card {
+  background: var(--white); border-radius: var(--rxl);
+  padding: 40px 36px; max-width: 460px; width: 100%;
+  box-shadow: var(--sh-md); text-align: center;
+}
+.bloq-card .icon { font-size: 36px; margin-bottom: 12px; }
+.bloq-card h1 { font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.bloq-card p { font-size: 14px; color: var(--ink-3); margin-bottom: 18px; line-height: 1.6; }
+.bloq-card .ag-email { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink); background: var(--bg); padding: 6px 10px; border-radius: 6px; display: inline-block; margin-bottom: 18px; }
+.bloq-card .btn-logout {
+  background: var(--blue); color: #fff; border: none;
+  padding: 10px 22px; border-radius: var(--r); font-weight: 600;
+  font-size: 13px; cursor: pointer;
+}
+
+/* ═══════════════════════ AGENT HEADER ═══════════════════════ */
+.hdr {
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
+  color: #fff; display: flex; align-items: center;
+  padding: 0 28px; height: 60px; gap: 14px;
+}
+.hdr-logo { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.hdr-ins-logo { height: 28px; width: auto; filter: brightness(0) invert(1); opacity: .9; flex-shrink: 0; }
+.hdr-sep { width: 1px; height: 22px; background: rgba(255,255,255,.25); flex-shrink: 0; }
+.hdr-prod {
+  font-size: 17px; font-weight: 700; color: #fff;
+  letter-spacing: -.3px; white-space: nowrap;
+}
+.hdr-prod span { color: rgba(255,255,255,.55); font-weight: 400; font-size: 15px; }
+.hdr-badge {
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18);
+  padding: 4px 12px; border-radius: 100px; font-size: 12px;
+  color: rgba(255,255,255,.8); white-space: nowrap;
+}
+.hdr-user { font-size: 13px; color: rgba(255,255,255,.7); white-space: nowrap; }
+.hdr-user strong { color: #fff; font-weight: 600; }
+.hdr-out {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  color: #fff; padding: 6px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;
+}
+.hdr-out:hover { background: rgba(255,255,255,.18); }
+
+/* ═══════════════════════ STEPPER ═══════════════════════ */
+.stepper {
+  background: var(--white); border-bottom: 1px solid var(--line);
+  padding: 0 28px; display: flex; align-items: stretch;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.step {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 20px; font-size: 13px; font-weight: 500;
+  color: var(--ink-4); border-bottom: 3px solid transparent;
+  cursor: pointer; user-select: none; white-space: nowrap;
+  transition: all .15s; background: none; border-left: none; border-right: none; border-top: none;
+}
+.step:hover { color: var(--ink-2); }
+.step.active { color: var(--blue); border-bottom-color: var(--blue); }
+.step.done { color: var(--green); }
+.step-dot {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--line-2); border: 2px solid var(--line);
+  display: grid; place-items: center; font-size: 11px; font-weight: 700;
+  flex-shrink: 0; transition: all .15s;
+}
+.step.active .step-dot { background: var(--blue); border-color: var(--blue); color: #fff; }
+.step.done .step-dot { background: var(--green); border-color: var(--green); color: #fff; }
+.step-div { width: 28px; height: 1px; background: var(--line); align-self: center; flex-shrink: 0; }
+.step-hist { margin-left: auto; }
+.step-hist .step-dot { background: var(--line-2); border-color: var(--line); }
+.step-hist.active .step-dot { background: var(--ink-2); border-color: var(--ink-2); color: #fff; }
+.step-hist.active { color: var(--ink-2); border-bottom-color: var(--ink-2); }
+
+/* ═══════════════════════ MAIN CONTAINER ═══════════════════════ */
+.main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+.page-hdr { margin-bottom: 22px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.page-title { font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: -.3px; }
+.page-sub { font-size: 13px; color: var(--ink-3); margin-top: 3px; }
+.paso { display: none; }
+.paso.active { display: block; }
+
+/* ═══════════════════════ PASO 1: CLIENT + ASEGURADOS ═══════════════════════ */
+.cli-form {
+  background: var(--white); border: 1.5px solid var(--line);
+  border-radius: var(--rxl); padding: 22px 24px; margin-bottom: 22px;
+  box-shadow: var(--sh);
+}
+.cli-form-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 14px; }
+.cli-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 14px 16px;
+}
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field-lbl {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--ink-4);
+}
+.field-lbl .req { color: var(--red); margin-left: 2px; }
+.field-input {
+  padding: 9px 12px; border: 1.5px solid var(--line);
+  border-radius: var(--r); font-size: 13px; color: var(--ink);
+  background: var(--white); outline: none; font-family: inherit;
+  transition: border-color .15s;
+}
+.field-input:focus { border-color: var(--blue); }
+.field-input.error { border-color: var(--red); }
+.field-help { font-size: 11px; color: var(--ink-3); }
+.field-err { font-size: 11px; color: var(--red); }
+
+/* Asegurados list */
+.aseg-section {
+  background: var(--white); border: 1.5px solid var(--line);
+  border-radius: var(--rxl); padding: 22px 24px;
+  box-shadow: var(--sh);
+}
+.aseg-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
+.aseg-head-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+.aseg-head-sub { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.aseg-add {
+  background: var(--blue); color: #fff; border: none;
+  padding: 9px 16px; border-radius: var(--r);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+}
+.aseg-add:hover { background: var(--blue-dark); }
+.aseg-list { display: flex; flex-direction: column; gap: 10px; }
+.aseg-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; background: var(--bg);
+  border: 1px solid var(--line-2); border-radius: var(--r);
+}
+.aseg-av {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--blue-light); color: var(--blue);
+  display: grid; place-items: center; font-size: 13px; font-weight: 800;
+  flex-shrink: 0;
+}
+.aseg-info { flex: 1; min-width: 0; }
+.aseg-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+.aseg-meta { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.aseg-meta .dot { color: var(--ink-4); margin: 0 6px; }
+.aseg-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.aseg-btn {
+  background: var(--white); border: 1px solid var(--line);
+  padding: 6px 10px; border-radius: 6px; font-size: 12px;
+  color: var(--ink-2); cursor: pointer; font-weight: 500;
+}
+.aseg-btn:hover { background: var(--bg); }
+.aseg-btn.danger { color: var(--red); }
+.aseg-btn.danger:hover { background: var(--red-light); border-color: var(--red); }
+.aseg-empty {
+  text-align: center; padding: 32px 16px; color: var(--ink-3);
+  font-size: 13px; background: var(--bg);
+  border: 1px dashed var(--line); border-radius: var(--r);
+}
+
+/* ═══════════════════════ MODAL ═══════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(15,23,42,.5);
+  display: none; align-items: center; justify-content: center;
+  z-index: 1000; padding: 20px; backdrop-filter: blur(2px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--white); border-radius: var(--rxl);
+  max-width: 480px; width: 100%; max-height: 90vh; overflow: auto;
+  box-shadow: 0 24px 70px rgba(0,0,0,.25);
+}
+.modal-hd {
+  padding: 20px 24px 14px; border-bottom: 1px solid var(--line-2);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.modal-title { font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: -.2px; }
+.modal-close {
+  background: none; border: none; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 6px;
+  display: grid; place-items: center; color: var(--ink-3);
+  font-size: 18px;
+}
+.modal-close:hover { background: var(--bg); color: var(--ink); }
+.modal-body { padding: 18px 24px 22px; display: flex; flex-direction: column; gap: 14px; }
+.modal-foot {
+  padding: 14px 24px; border-top: 1px solid var(--line-2);
+  display: flex; justify-content: flex-end; gap: 8px;
+  background: var(--bg);
+}
+.modal-foot.between { justify-content: space-between; }
+.btn {
+  padding: 9px 18px; border-radius: var(--r);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: none; display: inline-flex; align-items: center; gap: 6px;
+  transition: opacity .1s;
+}
+.btn:hover { opacity: .88; }
+.btn-pri { background: var(--blue); color: #fff; }
+.btn-out { background: var(--white); color: var(--blue); border: 1.5px solid var(--blue); }
+.btn-out:hover { background: var(--blue-pale); }
+.btn-gray { background: var(--white); color: var(--ink-2); border: 1.5px solid var(--line); }
+.btn-gray:hover { background: var(--bg); }
+.btn-danger { background: var(--red); color: #fff; }
+.btn-wa { background: #128C7E; color: #fff; }
+.btn-success { background: var(--green); color: #fff; }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Radio group inside modal */
+.radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.radio-pill {
+  border: 1.5px solid var(--line); border-radius: var(--r);
+  padding: 10px 12px; cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--white); transition: all .15s;
+}
+.radio-pill input { margin: 0; accent-color: var(--blue); }
+.radio-pill:has(input:checked) { border-color: var(--blue); background: var(--blue-pale); }
+.radio-pill .icon { font-size: 16px; }
+
+/* ═══════════════════════ PASO 2: PRODUCTS ═══════════════════════ */
+.aseg-bar {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 22px; flex-wrap: wrap;
+}
+.aseg-bar-lbl {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: var(--ink-4); margin-right: 4px;
+}
+.aseg-pill {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--white); border: 1.5px solid var(--line);
+  padding: 5px 13px 5px 7px; border-radius: 100px; font-size: 13px;
+  box-shadow: 0 1px 3px rgba(30,58,138,.04);
+}
+.aseg-pill-av {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--blue-light); color: var(--blue);
+  display: grid; place-items: center; font-size: 10px; font-weight: 800;
+}
+.aseg-pill-nm { font-weight: 600; color: var(--ink); }
+.aseg-pill-i { color: var(--ink-3); font-size: 12px; }
+
+/* Variant toggle Con/Sin Reducción (auto-shown if any aseg >= 70) */
+.variant-toggle {
+  background: var(--amber-light); border: 1px solid #FBBF24;
+  border-radius: var(--rl); padding: 14px 18px; margin-bottom: 18px;
+  display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;
+}
+.variant-toggle .icon { font-size: 18px; flex-shrink: 0; }
+.variant-toggle .text { flex: 1; min-width: 200px; font-size: 12.5px; color: #78350F; line-height: 1.55; }
+.variant-toggle .text strong { color: #92400E; }
+.variant-toggle .ctl { display: flex; gap: 8px; }
+.variant-toggle .ctl button {
+  padding: 7px 14px; border-radius: 100px; border: 1.5px solid #FBBF24;
+  background: var(--white); color: #92400E; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.variant-toggle .ctl button.on { background: #92400E; color: #fff; }
+
+/* Opciones cotización (AMP epidemias) */
+.opt-toggle {
+  background: var(--blue-pale); border: 1px solid var(--blue-light);
+  border-radius: var(--rl); padding: 14px 18px; margin-bottom: 18px;
+  display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;
+}
+.opt-toggle .icon { font-size: 18px; flex-shrink: 0; }
+.opt-toggle .text { flex: 1; min-width: 240px; font-size: 12.5px; color: var(--blue-dark); line-height: 1.55; }
+.opt-toggle .text strong { color: var(--blue-dark); }
+.opt-toggle .text .note { color: var(--ink-3); font-size: 11px; margin-top: 3px; }
+.opt-toggle .ctl { display: flex; gap: 8px; }
+.opt-toggle .ctl button {
+  padding: 7px 14px; border-radius: 100px; border: 1.5px solid var(--blue);
+  background: var(--white); color: var(--blue-dark); font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.opt-toggle .ctl button.on { background: var(--blue); color: #fff; }
+
+/* Products grid */
+.prods-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 18px; margin-bottom: 22px;
+}
+
+.pc {
+  background: var(--white); border: 1.5px solid var(--line);
+  border-radius: var(--rxl); overflow: hidden;
+  box-shadow: 0 1px 4px rgba(30,58,138,.05);
+  transition: box-shadow .2s, border-color .2s;
+}
+.pc.sel { border-color: var(--blue-mid); box-shadow: 0 4px 20px rgba(37,99,235,.14); }
+.pc.sel.reg { border-color: var(--reg); box-shadow: 0 4px 20px rgba(91,145,208,.14); }
+.pc.sel.gd { border-color: var(--green); box-shadow: 0 4px 20px rgba(5,150,105,.14); }
+.pc-bar { height: 4px; background: var(--line); }
+.pc.sel .pc-bar { background: linear-gradient(90deg, var(--blue) 0%, var(--blue-mid) 100%); }
+.pc.sel.reg .pc-bar { background: linear-gradient(90deg, var(--reg-dark) 0%, var(--reg) 100%); }
+.pc.sel.gd .pc-bar { background: linear-gradient(90deg, var(--green) 0%, var(--teal) 100%); }
+
+.pc-hd { padding: 18px 18px 14px; border-bottom: 1px solid var(--line-2); }
+.pc-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; cursor: pointer; }
+.pc-ck {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--line); background: var(--white);
+  display: grid; place-items: center; flex-shrink: 0; margin-top: 2px;
+  color: transparent; font-size: 13px; font-weight: 800;
+  transition: all .15s;
+}
+.sel .pc-ck { background: var(--blue); border-color: var(--blue); color: #fff; }
+.sel.reg .pc-ck { background: var(--reg); border-color: var(--reg); }
+.sel.gd .pc-ck { background: var(--green); border-color: var(--green); }
+.pc-nm { font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.25; letter-spacing: -.2px; }
+.pc-tg { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.pc-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--blue-pale); color: var(--blue);
+  font-size: 11px; font-weight: 700; padding: 3px 10px;
+  border-radius: 100px; letter-spacing: .2px;
+}
+.sel.reg .pc-pill { background: var(--reg-light); color: var(--reg-dark); }
+.sel.gd .pc-pill { background: var(--green-light); color: var(--green-dark); }
+
+.pc-bd { padding: 14px 18px; border-bottom: 1px solid var(--line-2); }
+.fld-l {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--ink-4); margin-bottom: 7px;
+}
+.fld-sel {
+  width: 100%; padding: 9px 12px; border: 1.5px solid var(--line);
+  border-radius: var(--r); font-family: inherit; font-size: 13px;
+  color: var(--ink); background: var(--bg); cursor: pointer;
+  outline: none; font-weight: 500;
+}
+.fld-sel:focus { border-color: var(--blue); background: var(--white); }
+.sel.reg .fld-sel:focus { border-color: var(--reg); }
+.sel.gd .fld-sel:focus { border-color: var(--green); }
+
+.pc-primas { padding: 14px 18px; }
+.pr-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; font-size: 13px;
+}
+.pr-row + .pr-row { border-top: 1px solid var(--line-2); }
+.pr-nm { font-weight: 600; color: var(--ink-2); }
+.pr-rel { font-size: 11px; color: var(--ink-4); font-weight: 400; }
+.pr-amt { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500; color: var(--ink); }
+
+.pc-tot {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 13px 18px; background: var(--bg); border-top: 1.5px solid var(--line);
+}
+.sel .pc-tot { background: var(--blue-pale); border-top-color: var(--blue-light); }
+.sel.reg .pc-tot { background: var(--reg-light); border-top-color: var(--reg-line); }
+.sel.gd .pc-tot { background: var(--green-light); border-top-color: #A7F3D0; }
+.tot-l {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--ink-3);
+}
+.sel .tot-l { color: var(--blue-dark); }
+.sel.reg .tot-l { color: var(--reg-dark); }
+.sel.gd .tot-l { color: var(--green-dark); }
+.tot-n {
+  font-family: 'JetBrains Mono', monospace; font-size: 20px;
+  font-weight: 700; color: var(--ink);
+}
+.sel .tot-n { color: var(--blue-dark); }
+.sel.reg .tot-n { color: var(--reg-dark); }
+.sel.gd .tot-n { color: var(--green-dark); }
+.tot-c { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; color: var(--ink-3); margin-left: 3px; font-weight: 500; }
+
+/* ═══════════════════════ PASO 3: SEND ═══════════════════════ */
+.send-band {
+  background: var(--white); border: 1.5px solid var(--line);
+  border-radius: var(--rl); padding: 18px 22px;
+  margin-bottom: 22px; box-shadow: var(--sh);
+}
+.send-band-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.send-band-sub { font-size: 12px; color: var(--ink-3); margin-bottom: 14px; }
+.send-prods { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+.send-prod {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 16px; background: var(--bg); border: 1.5px solid var(--line);
+  border-radius: var(--r); cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  transition: all .15s;
+}
+.send-prod:has(input:checked) {
+  background: var(--blue-pale); border-color: var(--blue); color: var(--blue-dark);
+}
+.send-prod:has(input:checked).reg { background: var(--reg-light); border-color: var(--reg); color: var(--reg-dark); }
+.send-prod:has(input:checked).gd { background: var(--green-light); border-color: var(--green); color: var(--green-dark); }
+.send-prod input { accent-color: var(--blue); }
+.send-prod .nm { font-weight: 600; }
+.send-prod .pr { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; }
+
+.send-recommended {
+  background: var(--blue-pale); border: 1px solid var(--blue-light);
+  border-radius: var(--r); padding: 12px 14px; margin-bottom: 18px;
+  font-size: 12.5px; color: var(--blue-dark); display: flex; gap: 10px; align-items: flex-start;
+}
+.send-recommended select {
+  margin-left: 8px; padding: 4px 10px; border: 1px solid var(--blue-light);
+  border-radius: 6px; background: var(--white); font-size: 12px; font-weight: 600;
+  color: var(--blue-dark); font-family: inherit;
+}
+.send-recommended-icon { font-size: 16px; }
+
+.send-actions {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; flex-wrap: wrap;
+}
+.send-link-box {
+  flex: 1; min-width: 200px;
+  background: var(--bg); border: 1px dashed var(--line);
+  padding: 9px 14px; border-radius: var(--r);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.send-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ═══════════════════════ NAV BAND (paso 1→2→3) ═══════════════════════ */
+.nav-band {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line);
+}
+.nav-band .btn { font-size: 13.5px; padding: 11px 24px; }
+
+/* ═══════════════════════ HISTORY ═══════════════════════ */
+.hist-list { display: flex; flex-direction: column; gap: 12px; }
+.hist-empty {
+  background: var(--white); border: 1px dashed var(--line);
+  border-radius: var(--rl); padding: 40px 20px;
+  text-align: center; color: var(--ink-3); font-size: 13px;
+}
+.hist-card {
+  background: var(--white); border: 1.5px solid var(--line);
+  border-radius: var(--rl); padding: 16px 20px;
+  display: grid; grid-template-columns: 1fr auto; gap: 14px;
+  box-shadow: var(--sh);
+}
+.hist-info {}
+.hist-row1 {
+  display: flex; gap: 10px; align-items: center;
+  font-size: 14px; margin-bottom: 4px; flex-wrap: wrap;
+}
+.hist-id { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-3); }
+.hist-cli { font-weight: 700; color: var(--ink); }
+.hist-state {
+  font-size: 11px; font-weight: 700; padding: 2px 8px;
+  border-radius: 100px; text-transform: uppercase; letter-spacing: .3px;
+}
+.hist-state.pendiente { background: var(--amber-light); color: var(--amber); }
+.hist-state.aceptada  { background: var(--green-light); color: var(--green-dark); }
+.hist-state.eliminada { background: var(--red-light); color: var(--red); }
+.hist-row2 { font-size: 12px; color: var(--ink-3); display: flex; gap: 14px; flex-wrap: wrap; }
+.hist-row2 .meta-amt { font-family: 'JetBrains Mono', monospace; color: var(--ink); font-weight: 600; }
+.hist-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.hist-act {
+  background: var(--white); border: 1px solid var(--line);
+  padding: 6px 10px; border-radius: 6px; font-size: 11.5px;
+  color: var(--ink-2); cursor: pointer; font-weight: 500;
+}
+.hist-act:hover { background: var(--bg); }
+.hist-act.danger { color: var(--red); }
+.hist-act.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+/* ═══════════════════════ TOASTS ═══════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; right: 24px; z-index: 2000;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  background: var(--ink); color: #fff; padding: 12px 18px;
+  border-radius: var(--r); font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  max-width: 360px; display: flex; gap: 10px; align-items: center;
+  animation: toast-in .25s ease-out;
+}
+.toast.success { background: var(--green-dark); }
+.toast.error { background: var(--red); }
+@keyframes toast-in { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ═══════════════════════ CLIENT VIEW ═══════════════════════ */
+[data-view="cliente"] { background: var(--white); font-size: 14.5px; }
+
+.cv-hero {
+  background: linear-gradient(150deg, #0F2567 0%, #1E3A8A 35%, #1D4ED8 70%, #2563EB 100%);
+  color: #fff; padding: 0; position: relative; overflow: hidden;
+}
+.cv-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.ins-topbar {
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  padding: 12px 28px; display: flex; align-items: center;
+  justify-content: space-between; position: relative; z-index: 1;
+  gap: 16px; flex-wrap: wrap;
+}
+.ins-topbar-l { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ins-logo-img { height: 30px; width: auto; display: block; filter: brightness(0) invert(1); opacity: .9; }
+.ins-topbar-sep { width: 1px; height: 22px; background: rgba(255,255,255,.2); }
+.ins-topbar-prod { font-size: 15px; font-weight: 600; color: #fff; letter-spacing: -.2px; }
+.ins-topbar-agent { font-size: 12px; color: rgba(255,255,255,.55); }
+.ins-topbar-r { font-size: 11.5px; color: rgba(255,255,255,.45); }
+
+.cv-hero-body {
+  padding: 44px 28px 40px; text-align: center; position: relative; z-index: 1;
+}
+.cv-ey {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,.5); margin-bottom: 10px; font-weight: 600;
+}
+.cv-ttl {
+  font-size: 30px; font-weight: 800; line-height: 1.2; letter-spacing: -.5px;
+}
+.cv-sub { font-size: 14px; color: rgba(255,255,255,.55); margin-top: 8px; }
+.cv-chips {
+  display: flex; justify-content: center; gap: 8px;
+  margin-top: 18px; flex-wrap: wrap;
+}
+.cv-chip {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  padding: 5px 14px; border-radius: 100px; font-size: 12px;
+  color: rgba(255,255,255,.85); font-weight: 500;
+}
+
+/* ═══════════════════════ COMPARISON ═══════════════════════ */
+.cmp-wrap { max-width: 1180px; margin: 0 auto; padding: 36px 28px 24px; }
+.cmp-ttl {
+  font-size: 19px; font-weight: 700; color: var(--ink);
+  letter-spacing: -.3px; margin-bottom: 4px;
+}
+.cmp-sub { font-size: 13px; color: var(--ink-3); margin-bottom: 18px; }
+
+.price-cards {
+  display: grid; gap: 14px; margin-bottom: 24px;
+}
+.price-cards.n-1 { grid-template-columns: 1fr; max-width: 460px; margin-left: auto; margin-right: auto; }
+.price-cards.n-2 { grid-template-columns: repeat(2, 1fr); max-width: 720px; margin-left: auto; margin-right: auto; }
+.price-cards.n-3 { grid-template-columns: repeat(3, 1fr); }
+.price-card {
+  background: var(--white); border: 1.5px solid var(--line);
+  border-radius: var(--rl); padding: 20px 18px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.price-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--blue); }
+.price-card.reg::before { background: linear-gradient(90deg, var(--reg-dark) 0%, var(--reg) 100%); }
+.price-card.gd::before  { background: linear-gradient(90deg, var(--green) 0%, var(--teal) 100%); }
+.price-card-nm { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.price-card-cov { font-size: 12px; color: var(--ink-3); }
+.price-card-ded {
+  display: inline-block; background: var(--blue-pale); color: var(--blue);
+  font-size: 11px; font-weight: 700; padding: 3px 10px;
+  border-radius: 100px; margin: 8px 0;
+}
+.price-card.reg .price-card-ded { background: var(--reg-light); color: var(--reg-dark); }
+.price-card.gd .price-card-ded  { background: var(--green-light); color: var(--green-dark); }
+.price-card-price {
+  font-family: 'JetBrains Mono', monospace; font-size: 28px;
+  font-weight: 700; color: var(--blue-dark); line-height: 1;
+}
+.price-card.reg .price-card-price { color: var(--reg-dark); }
+.price-card.gd .price-card-price  { color: var(--green-dark); }
+.price-card-psub { font-size: 11px; color: var(--ink-3); margin-top: 4px; font-weight: 400; }
+.price-card-cta {
+  margin-top: 12px; padding: 8px 16px; background: var(--blue); color: #fff;
+  border: none; border-radius: var(--r); font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: inherit; width: 100%;
+}
+.price-card.reg .price-card-cta { background: var(--reg); }
+.price-card.gd .price-card-cta  { background: var(--green); }
+.price-card-cta:hover { opacity: .88; }
+.best-tag {
+  position: absolute; top: 12px; right: 12px;
+  background: var(--green); color: #fff; font-size: 10px;
+  font-weight: 700; padding: 2px 8px; border-radius: 100px; letter-spacing: .3px;
+}
+
+/* TOOLTIPS de cobertura */
+.has-tip { position: relative; display: inline-flex; align-items: center; gap: 5px; cursor: help; }
+.tip-ico {
+  display: inline-grid; place-items: center;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--blue-light); color: var(--blue);
+  font-size: 9px; font-weight: 800; flex-shrink: 0; line-height: 1;
+  font-style: normal;
+}
+.has-tip:hover .tip-ico, .has-tip:focus .tip-ico, .has-tip.tipped .tip-ico { background: var(--blue); color: #fff; }
+.has-tip::after {
+  content: attr(data-tip);
+  position: absolute; left: 0; top: calc(100% + 8px);
+  background: var(--ink); color: #fff;
+  font-size: 11.5px; line-height: 1.55;
+  padding: 9px 13px; border-radius: var(--r);
+  width: 270px; z-index: 200; opacity: 0;
+  pointer-events: none; font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400; box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .12s;
+}
+.has-tip::before {
+  content: ''; position: absolute; left: 8px; top: calc(100% + 2px);
+  border: 6px solid transparent; border-bottom-color: var(--ink);
+  opacity: 0; z-index: 200; transition: opacity .12s;
+}
+.has-tip:hover::after, .has-tip:focus::after, .has-tip.tipped::after,
+.has-tip:hover::before, .has-tip:focus::before, .has-tip.tipped::before { opacity: 1; }
+
+/* Coverage table */
+.cov-wrap { border: 1.5px solid var(--line); border-radius: var(--rl); overflow: hidden; margin-bottom: 24px; }
+.cov-hdr {
+  display: grid; grid-template-columns: 220px repeat(var(--cols, 3), 1fr);
+  background: var(--blue-dark); color: #fff;
+}
+.cov-hdr-lbl {
+  padding: 13px 16px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px; color: rgba(255,255,255,.55);
+}
+.cov-hdr-nm {
+  padding: 13px 16px; font-size: 13px; font-weight: 700;
+  text-align: center; border-left: 1px solid rgba(255,255,255,.1);
+}
+.cov-sec {
+  display: grid; grid-template-columns: 220px repeat(var(--cols, 3), 1fr);
+  background: linear-gradient(90deg, var(--blue) 0%, var(--blue-mid) 100%);
+}
+.cov-sec-lbl {
+  padding: 7px 16px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px;
+  color: rgba(255,255,255,.9); grid-column: 1 / -1;
+}
+.cov-row {
+  display: grid; grid-template-columns: 220px repeat(var(--cols, 3), 1fr);
+  border-bottom: 1px solid var(--line-2);
+}
+.cov-row:last-child { border-bottom: none; }
+.cov-row:nth-child(even) { background: var(--bg); }
+.cc {
+  padding: 10px 16px; font-size: 13px;
+  display: flex; align-items: center;
+  border-left: 1px solid var(--line-2);
+}
+.cc:first-child { border-left: none; }
+.cc-lbl { color: var(--ink-2); font-weight: 500; }
+.cc-val { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; justify-content: center; text-align: center; }
+.cc-val.hl { color: var(--blue); font-weight: 600; }
+.cc-val.gd-val { color: var(--green); font-weight: 600; }
+.cc-val.reg-val { color: var(--reg-dark); font-weight: 600; }
+.cc-val.na { color: var(--ink-4); }
+
+/* PAYMENT */
+.pay-wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px 28px; }
+.pay-hdr { font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -.3px; margin-bottom: 4px; }
+.pay-sub { font-size: 13px; color: var(--ink-3); margin-bottom: 16px; }
+.pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.pay-card {
+  background: var(--white); border: 1.5px solid var(--line);
+  border-radius: var(--rl); padding: 16px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.pay-card.rec {
+  border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+}
+.pay-card.rec::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--blue); }
+.pay-rec-tag {
+  display: inline-block; background: var(--green); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 10px;
+  border-radius: 100px; margin-bottom: 8px; letter-spacing: .3px;
+}
+.pay-frm { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.pay-rcg { font-size: 11px; color: var(--ink-3); font-weight: 400; }
+.pay-rows { margin-top: 12px; display: flex; flex-direction: column; gap: 5px; }
+.pay-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; padding: 4px 0; border-bottom: 1px solid var(--line-2);
+}
+.pay-row:last-child { border-bottom: none; }
+.pay-prd { color: var(--ink-3); font-weight: 500; }
+.pay-amt { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: var(--ink); }
+
+/* WAITING PERIODS */
+.wait-wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px 28px; }
+.wait-box { background: var(--white); border: 1.5px solid var(--line); border-radius: var(--rl); overflow: hidden; }
+.wait-hd { padding: 20px 24px; background: var(--blue-pale); border-bottom: 1px solid var(--blue-light); }
+.wait-hd h3 { font-size: 17px; font-weight: 700; color: var(--blue-dark); letter-spacing: -.2px; }
+.wait-hd p { font-size: 13px; color: var(--ink-3); margin-top: 3px; }
+.wait-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 18px 24px; gap: 0; }
+.wait-col { padding: 0 18px; border-right: 1px solid var(--line-2); }
+.wait-col:first-child { padding-left: 0; }
+.wait-col:last-child { border-right: none; padding-right: 0; }
+.wait-col-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--ink-4); margin-bottom: 10px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--line-2);
+}
+.wait-row {
+  display: flex; justify-content: space-between; padding: 6px 0;
+  font-size: 12.5px; border-bottom: 1px solid var(--line-2);
+}
+.wait-row:last-child { border-bottom: none; }
+.wait-k { color: var(--ink-2); }
+.wait-v { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--blue-dark); font-size: 12px; }
+.wait-v.long { color: var(--red); }
+.wait-v.good { color: var(--green); }
+.wait-note {
+  padding: 12px 24px; background: var(--bg);
+  border-top: 1px solid var(--line-2);
+  font-size: 12px; color: var(--ink-3); line-height: 1.6;
+}
+.wait-note strong { color: var(--ink-2); }
+
+/* DOCS */
+.docs-wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px 28px; }
+.docs-box { background: var(--white); border: 1.5px solid var(--line); border-radius: var(--rl); overflow: hidden; }
+.docs-hd {
+  padding: 22px 24px;
+  background: linear-gradient(135deg, var(--blue-pale) 0%, var(--white) 70%);
+  border-bottom: 1px solid var(--blue-light);
+}
+.docs-hd h3 { font-size: 17px; font-weight: 700; color: var(--blue-dark); letter-spacing: -.2px; }
+.docs-hd h3 em { font-style: italic; color: var(--blue); }
+.docs-hd p { font-size: 13px; color: var(--ink-3); margin-top: 4px; max-width: 60ch; line-height: 1.55; }
+.docs-body { padding: 20px 24px; }
+.docs-sec { margin-bottom: 20px; }
+.docs-sec:last-child { margin-bottom: 0; }
+.docs-sec-lbl {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--ink-4); margin-bottom: 10px; flex-wrap: wrap;
+}
+.docs-pin { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.docs-pin.base { background: var(--green); }
+.docs-pin.cond { background: var(--blue); }
+.docs-pin.info { background: var(--ink-3); }
+.docs-trigger-chip {
+  background: var(--blue-pale); color: var(--blue-dark);
+  font-size: 10.5px; padding: 2px 8px; border-radius: 4px;
+  font-weight: 600; text-transform: none; letter-spacing: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+.docs-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.doc-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 14px; background: var(--bg);
+  border: 1px solid var(--line-2); border-radius: var(--r);
+}
+.doc-icon {
+  width: 40px; height: 40px; border-radius: 8px;
+  background: var(--white); border: 1px solid var(--line);
+  display: grid; place-items: center; flex-shrink: 0; position: relative;
+}
+.doc-icon::after {
+  content: 'PDF'; font-size: 8px; font-weight: 700; color: var(--blue);
+  position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); letter-spacing: .3px;
+}
+.doc-icon::before {
+  content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  width: 16px; height: 13px; border: 1.5px solid var(--blue); border-radius: 2px;
+}
+.doc-icon.aviso::before, .doc-icon.aviso::after { display: none; }
+.doc-icon.aviso { font-size: 22px; font-weight: 300; color: var(--blue-dark); }
+.doc-info { flex: 1; min-width: 0; }
+.doc-nm { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 2px; line-height: 1.3; }
+.doc-desc { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; }
+.doc-dl {
+  display: grid; place-items: center; width: 32px; height: 32px;
+  background: var(--blue); color: #fff; border-radius: 7px;
+  font-size: 13px; font-weight: 700; text-decoration: none;
+  flex-shrink: 0; margin-top: 2px;
+}
+.doc-dl:hover { background: var(--blue-dark); text-decoration: none; }
+.docs-note {
+  margin-top: 16px; padding: 12px 16px;
+  background: var(--bg); border-left: 3px solid var(--blue);
+  border-radius: 0 var(--r) var(--r) 0;
+  font-size: 12px; color: var(--ink-2); line-height: 1.65;
+}
+.docs-note strong { color: var(--ink); display: block; margin-bottom: 2px; }
+
+/* CTA */
+.cta-strip {
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
+  padding: 36px 28px; text-align: center; color: #fff;
+}
+.cta-title { font-size: 22px; font-weight: 800; letter-spacing: -.3px; margin-bottom: 6px; }
+.cta-sub { font-size: 14px; color: rgba(255,255,255,.6); margin-bottom: 22px; }
+.cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.cta-btn {
+  padding: 12px 24px; border-radius: var(--r);
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  font-family: inherit; display: flex; align-items: center; gap: 8px;
+  border: none; text-decoration: none;
+}
+.cta-btn:hover { opacity: .88; text-decoration: none; }
+.cta-pri { background: #fff; color: var(--blue-dark); }
+.cta-wa { background: #128C7E; color: #fff; }
+
+/* DISCLAIMER */
+.fine-wrap { max-width: 1180px; margin: 0 auto; padding: 28px 28px 20px; }
+.fine {
+  background: #FFF7ED; border: 1px solid #FED7AA;
+  border-radius: var(--rl); padding: 18px 22px;
+  font-size: 12px; color: #7C3D12; line-height: 1.7;
+}
+.fine strong { color: #9A3412; font-weight: 600; }
+
+/* SDI FOOTER */
+.sdi-foot-wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px 36px; }
+.sdi-foot {
+  background: var(--blue-dark); border-radius: var(--rl);
+  padding: 24px 28px; text-align: center; color: #fff;
+}
+.sdi-mark { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.sdi-word { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -.3px; }
+.sdi-bars { display: inline-flex; flex-direction: column; gap: 3px; }
+.sdi-bars i { display: block; width: 20px; height: 3px; background: #fff; border-radius: 1px; }
+.sdi-line { font-size: 12px; color: #93C5FD; margin: 4px 0; line-height: 1.55; }
+.sdi-line strong { color: #fff; font-weight: 600; }
+.sdi-line.sub { font-size: 11px; color: #60A5FA; }
+
+/* ═══════════════════════ RESPONSIVE ═══════════════════════ */
+@media (max-width: 900px) {
+  .cli-grid { grid-template-columns: 1fr; }
+  .prods-grid { grid-template-columns: 1fr; }
+  .price-cards.n-3, .price-cards.n-2 { grid-template-columns: 1fr; max-width: 460px; }
+  .pay-grid { grid-template-columns: 1fr; }
+  .wait-grid { grid-template-columns: 1fr; }
+  .wait-col { padding: 0 0 14px; border-right: none; border-bottom: 1px solid var(--line-2); }
+  .wait-col:last-child { padding-bottom: 0; border-bottom: none; }
+  .docs-list { grid-template-columns: 1fr; }
+  .cov-hdr, .cov-sec, .cov-row { grid-template-columns: 140px repeat(var(--cols, 3), 1fr); }
+  .cc, .cov-hdr-nm, .cov-hdr-lbl { padding: 8px 8px; font-size: 12px; }
+  .cv-ttl { font-size: 22px; }
+  .ins-topbar { padding: 10px 16px; }
+  .ins-topbar-agent { font-size: 11px; }
+  .main { padding: 18px; }
+  .hdr { padding: 0 14px; }
+  .hdr-prod { font-size: 14px; }
+  .hdr-prod span { display: none; }
+  .hdr-user { display: none; }
+  .stepper { padding: 0 14px; }
+  .step { padding: 12px 12px; font-size: 12px; }
+}
+@media (max-width: 600px) {
+  .cov-hdr-nm, .cc-val { font-size: 10.5px; }
+  .has-tip::after { width: 220px; font-size: 10.5px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ LOADING ═══════════════════════ -->
+<div data-view="loading" class="active">
+  <div class="loading">
+    <div>
+      <div class="spinner"></div>
+      <div>Cargando cotizador INS Medical…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ LOGIN ═══════════════════════ -->
+<div data-view="login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <img class="ins-logo" src="https://cotizador.appsegurosdigitales.com/img/ins-logo.png" alt="INS" style="filter:invert(.15);" />
+      <h1>INS Medical · Cotizador</h1>
+      <div class="sub">Acceso exclusivo para agentes autorizados de Seguros Digitales SDI</div>
+      <button class="gsi-btn" id="btn-login">
+        <svg class="gsi-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC04" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Iniciar sesión con Google
+      </button>
+      <button class="gsi-btn" id="btn-login-local" style="display:none;margin-top:10px;background:#FEF3C7;border-color:#FBBF24;color:#92400E">
+        🔧 Modo local · Continuar como Juan Carlos
+      </button>
+      <div class="footnote">
+        Su correo será verificado contra la lista de agentes autorizados. Si tiene problemas, contacte a su administrador.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ BLOQUEADO ═══════════════════════ -->
+<div data-view="bloqueado">
+  <div class="bloq-wrap">
+    <div class="bloq-card">
+      <div class="icon">🔒</div>
+      <h1>Acceso restringido</h1>
+      <p>Este cotizador está reservado para agentes autorizados de Seguros Digitales SDI.</p>
+      <div class="ag-email" id="bloq-email">—</div>
+      <p>Si cree que esto es un error, contacte al administrador.</p>
+      <button class="btn-logout" id="btn-logout-bloq">Cerrar sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ AGENTE ═══════════════════════ -->
+<div data-view="agente">
+
+  <header class="hdr">
+    <div class="hdr-logo">
+      <img src="https://cotizador.appsegurosdigitales.com/img/ins-logo.png" alt="INS" class="hdr-ins-logo" />
+      <div class="hdr-sep"></div>
+      <span class="hdr-prod">INS Medical <span>/ Cotizador</span></span>
+    </div>
+    <div class="hdr-badge">Seguros Digitales SDI</div>
+    <span class="hdr-user">Agente: <strong id="hdr-agent-email">—</strong></span>
+    <button class="hdr-out" id="btn-logout">Cerrar sesión</button>
+  </header>
+
+  <nav class="stepper">
+    <button class="step" data-step="1"><div class="step-dot">1</div>Asegurados</button>
+    <div class="step-div"></div>
+    <button class="step" data-step="2"><div class="step-dot">2</div>Productos</button>
+    <div class="step-div"></div>
+    <button class="step" data-step="3"><div class="step-dot">3</div>Enviar</button>
+    <button class="step step-hist" data-step="hist"><div class="step-dot">H</div>Mis cotizaciones</button>
+  </nav>
+
+  <div class="main">
+
+    <!-- PASO 1 -->
+    <section class="paso paso-1" data-paso="1">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Datos del cliente y asegurados</div>
+          <div class="page-sub">Ingrese la información de quien recibirá la cotización y de cada persona que estará asegurada.</div>
+        </div>
+      </div>
+
+      <div class="cli-form">
+        <div class="cli-form-title">Cliente (titular)</div>
+        <div class="cli-grid">
+          <div class="field">
+            <label class="field-lbl" for="cli-nombre">Nombre completo <span class="req">*</span></label>
+            <input class="field-input" id="cli-nombre" type="text" placeholder="Ej: Juan Carlos Hernández Vargas" />
+          </div>
+          <div class="field">
+            <label class="field-lbl" for="cli-cedula">Cédula / identificación</label>
+            <input class="field-input" id="cli-cedula" type="text" placeholder="Ej: 1-0775-0123" />
+          </div>
+          <div class="field">
+            <label class="field-lbl" for="cli-tel">Teléfono / WhatsApp <span class="req">*</span></label>
+            <input class="field-input" id="cli-tel" type="tel" placeholder="Ej: 8822-1348" />
+          </div>
+          <div class="field">
+            <label class="field-lbl" for="cli-email">Correo electrónico <span class="req">*</span></label>
+            <input class="field-input" id="cli-email" type="email" placeholder="cliente@correo.com" />
+            <div class="field-help">Al correo del cliente le llegará la cotización completa.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="aseg-section">
+        <div class="aseg-head">
+          <div>
+            <div class="aseg-head-title">Asegurados</div>
+            <div class="aseg-head-sub">Agregue cada persona que estará cubierta por la póliza.</div>
+          </div>
+          <button class="aseg-add" id="btn-aseg-add">+ Agregar asegurado</button>
+        </div>
+        <div class="aseg-list" id="aseg-list">
+          <div class="aseg-empty">Aún no ha agregado asegurados. Haga clic en "Agregar asegurado" para empezar.</div>
+        </div>
+      </div>
+
+      <div class="nav-band">
+        <div></div>
+        <button class="btn btn-pri" id="btn-paso1-next">Continuar a Productos →</button>
+      </div>
+    </section>
+
+    <!-- PASO 2 -->
+    <section class="paso paso-2" data-paso="2">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Seleccione los productos a cotizar</div>
+          <div class="page-sub">Elija el deducible de cada producto. La prima se calcula en tiempo real por asegurado y edad.</div>
+        </div>
+      </div>
+
+      <div class="aseg-bar" id="aseg-bar"></div>
+
+      <div class="opt-toggle">
+        <div class="icon">🦠</div>
+        <div class="text">
+          <strong>Ampliar cobertura de epidemias y pandemias</strong>
+          <div class="note">Sin ampliar: $7.500 (Regional) / $15.000 (Internacional y GD). Con ampliación: $75.000 / $200.000. <strong>La prima sube ~17%</strong>.</div>
+        </div>
+        <div class="ctl">
+          <button data-amp="off" class="on">Sin ampliar</button>
+          <button data-amp="on">Con ampliación</button>
+        </div>
+      </div>
+
+      <div class="variant-toggle" id="variant-toggle" style="display:none">
+        <div class="icon">⚠</div>
+        <div class="text">
+          Hay asegurados de 70 años o más. El INS permite escoger entre <strong>Con Reducción de Suma Asegurada</strong> (la suma asegurada baja a partir de los 70) o <strong>Sin Reducción</strong> (la suma asegurada se mantiene, con prima mayor).
+        </div>
+        <div class="ctl">
+          <button data-variant="con" class="on">Con Reducción</button>
+          <button data-variant="sin">Sin Reducción</button>
+        </div>
+      </div>
+
+      <div class="prods-grid" id="prods-grid"></div>
+
+      <div class="nav-band">
+        <button class="btn btn-gray" id="btn-paso2-back">← Volver a Asegurados</button>
+        <button class="btn btn-pri" id="btn-paso2-next">Continuar a Enviar →</button>
+      </div>
+    </section>
+
+    <!-- PASO 3 -->
+    <section class="paso paso-3" data-paso="3">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Enviar cotización</div>
+          <div class="page-sub">Revise los productos incluidos, copie el enlace o envíe la cotización por correo o WhatsApp.</div>
+        </div>
+      </div>
+
+      <div class="send-band">
+        <div class="send-band-title">Productos a incluir en la cotización</div>
+        <div class="send-band-sub">Active o desactive productos. El cliente verá solo los seleccionados.</div>
+        <div class="send-prods" id="send-prods"></div>
+
+        <div class="send-recommended">
+          <span class="send-recommended-icon">★</span>
+          <div>
+            <strong>Plan recomendado (opcional)</strong> — destaca un producto en la vista del cliente como su sugerencia:
+            <select id="send-rec">
+              <option value="">Sin recomendación</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="send-actions">
+          <div class="send-link-box" id="send-link">El enlace se generará al activar al menos un producto…</div>
+          <div class="send-btns">
+            <button class="btn btn-gray" id="btn-preview">Vista previa</button>
+            <button class="btn btn-out" id="btn-copy">Copiar enlace</button>
+            <button class="btn btn-wa" id="btn-wa">WhatsApp</button>
+            <button class="btn btn-pri" id="btn-email">✉ Enviar por correo</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-band">
+        <button class="btn btn-gray" id="btn-paso3-back">← Volver a Productos</button>
+        <button class="btn btn-success" id="btn-finalizar">Guardar y terminar</button>
+      </div>
+    </section>
+
+    <!-- HISTORIAL -->
+    <section class="paso paso-hist" data-paso="hist">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Mis cotizaciones</div>
+          <div class="page-sub">Historial local de cotizaciones generadas desde este navegador.</div>
+        </div>
+        <button class="btn btn-out" id="btn-new">+ Nueva cotización</button>
+      </div>
+      <div class="hist-list" id="hist-list"></div>
+    </section>
+
+  </div><!-- /main -->
+
+</div><!-- /data-view=agente -->
+
+<!-- ═══════════════════════ CLIENTE ═══════════════════════ -->
+<div data-view="cliente">
+  <div id="cli-root"></div>
+</div>
+
+<!-- ═══════════════════════ MODAL: ASEGURADO ═══════════════════════ -->
+<div class="modal-overlay" id="aseg-modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title" id="aseg-modal-title">Agregar asegurado</div>
+      <button class="modal-close" id="aseg-modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-lbl" for="aseg-nombre">Nombre completo <span class="req">*</span></label>
+        <input class="field-input" id="aseg-nombre" type="text" placeholder="Nombre y apellidos" />
+      </div>
+      <div class="cli-grid">
+        <div class="field">
+          <label class="field-lbl" for="aseg-edad">Edad <span class="req">*</span></label>
+          <input class="field-input" id="aseg-edad" type="number" min="0" max="99" placeholder="0 a 99" />
+          <div class="field-help">Edad al momento de la cotización.</div>
+        </div>
+        <div class="field">
+          <label class="field-lbl">Género <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="aseg-gen" value="F" /><span class="icon">♀</span> Femenino</label>
+            <label class="radio-pill"><input type="radio" name="aseg-gen" value="M" /><span class="icon">♂</span> Masculino</label>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-lbl">Parentesco con el titular <span class="req">*</span></label>
+        <div class="radio-group" style="grid-template-columns:repeat(4,1fr);gap:6px">
+          <label class="radio-pill"><input type="radio" name="aseg-par" value="titular" /> Titular</label>
+          <label class="radio-pill"><input type="radio" name="aseg-par" value="conyuge" /> Cónyuge</label>
+          <label class="radio-pill"><input type="radio" name="aseg-par" value="hijo" /> Hijo/a</label>
+          <label class="radio-pill"><input type="radio" name="aseg-par" value="otro" /> Otro</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot between">
+      <button class="btn btn-danger" id="aseg-modal-del" style="display:none">Eliminar</button>
+      <div style="display:flex;gap:8px;margin-left:auto">
+        <button class="btn btn-gray" id="aseg-modal-cancel">Salir</button>
+        <button class="btn btn-pri" id="aseg-modal-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ MODAL: EMAIL ═══════════════════════ -->
+<div class="modal-overlay" id="email-modal">
+  <div class="modal" style="max-width:540px">
+    <div class="modal-hd">
+      <div class="modal-title">Enviar por correo</div>
+      <button class="modal-close" id="email-modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-lbl" for="email-to">Para</label>
+        <input class="field-input" id="email-to" type="email" />
+      </div>
+      <div class="field">
+        <label class="field-lbl" for="email-subj">Asunto</label>
+        <input class="field-input" id="email-subj" type="text" />
+      </div>
+      <div style="font-size:12px;color:var(--ink-3);background:var(--bg);padding:10px 12px;border-radius:8px;line-height:1.55">
+        Se enviará desde su cuenta autorizada de Google con un enlace que abre la cotización completa con la vista del cliente.
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-gray" id="email-modal-cancel">Salir</button>
+      <button class="btn btn-pri" id="email-modal-send">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<!-- Tarifas (data) -->
+<script src="primas.js"></script>
+
+<!-- App logic -->
+<script>
+"use strict";
+
+/* ═══════════════════════════════════════════════════════════════
+   CONSTANTES
+   ═══════════════════════════════════════════════════════════════ */
+
+const COTIZADOR_VERSION = "1.0.0";
+const TARIFAS_VERSION = window.PRIMAS_VERSION || "INS-MEDICAL-2025-12-01";
+const IVA_RATE = window.PRIMAS_IVA || 0.02;   // 2% IVA seguros de personas (Ley 9635 CR)
+const VIGENCIA_DIAS = 30;
+
+const LOGO_INS_URL = "https://cotizador.appsegurosdigitales.com/img/ins-logo.png";
+
+// OAuth Client (compartido con otros cotizadores SDI)
+const GOOGLE_CLIENT_ID = "255791314248-apgnrs0tiii72ogau5dpsjm2eie6d2hu.apps.googleusercontent.com";
+
+// Whitelist de agentes autorizados (mismo patrón que Vital 360)
+const AGENTES = {
+  "jhernandez@segurosdelins.com": {
+    nombre: "Juan Carlos Hernández",
+    whatsapp: "8822-1348",
+    email: "jhernandez@segurosdelins.com",
+    codigo: "110113",
+    licencia: "08-1318"
+  }
+};
+
+// Catálogo de productos
+const PRODUCTOS = {
+  regional: {
+    key: "regional",
+    nombre: "INS Medical Regional",
+    tagline: "Cobertura en CR y Centroamérica",
+    suma_asegurada: 200000,
+    suma_asegurada_reducida: 60000,
+    deducibles: ["0", "200", "300", "400", "500", "1000"],
+    deducible_default: "1000",
+    color_class: "reg"
+  },
+  internacional: {
+    key: "internacional",
+    nombre: "INS Medical Internacional",
+    tagline: "Cobertura mundial",
+    suma_asegurada: 2000000,
+    suma_asegurada_reducida: 600000,
+    deducibles: ["0", "200", "300", "400", "500", "1000"],
+    deducible_default: "1000",
+    color_class: ""
+  },
+  grandes_deducibles: {
+    key: "grandes_deducibles",
+    nombre: "Grandes Deducibles",
+    tagline: "Cobertura mundial · prima significativamente menor",
+    suma_asegurada: 2000000,
+    suma_asegurada_reducida: 600000,
+    deducibles: ["5000", "10000", "15000"],
+    deducible_default: "5000",
+    color_class: "gd"
+  }
+};
+
+const PRODUCTOS_ORDER = ["regional", "internacional", "grandes_deducibles"];
+
+// Etiquetas legibles de deducibles
+const DEDUCIBLE_LABELS = {
+  "0":     "Sin deducible (prórroga)",
+  "200":   "Deducible $200",
+  "300":   "Deducible $300",
+  "400":   "Deducible $400",
+  "500":   "Deducible $500",
+  "1000":  "Deducible $1,000",
+  "5000":  "Deducible $5,000",
+  "10000": "Deducible $10,000",
+  "15000": "Deducible $15,000"
+};
+
+// Formas de pago y recargos
+const FORMAS_PAGO = [
+  { id: "anual",      label: "Anual",      recargo: 0.00, divisor: 1, recomendado: true,  nota: "Sin recargo · pago único" },
+  { id: "semestral",  label: "Semestral",  recargo: 0.05, divisor: 2, recomendado: false, nota: "+5% · cada 6 meses" },
+  { id: "trimestral", label: "Trimestral", recargo: 0.07, divisor: 4, recomendado: false, nota: "+7% · cada 3 meses" }
+];
+
+// Coberturas con descripciones para tooltips. Fuente: Condiciones Particulares INS Medical Reg/Int V13.
+const COBERTURAS_SECCIONES = [
+  {
+    titulo: "Coberturas Principales",
+    items: [
+      {
+        id: "suma_asegurada",
+        label: "Suma Asegurada Anual",
+        desc: "Tope máximo anual de gastos médicos cubiertos por persona: hospitalización, cirugías, consultas, exámenes y tratamientos.",
+        val: (p) => "$" + _fmtMon(p.suma_asegurada),
+        hl: (p) => p.suma_asegurada >= 2000000
+      },
+      {
+        id: "deducible",
+        label: "Deducible anual",
+        desc: "Monto que cada asegurado asume por año antes de que el INS empiece a pagar. Máximo 3 deducibles por familia al año.",
+        val: (p, ded) => "$" + _fmtMon(parseInt(ded, 10)),
+        clsForGd: true
+      },
+      {
+        id: "coas_amb_red",
+        label: "Coaseguro ambulatorio en red",
+        desc: "Porcentaje del gasto que usted asume al atenderse en proveedores dentro de la red del INS. Tope anual: $10,000 en CR/CA · $50,000 en el resto del mundo.",
+        val: () => "20%"
+      },
+      {
+        id: "coas_fuera",
+        label: "Coaseguro fuera de red",
+        desc: "Porcentaje que usted asume al atenderse fuera de la red del INS. Tope de consulta: $50 general, $90 especialista.",
+        val: () => "30%"
+      },
+      {
+        id: "hab_cr",
+        label: "Habitación diaria (fuera de red · CR)",
+        desc: "Monto máximo diario por habitación normal al hospitalizarse fuera de la red del INS en Costa Rica y Centroamérica.",
+        val: () => "$500/día"
+      },
+      {
+        id: "hab_mundo",
+        label: "Habitación diaria (fuera de red · mundial)",
+        desc: "Monto máximo diario por habitación normal al hospitalizarse fuera de la red en el resto del mundo. Solo Internacional y Grandes Deducibles.",
+        val: (p) => p.key === "regional" ? "—" : "$1,000/día",
+        naForRegional: true,
+        hl: (p) => p.key !== "regional"
+      },
+      {
+        id: "uci",
+        label: "UCI / Cuidados Intensivos",
+        desc: "Monto máximo diario en UCI fuera de la red. CR/CA: $1,000/día. Resto del mundo: $1,500/día (solo Internacional y Grandes Deducibles).",
+        val: (p) => p.key === "regional" ? "$1,000/día CR" : "$1,000 CR · $1,500 mundial"
+      }
+    ]
+  },
+  {
+    titulo: "Maternidad y Recién Nacido",
+    items: [
+      {
+        id: "parto_normal",
+        label: "Parto normal / aborto",
+        desc: "Gastos del parto vaginal o interrupción médica del embarazo. Período de espera: 13 meses desde el inicio de la póliza.",
+        val: (p) => p.key === "regional" ? "$3,000" : "$3,500"
+      },
+      {
+        id: "cesarea",
+        label: "Cesárea o parto múltiple",
+        desc: "Gastos del parto por cesárea o partos múltiples. Período de espera: 13 meses.",
+        val: (p) => p.key === "regional" ? "$3,500" : "$4,500",
+        hl: (p) => p.key !== "regional"
+      },
+      {
+        id: "complicaciones",
+        label: "Complicaciones del embarazo",
+        desc: "Complicaciones médicas graves durante el embarazo. Período de espera: 13 meses.",
+        val: (p) => p.key === "regional" ? "$1,000" : "$1,500",
+        hl: (p) => p.key !== "regional"
+      },
+      {
+        id: "prematurez",
+        label: "Prematurez (máx 20 sesiones)",
+        desc: "Atención del recién nacido prematuro o de bajo peso en unidad neonatal. Máximo 20 sesiones por condición.",
+        val: () => "$100,000"
+      },
+      {
+        id: "congenitas",
+        label: "Enfermedades congénitas",
+        desc: "Enfermedades presentes desde el nacimiento en hijos nacidos durante la vigencia de la póliza. Máximo 20 sesiones por condición.",
+        val: (p) => p.key === "regional" ? "$25,000" : "$50,000",
+        hl: (p) => p.key !== "regional"
+      }
+    ]
+  },
+  {
+    titulo: "Coberturas Especiales",
+    items: [
+      {
+        id: "trasplantes",
+        label: "Trasplantes de órganos",
+        desc: "Trasplante de órganos cubiertos: cirugía, donante, medicamentos antirechazo y seguimiento postrasplante. Período de espera: 24 meses.",
+        val: (p) => p.key === "regional" ? "$200,000" : "$500,000",
+        hl: (p) => p.key !== "regional"
+      },
+      {
+        id: "epidemias",
+        label: "Epidemias / pandemias",
+        desc: "Cobertura para enfermedades declaradas epidémicas o pandémicas. La ampliación (prima adicional) eleva el sublímite a $75K Regional / $200K Internacional y Grandes Deducibles.",
+        val: (p, ded, payload) => {
+          const amp = payload && payload.ampliacionEpidemias;
+          if (p.key === "regional") return amp ? "$75,000" : "$7,500";
+          return amp ? "$200,000" : "$15,000";
+        },
+        hl: (p) => p.key !== "regional"
+      },
+      {
+        id: "mental",
+        label: "Salud mental",
+        desc: "Consultas psiquiátricas, terapias y medicación bajo prescripción de psiquiatra o médico especialista. Incluye internamiento cuando sea necesario.",
+        val: () => "$1,000"
+      },
+      {
+        id: "deportes",
+        label: "Deportes de riesgo",
+        desc: "Lesiones por actividades deportivas no competitivas (recreativas o amateur). Fútbol competitivo en liga formal tiene su propia cobertura.",
+        val: () => "$10,000"
+      },
+      {
+        id: "viajero",
+        label: "Asistencia al viajero (por viaje)",
+        desc: "Asistencia médica y de emergencia fuera de Costa Rica por viaje: telemedicina, traslados, gestión de crisis. Límite por viaje por asegurado.",
+        val: () => "$10,000"
+      },
+      {
+        id: "aparatos",
+        label: "Aparatos de apoyo médico",
+        desc: "Sillas de ruedas, prótesis, órtesis y equipos médicos prescritos para la recuperación o rehabilitación del asegurado.",
+        val: () => "$10,000"
+      },
+      {
+        id: "futbol",
+        label: "Fútbol competitivo",
+        desc: "Fútbol practicado en liga formal o torneo organizado. No cubre cuando el deporte es la fuente principal de ingresos del asegurado.",
+        val: () => "$10,000"
+      }
+    ]
+  },
+  {
+    titulo: "Beneficios por Fallecimiento",
+    items: [
+      {
+        id: "fallecimiento",
+        label: "Beneficio por fallecimiento",
+        desc: "Indemnización pagada al beneficiario designado por fallecimiento del asegurado. Es adicional a los gastos médicos cubiertos.",
+        val: (p) => p.key === "regional" ? "$2,500" : "$5,000",
+        hl: (p) => p.key !== "regional"
+      },
+      {
+        id: "sepelio",
+        label: "Beneficio de sepelio",
+        desc: "Auxilio para gastos fúnebres pagado al beneficiario. Se paga adicionalmente al beneficio por fallecimiento.",
+        val: (p) => p.key === "regional" ? "$2,500" : "$5,000",
+        hl: (p) => p.key !== "regional"
+      },
+      {
+        id: "repatriacion",
+        label: "Repatriación de restos",
+        desc: "Traslado de los restos mortales al país de origen del asegurado. Regional: $100/día máximo 10 días. Internacional y Grandes Deducibles: hasta $5,000 total.",
+        val: (p) => p.key === "regional" ? "$100/día (10d)" : "$5,000",
+        hl: (p) => p.key !== "regional"
+      },
+      {
+        id: "exoneracion",
+        label: "Relajación de primas (titular fallece)",
+        desc: "Si el titular fallece, el INS exonera el pago de primas por 12 meses para que los dependientes continúen asegurados.",
+        val: () => "12 meses"
+      }
+    ]
+  }
+];
+
+// Períodos de espera (3 columnas en la vista cliente)
+const PERIODOS_ESPERA_COLS = [
+  {
+    titulo: "General",
+    items: [
+      { k: "CR y Centroamérica",   v: "30 días",   cls: "" },
+      { k: "Resto del mundo",      v: "60 días",   cls: "" },
+      { k: "Maternidad",           v: "13 meses",  cls: "long" },
+      { k: "Trasplantes",          v: "24 meses",  cls: "long" },
+      { k: "Accidentes",           v: "Sin espera", cls: "good" }
+    ]
+  },
+  {
+    titulo: "Condiciones de 10 meses",
+    items: [
+      { k: "Cataratas y glaucoma",                     v: "10 meses" },
+      { k: "Amígdalas, adenoides, septoplastia",       v: "10 meses" },
+      { k: "Enfermedades tiroideas",                   v: "10 meses" },
+      { k: "Cálculos biliares y vías biliares",        v: "10 meses" },
+      { k: "Cálculos vías urinarias",                  v: "10 meses" }
+    ]
+  },
+  {
+    titulo: "Condiciones de 10 meses (cont.)",
+    items: [
+      { k: "Enfermedades de próstata",                 v: "10 meses" },
+      { k: "Aparato genital femenino y mama",          v: "10 meses" },
+      { k: "Hemorroides y fisura anal",                v: "10 meses" },
+      { k: "Asma",                                     v: "10 meses" },
+      { k: "Hernias (todos los tipos)",                v: "10 meses" },
+      { k: "Enfermedades de rodilla",                  v: "10 meses" }
+    ]
+  }
+];
+
+// Documentos base para emisión (todos los asegurados)
+const DOCS_BASE = [
+  { id: "solicitud",      nombre: "Solicitud de Seguro INS Medical",   archivo: "docs/solicitud-ins-medical.pdf",     desc: "Formulario principal del titular y dependientes. Vigencia 60 días naturales." },
+  { id: "declaracion",    nombre: "Declaración de Salud",              archivo: "docs/declaracion-salud.pdf",          desc: "Declaración jurada de estado de salud. Una por cada asegurado mayor de edad." },
+  { id: "autorizacion",   nombre: "Autorización Consulta Expedientes", archivo: "docs/autorizacion-expedientes.pdf",   desc: "Permite al INS verificar información en CCSS y otras fuentes oficiales de salud." },
+  { id: "beneficios",     nombre: "Solicitud de Beneficios (reclamos)", archivo: "docs/solicitud-beneficios.pdf",      desc: "Para cuando necesite gestionar un reembolso de gastos médicos ante el INS." }
+];
+
+// Disparadores por edad (calcular_documentos)
+function calcularDocumentos(asegurados) {
+  const out = { base: DOCS_BASE.slice(), disparadores: [] };
+  // Edad 66-70 → Telesuscripción
+  const tele = asegurados.filter(a => a.edad >= 66 && a.edad <= 70);
+  if (tele.length) {
+    out.disparadores.push({
+      titulo: `Asegurados de 66 a 70 años`,
+      chip: `${tele.length} ${tele.length === 1 ? 'persona' : 'personas'}`,
+      items: [{
+        tipo: "aviso",
+        nombre: "Telesuscripción INS",
+        desc: "Entrevista telefónica coordinada por el INS con el asegurado. No requiere documento físico; su agente coordina la llamada una vez recibida la solicitud."
+      }]
+    });
+  }
+  // Edad 71+ → Batería de exámenes
+  const examenes = asegurados.filter(a => a.edad >= 71);
+  if (examenes.length) {
+    out.disparadores.push({
+      titulo: `Asegurados de 71 años o más`,
+      chip: `${examenes.length} ${examenes.length === 1 ? 'persona' : 'personas'}`,
+      items: [
+        { tipo: "pdf", nombre: "Boleta Examen Físico",     archivo: "docs/boleta-examen-fisico.pdf",   desc: "Examen médico presencial firmado por médico autorizado por el INS. Vigencia 90 días." },
+        { tipo: "pdf", nombre: "Boleta de Laboratorios",   archivo: "docs/boleta-laboratorios.pdf",     desc: "Perfil completo: glucosa, hemoglobina A1c, colesterol, creatinina, transaminasas. Vigencia 90 días." },
+        { tipo: "pdf", nombre: "Boleta Electrocardiograma", archivo: "docs/boleta-electrocardiograma.pdf", desc: "ECG de 12 derivaciones realizado en proveedor autorizado por el INS. Vigencia 90 días." }
+      ]
+    });
+  }
+  return out;
+}
+
+// Material informativo (PDFs descargables del producto)
+const DOCS_INFO = [
+  { nombre: "Condiciones Generales INS Medical",  archivo: "docs/condiciones-generales-ins-medical.pdf", desc: "Contrato base del seguro: definiciones, exclusiones, procedimientos y derechos del asegurado." },
+  { nombre: "Manual INS Medical",                  archivo: "docs/manual-ins-medical.pdf",                desc: "Guía completa del producto: cómo usar el seguro, red médica, autorización y reembolso." },
+  { nombre: "Medicina Virtual — Guía de uso",      archivo: "docs/medicina-virtual.pdf",                  desc: "Cómo acceder a consultas médicas por video 24/7. Sin costo ni deducible para el asegurado." },
+  { nombre: "Cobertura Cáncer",                    archivo: "docs/cobertura-cancer.pdf",                  desc: "Detalle de la cobertura complementaria de cáncer: diagnóstico, tratamientos y reclamo." },
+  { nombre: "Cobertura Enfermedades Graves",       archivo: "docs/cobertura-enfermedades-graves.pdf",     desc: "Amparo adicional para enfermedades de alto costo: infarto, ACV, insuficiencia renal." },
+  { nombre: "Odontología de Emergencia",           archivo: "docs/cobertura-odontologia-emergencia.pdf",  desc: "Alcance de la cobertura dental por accidente o emergencia." },
+  { nombre: "Procedimiento Grandes Deducibles",    archivo: "docs/procedimiento-grandes-deducibles.pdf",  desc: "Guía específica para asegurados con deducible alto: pago directo al hospital y acumulación." },
+  { nombre: "Formulario de Pre-Autorización",      archivo: "docs/formulario-preautorizacion.pdf",        desc: "Para cirugías y hospitalizaciones programadas. Enviar al INS con 3 días hábiles de anticipación." }
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════════════ */
+
+const ESTADO_INICIAL = {
+  cotizacionId: null,
+  fechaCreacion: null,
+  cliente: { nombre: "", cedula: "", telefono: "", email: "" },
+  asegurados: [],   // { id, nombre, edad, genero, parentesco }
+  productos: {
+    regional:           { sel: false, deducible: "1000" },
+    internacional:      { sel: false, deducible: "1000" },
+    grandes_deducibles: { sel: false, deducible: "5000" }
+  },
+  sinReduccion: false,        // Solo se ofrece si hay aseg ≥ 70
+  ampliacionEpidemias: false, // Ampliación cobertura epid/pand (sin = base; con = AMP $200K)
+  productosEnviar: { regional: true, internacional: true, grandes_deducibles: true },
+  planRecomendado: null
+};
+
+let state = clone(ESTADO_INICIAL);
+let agenteActual = null;
+let editingAsegId = null;
+let currentPaso = 1;
+let cli = { payload: null };
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILIDADES
+   ═══════════════════════════════════════════════════════════════ */
+
+function $(sel, root) { return (root || document).querySelector(sel); }
+function $$(sel, root) { return Array.from((root || document).querySelectorAll(sel)); }
+
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+function escapeHtml(s) {
+  if (s === null || s === undefined) return "";
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function escAttr(s) { return escapeHtml(s); }
+
+function _fmtMon(n) {
+  if (n === null || n === undefined || isNaN(n)) return "—";
+  return Math.round(n).toLocaleString("en-US");
+}
+
+function _fmtMon2(n) {
+  if (n === null || n === undefined || isNaN(n)) return "—";
+  return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function genCotId() {
+  // 5 dígitos basados en epoch + random
+  const t = Date.now().toString().slice(-5);
+  const r = Math.floor(Math.random() * 90 + 10);
+  return t.slice(0, 3) + r;
+}
+
+function uid() {
+  return Math.random().toString(36).slice(2, 9);
+}
+
+function iniciales(nombre) {
+  if (!nombre) return "??";
+  return nombre.trim().split(/\s+/).slice(0, 2).map(p => p[0] || "").join("").toUpperCase() || "??";
+}
+
+function fechaHoy() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function fechaLarga(iso) {
+  if (!iso) return "";
+  const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  const d = new Date(iso + "T00:00:00");
+  return `${d.getDate()} ${meses[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function parentescoLabel(p) {
+  return { titular: "Titular", conyuge: "Cónyuge", hijo: "Hijo/a", otro: "Otro" }[p] || "—";
+}
+
+// Base64 URL-safe encode/decode (sin padding) — compatible Vital 360
+function encodePayload(obj) {
+  const json = JSON.stringify(obj);
+  const b64 = btoa(unescape(encodeURIComponent(json)));
+  return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function decodePayload(s) {
+  let b64 = s.replace(/-/g, "+").replace(/_/g, "/");
+  while (b64.length % 4) b64 += "=";
+  try {
+    const json = decodeURIComponent(escape(atob(b64)));
+    return JSON.parse(json);
+  } catch (e) {
+    console.error("decodePayload fallo:", e);
+    return null;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOASTS
+   ═══════════════════════════════════════════════════════════════ */
+
+function toast(msg, type) {
+  type = type || "";
+  const wrap = $("#toast-wrap");
+  const el = document.createElement("div");
+  el.className = "toast " + type;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.transition = "opacity .2s";
+    el.style.opacity = "0";
+    setTimeout(() => el.remove(), 200);
+  }, 3200);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PREMIUM CALCULATOR
+   ═══════════════════════════════════════════════════════════════ */
+
+/**
+ * Devuelve la prima anual USD para un asegurado.
+ * @param {string} productoKey - 'regional' | 'internacional' | 'grandes_deducibles'
+ * @param {number} edad - 0..99 (>99 se trata como 99)
+ * @param {string} genero - 'F' | 'M'
+ * @param {string} deducible - '0'|'200'|...|'15000'
+ * @param {boolean} sinReduccion - si true usa tabla sin_reduccion (suma asegurada plena post-70)
+ * @returns {number|null} prima en USD o null si no hay tarifa
+ */
+function lookupPrima(productoKey, edad, genero, deducible, sinReduccion, ampliacionEpidemias) {
+  if (!window.PRIMAS) return null;
+  const verKey = ampliacionEpidemias ? "amp" : "base";
+  const ver = window.PRIMAS[verKey];
+  if (!ver) return null;
+  const prod = ver[productoKey];
+  if (!prod) return null;
+  const seccion = sinReduccion ? prod.sin_reduccion : prod.con_reduccion;
+  if (!seccion) return null;
+  const edadKey = String(Math.min(Math.max(edad | 0, 0), 99));
+  const row = seccion[edadKey];
+  if (!row) return null;
+  const dedRow = row[String(deducible)];
+  if (!dedRow) return null;
+  const prima = dedRow[genero];
+  return (typeof prima === "number") ? prima : null;
+}
+
+/**
+ * Prima con IVA aplicado (la prima del XLSX es sin IVA).
+ */
+function primaConIVA(primaSinIVA) {
+  if (primaSinIVA === null || primaSinIVA === undefined) return null;
+  return primaSinIVA * (1 + IVA_RATE);
+}
+
+/**
+ * Calcula la prima total familiar para un producto y deducible dados.
+ * @param {Array} asegurados - lista de asegurados con {edad, genero}
+ * @param {string} productoKey
+ * @param {string} deducible
+ * @param {boolean} sinReduccion
+ * @returns {{ total: number, porAseg: Array<{asegId, prima}>, faltantes: number }}
+ */
+function calcPrimaProducto(asegurados, productoKey, deducible, sinReduccion, ampliacionEpidemias) {
+  let totalSinIVA = 0;
+  let faltantes = 0;
+  const porAseg = asegurados.map(a => {
+    const primaSinIVA = lookupPrima(productoKey, a.edad, a.genero, deducible, sinReduccion, ampliacionEpidemias);
+    if (primaSinIVA === null || primaSinIVA === undefined) {
+      faltantes++;
+      return { asegId: a.id, primaSinIVA: null, primaConIVA: null };
+    }
+    totalSinIVA += primaSinIVA;
+    return { asegId: a.id, primaSinIVA, primaConIVA: primaConIVA(primaSinIVA) };
+  });
+  return {
+    totalSinIVA,
+    total: primaConIVA(totalSinIVA),  // por defecto el "total" es con IVA (lo que paga el cliente)
+    porAseg,
+    faltantes
+  };
+}
+
+/**
+ * Recargo por forma de pago.
+ */
+function calcRecargo(primaAnual, formaId) {
+  const fp = FORMAS_PAGO.find(f => f.id === formaId);
+  if (!fp) return primaAnual;
+  return Math.round(primaAnual * (1 + fp.recargo) / fp.divisor);
+}
+
+/**
+ * Determina si CON o SIN reducción aplica automáticamente.
+ * Por defecto: con_reduccion. El agente puede toggleear a sin_reduccion si hay aseg ≥70.
+ */
+function hayAsegMayor70(asegurados) {
+  return asegurados.some(a => a.edad >= 70);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VIEW ROUTING
+   ═══════════════════════════════════════════════════════════════ */
+
+function showView(view) {
+  $$("[data-view]").forEach(el => el.classList.remove("active"));
+  const target = $(`[data-view="${view}"]`);
+  if (target) target.classList.add("active");
+}
+
+function showPaso(p) {
+  currentPaso = p;
+  // Marcar tabs done/active según paso
+  $$(".step").forEach(s => {
+    const sp = s.dataset.step;
+    s.classList.remove("active", "done");
+    if (sp === String(p)) {
+      s.classList.add("active");
+    } else if (sp !== "hist" && !isNaN(sp) && parseInt(sp, 10) < (p === "hist" ? 0 : p)) {
+      s.classList.add("done");
+    }
+  });
+  // Mostrar sección correspondiente
+  $$(".paso").forEach(sec => sec.classList.remove("active"));
+  if (p === "hist") {
+    $(".paso-hist").classList.add("active");
+    renderHistorial();
+  } else {
+    const sec = $(`.paso-${p}`);
+    if (sec) sec.classList.add("active");
+    if (p === 2) renderPaso2();
+    if (p === 3) renderPaso3();
+  }
+  // Scroll arriba
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PASO 1: CLIENTE + ASEGURADOS
+   ═══════════════════════════════════════════════════════════════ */
+
+function bindCliForm() {
+  ["nombre", "cedula", "telefono", "email"].forEach(field => {
+    const inputId = field === "telefono" ? "cli-tel" : `cli-${field}`;
+    const el = $(`#${inputId}`);
+    if (!el) return;
+    el.value = state.cliente[field] || "";
+    el.addEventListener("input", () => {
+      state.cliente[field] = el.value.trim();
+      saveDraft();
+    });
+  });
+}
+
+function renderAsegList() {
+  const list = $("#aseg-list");
+  if (!state.asegurados.length) {
+    list.innerHTML = `<div class="aseg-empty">Aún no ha agregado asegurados. Haga clic en "Agregar asegurado" para empezar.</div>`;
+    return;
+  }
+  list.innerHTML = state.asegurados.map(a => `
+    <div class="aseg-item" data-aseg-id="${a.id}">
+      <div class="aseg-av">${escapeHtml(iniciales(a.nombre))}</div>
+      <div class="aseg-info">
+        <div class="aseg-name">${escapeHtml(a.nombre)}</div>
+        <div class="aseg-meta">
+          ${escapeHtml(parentescoLabel(a.parentesco))}
+          <span class="dot">·</span> ${a.edad} años
+          <span class="dot">·</span> ${a.genero === "F" ? "Femenino" : "Masculino"}
+        </div>
+      </div>
+      <div class="aseg-actions">
+        <button class="aseg-btn" data-act="edit" data-id="${a.id}">Editar</button>
+        <button class="aseg-btn danger" data-act="del" data-id="${a.id}">Eliminar</button>
+      </div>
+    </div>
+  `).join("");
+  // Bind actions
+  list.querySelectorAll(".aseg-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      const act = btn.dataset.act;
+      if (act === "edit") openAsegModal(id);
+      else if (act === "del") {
+        if (confirm("¿Eliminar este asegurado?")) {
+          state.asegurados = state.asegurados.filter(a => a.id !== id);
+          saveDraft();
+          renderAsegList();
+        }
+      }
+    });
+  });
+}
+
+function openAsegModal(asegId) {
+  editingAsegId = asegId || null;
+  const isEdit = !!asegId;
+  $("#aseg-modal-title").textContent = isEdit ? "Editar asegurado" : "Agregar asegurado";
+  $("#aseg-modal-del").style.display = isEdit ? "" : "none";
+  // Resetear / poblar
+  $("#aseg-nombre").value = "";
+  $("#aseg-edad").value = "";
+  $$('input[name="aseg-gen"]').forEach(r => r.checked = false);
+  $$('input[name="aseg-par"]').forEach(r => r.checked = false);
+  if (isEdit) {
+    const a = state.asegurados.find(x => x.id === asegId);
+    if (a) {
+      $("#aseg-nombre").value = a.nombre;
+      $("#aseg-edad").value = a.edad;
+      const gen = $(`input[name="aseg-gen"][value="${a.genero}"]`);
+      if (gen) gen.checked = true;
+      const par = $(`input[name="aseg-par"][value="${a.parentesco}"]`);
+      if (par) par.checked = true;
+    }
+  } else {
+    // Default titular si no hay nadie aún
+    if (!state.asegurados.length) {
+      const par = $('input[name="aseg-par"][value="titular"]');
+      if (par) par.checked = true;
+    } else {
+      const par = $('input[name="aseg-par"][value="hijo"]');
+      if (par) par.checked = true;
+    }
+  }
+  $("#aseg-modal").classList.add("open");
+  setTimeout(() => $("#aseg-nombre").focus(), 50);
+}
+
+function closeAsegModal() {
+  $("#aseg-modal").classList.remove("open");
+  editingAsegId = null;
+}
+
+function saveAseg() {
+  const nombre = $("#aseg-nombre").value.trim();
+  const edadStr = $("#aseg-edad").value.trim();
+  const genEl = $('input[name="aseg-gen"]:checked');
+  const parEl = $('input[name="aseg-par"]:checked');
+  // Validación
+  if (!nombre) { toast("Ingrese el nombre del asegurado", "error"); $("#aseg-nombre").focus(); return; }
+  const edad = parseInt(edadStr, 10);
+  if (isNaN(edad) || edad < 0 || edad > 99) { toast("Edad inválida (0–99)", "error"); $("#aseg-edad").focus(); return; }
+  if (!genEl) { toast("Seleccione género", "error"); return; }
+  if (!parEl) { toast("Seleccione parentesco", "error"); return; }
+  const data = { nombre, edad, genero: genEl.value, parentesco: parEl.value };
+  if (editingAsegId) {
+    const a = state.asegurados.find(x => x.id === editingAsegId);
+    if (a) Object.assign(a, data);
+  } else {
+    state.asegurados.push({ id: uid(), ...data });
+  }
+  saveDraft();
+  closeAsegModal();
+  renderAsegList();
+  toast(editingAsegId ? "Asegurado actualizado" : "Asegurado agregado", "success");
+}
+
+function deleteAsegFromModal() {
+  if (!editingAsegId) return;
+  if (!confirm("¿Eliminar este asegurado?")) return;
+  state.asegurados = state.asegurados.filter(a => a.id !== editingAsegId);
+  saveDraft();
+  closeAsegModal();
+  renderAsegList();
+}
+
+function validarPaso1() {
+  if (!state.cliente.nombre) { toast("Ingrese el nombre del cliente", "error"); $("#cli-nombre").focus(); return false; }
+  if (!state.cliente.telefono) { toast("Ingrese el teléfono del cliente", "error"); $("#cli-tel").focus(); return false; }
+  if (!state.cliente.email) { toast("Ingrese el correo del cliente", "error"); $("#cli-email").focus(); return false; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.cliente.email)) { toast("Correo inválido", "error"); $("#cli-email").focus(); return false; }
+  if (!state.asegurados.length) { toast("Agregue al menos un asegurado", "error"); return false; }
+  if (!state.cotizacionId) {
+    state.cotizacionId = genCotId();
+    state.fechaCreacion = fechaHoy();
+  }
+  return true;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PASO 2: PRODUCTOS
+   ═══════════════════════════════════════════════════════════════ */
+
+function renderPaso2() {
+  // Aseg bar (chips)
+  $("#aseg-bar").innerHTML = `
+    <span class="aseg-bar-lbl">Asegurados:</span>
+    ${state.asegurados.map(a => `
+      <div class="aseg-pill">
+        <div class="aseg-pill-av">${escapeHtml(iniciales(a.nombre))}</div>
+        <span class="aseg-pill-nm">${escapeHtml(a.nombre.split(/\s+/)[0])}</span>
+        <span class="aseg-pill-i">${a.edad}a · ${a.genero}</span>
+      </div>
+    `).join("")}
+  `;
+
+  // Amp toggle (siempre visible)
+  const ampBox = $(".opt-toggle");
+  if (ampBox) {
+    ampBox.querySelectorAll("[data-amp]").forEach(b => {
+      const want = (b.dataset.amp === "on");
+      b.classList.toggle("on", want === state.ampliacionEpidemias);
+      b.onclick = () => {
+        state.ampliacionEpidemias = (b.dataset.amp === "on");
+        saveDraft();
+        renderPaso2();
+      };
+    });
+  }
+
+  // Variant toggle (solo si hay aseg ≥ 70)
+  const variantBox = $("#variant-toggle");
+  if (hayAsegMayor70(state.asegurados)) {
+    variantBox.style.display = "";
+    variantBox.querySelectorAll("[data-variant]").forEach(b => {
+      const isSel = (b.dataset.variant === (state.sinReduccion ? "sin" : "con"));
+      b.classList.toggle("on", isSel);
+      b.onclick = () => {
+        state.sinReduccion = (b.dataset.variant === "sin");
+        saveDraft();
+        renderPaso2();
+      };
+    });
+  } else {
+    variantBox.style.display = "none";
+    state.sinReduccion = false;
+  }
+
+  // Product cards
+  const grid = $("#prods-grid");
+  grid.innerHTML = PRODUCTOS_ORDER.map(key => renderProductCard(key)).join("");
+
+  // Bind interactions
+  grid.querySelectorAll(".pc").forEach(card => {
+    const key = card.dataset.prod;
+    card.querySelector(".pc-top").addEventListener("click", () => {
+      state.productos[key].sel = !state.productos[key].sel;
+      saveDraft();
+      renderPaso2();
+    });
+    const sel = card.querySelector(".fld-sel");
+    sel.addEventListener("change", () => {
+      state.productos[key].deducible = sel.value;
+      saveDraft();
+      renderPaso2();
+    });
+  });
+}
+
+function renderProductCard(key) {
+  const prod = PRODUCTOS[key];
+  const sel = state.productos[key].sel;
+  const ded = state.productos[key].deducible;
+  const primas = calcPrimaProducto(state.asegurados, key, ded, state.sinReduccion, state.ampliacionEpidemias);
+  const classes = ["pc"];
+  if (sel) classes.push("sel");
+  if (prod.color_class) classes.push(prod.color_class);
+  const dedOptions = prod.deducibles.map(d =>
+    `<option value="${d}"${d === ded ? " selected" : ""}>${escapeHtml(DEDUCIBLE_LABELS[d])}</option>`
+  ).join("");
+  const primasRows = state.asegurados.map((a, i) => {
+    const p = primas.porAseg[i];
+    const primaStr = (p && p.primaConIVA !== null) ? "$" + _fmtMon(p.primaConIVA) : "—";
+    return `
+      <div class="pr-row">
+        <div>
+          <div class="pr-nm">${escapeHtml(a.nombre.split(/\s+/)[0])}</div>
+          <div class="pr-rel">${escapeHtml(parentescoLabel(a.parentesco))} · ${a.edad} años · ${a.genero}</div>
+        </div>
+        <div class="pr-amt">${primaStr}</div>
+      </div>`;
+  }).join("");
+  return `
+    <div class="${classes.join(" ")}" data-prod="${key}">
+      <div class="pc-bar"></div>
+      <div class="pc-hd">
+        <div class="pc-top">
+          <div class="pc-ck">✓</div>
+          <div>
+            <div class="pc-nm">${escapeHtml(prod.nombre)}</div>
+            <div class="pc-tg">${escapeHtml(prod.tagline)}</div>
+          </div>
+        </div>
+        <div class="pc-pill">Suma Asegurada $${_fmtMon(prod.suma_asegurada)} USD</div>
+      </div>
+      <div class="pc-bd">
+        <div class="fld-l">Deducible anual por persona</div>
+        <select class="fld-sel">${dedOptions}</select>
+      </div>
+      <div class="pc-primas">
+        <div class="fld-l">Prima anual por asegurado</div>
+        ${primasRows || '<div style="color:var(--ink-3);font-size:12px;padding:8px 0">Sin asegurados</div>'}
+      </div>
+      <div class="pc-tot">
+        <span class="tot-l">Prima familiar / año <span style="font-weight:400;color:var(--ink-3);font-size:10px;text-transform:none;letter-spacing:0">(con IVA)</span></span>
+        <span class="tot-n">$${_fmtMon(primas.total)}<span class="tot-c">USD</span></span>
+      </div>
+    </div>
+  `;
+}
+
+function validarPaso2() {
+  const algunoSel = PRODUCTOS_ORDER.some(k => state.productos[k].sel);
+  if (!algunoSel) { toast("Seleccione al menos un producto para cotizar", "error"); return false; }
+  // Sincronizar productosEnviar con sel
+  PRODUCTOS_ORDER.forEach(k => {
+    state.productosEnviar[k] = state.productos[k].sel;
+  });
+  return true;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PASO 3: ENVIAR
+   ═══════════════════════════════════════════════════════════════ */
+
+function renderPaso3() {
+  // Mostrar productos seleccionados con checkboxes para incluir
+  const sendBox = $("#send-prods");
+  const enviarKeys = PRODUCTOS_ORDER.filter(k => state.productos[k].sel);
+  sendBox.innerHTML = enviarKeys.map(key => {
+    const prod = PRODUCTOS[key];
+    const ded = state.productos[key].deducible;
+    const primas = calcPrimaProducto(state.asegurados, key, ded, state.sinReduccion, state.ampliacionEpidemias);
+    const checked = state.productosEnviar[key];
+    return `
+      <label class="send-prod ${prod.color_class}">
+        <input type="checkbox" data-prod="${key}" ${checked ? "checked" : ""} />
+        <span class="nm">${escapeHtml(prod.nombre)}</span>
+        <span class="pr">$${_fmtMon(primas.total)}</span>
+      </label>
+    `;
+  }).join("");
+  sendBox.querySelectorAll("input").forEach(ipt => {
+    ipt.addEventListener("change", () => {
+      state.productosEnviar[ipt.dataset.prod] = ipt.checked;
+      saveDraft();
+      renderPaso3();
+    });
+  });
+
+  // Recomendado select
+  const recSel = $("#send-rec");
+  recSel.innerHTML = `<option value="">Sin recomendación</option>` +
+    enviarKeys.filter(k => state.productosEnviar[k]).map(k =>
+      `<option value="${k}"${state.planRecomendado === k ? " selected" : ""}>${escapeHtml(PRODUCTOS[k].nombre)}</option>`
+    ).join("");
+  recSel.onchange = () => {
+    state.planRecomendado = recSel.value || null;
+    saveDraft();
+  };
+  if (state.planRecomendado && !state.productosEnviar[state.planRecomendado]) {
+    state.planRecomendado = null;
+    recSel.value = "";
+  }
+
+  // Link
+  refreshSendLink();
+}
+
+function refreshSendLink() {
+  const link = buildShareLink();
+  const linkBox = $("#send-link");
+  const tieneAlguno = PRODUCTOS_ORDER.some(k => state.productos[k].sel && state.productosEnviar[k]);
+  if (!tieneAlguno) {
+    linkBox.textContent = "Active al menos un producto para generar el enlace…";
+  } else {
+    linkBox.textContent = link;
+  }
+}
+
+function buildShareLink() {
+  const payload = buildClientPayload();
+  if (!payload) return "";
+  const enc = encodePayload(payload);
+  const base = window.location.href.split("?")[0].split("#")[0];
+  return `${base}?c=${enc}`;
+}
+
+function buildClientPayload() {
+  if (!state.cotizacionId) return null;
+  const ag = agenteActual || AGENTES["jhernandez@segurosdelins.com"];
+  const enviar = PRODUCTOS_ORDER.filter(k => state.productos[k].sel && state.productosEnviar[k]);
+  if (!enviar.length) return null;
+  // Para cada producto a enviar, capturar deducible + primas
+  const productos = {};
+  enviar.forEach(k => {
+    const ded = state.productos[k].deducible;
+    const primas = calcPrimaProducto(state.asegurados, k, ded, state.sinReduccion, state.ampliacionEpidemias);
+    productos[k] = {
+      deducible: ded,
+      primaTotal: primas.total,           // con IVA (lo que paga el cliente)
+      primaTotalSinIVA: primas.totalSinIVA,
+      primasPorAseg: primas.porAseg
+    };
+  });
+  return {
+    id: state.cotizacionId,
+    fecha: state.fechaCreacion || fechaHoy(),
+    cliente: state.cliente,
+    asegurados: state.asegurados,
+    productos,
+    sinReduccion: state.sinReduccion,
+    ampliacionEpidemias: state.ampliacionEpidemias,
+    planRecomendado: state.planRecomendado,
+    agente: {
+      nombre: ag.nombre,
+      whatsapp: ag.whatsapp,
+      email: ag.email,
+      codigo: ag.codigo,
+      licencia: ag.licencia
+    },
+    vigenciaDias: VIGENCIA_DIAS,
+    tarifasVersion: TARIFAS_VERSION
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CLIENT VIEW
+   ═══════════════════════════════════════════════════════════════ */
+
+function renderCliente(payload) {
+  cli.payload = payload;
+  const root = $("#cli-root");
+  const enviarKeys = Object.keys(payload.productos);
+  const nProds = enviarKeys.length;
+
+  root.innerHTML = `
+    ${renderCliHero(payload)}
+    ${renderCliPriceCards(payload, enviarKeys)}
+    ${renderCliCovTable(payload, enviarKeys)}
+    ${renderCliPayment(payload, enviarKeys)}
+    ${renderCliWaiting()}
+    ${renderCliDocs(payload)}
+    ${renderCliInfoDocs()}
+    ${renderCliCta(payload)}
+    ${renderCliDisclaimer(payload)}
+    ${renderCliFooter(payload)}
+  `;
+
+  // Set CSS var --cols dynamically for grid columns
+  document.documentElement.style.setProperty("--cols", nProds);
+
+  // Bind interactive tooltips (mobile tap)
+  root.querySelectorAll(".has-tip").forEach(el => {
+    el.addEventListener("click", (e) => {
+      // En mobile, tap toggle
+      $$(".has-tip.tipped").forEach(o => { if (o !== el) o.classList.remove("tipped"); });
+      el.classList.toggle("tipped");
+      e.stopPropagation();
+    });
+  });
+  document.addEventListener("click", () => $$(".has-tip.tipped").forEach(o => o.classList.remove("tipped")), { once: true, capture: true });
+}
+
+function renderCliHero(p) {
+  const cliNombre = (p.cliente.nombre || "").split(/\s+/).slice(0, 2).join(" ") || "estimado cliente";
+  const nProds = Object.keys(p.productos).length;
+  return `
+    <div class="cv-hero">
+      <div class="ins-topbar">
+        <div class="ins-topbar-l">
+          <img src="${LOGO_INS_URL}" alt="INS" class="ins-logo-img" />
+          <div class="ins-topbar-sep"></div>
+          <span class="ins-topbar-prod">INS Medical</span>
+          <div class="ins-topbar-sep"></div>
+          <span class="ins-topbar-agent">Cotización preparada por ${escapeHtml(p.agente.nombre)} · Agente INS · Cód. ${escapeHtml(p.agente.codigo || "—")}</span>
+        </div>
+        <div class="ins-topbar-r">N.º COT-${escapeHtml(p.id)} · ${escapeHtml(fechaLarga(p.fecha))} · vigencia ${p.vigenciaDias} días</div>
+      </div>
+      <div class="cv-hero-body">
+        <div class="cv-ey">Cotización INS Medical · ${escapeHtml(fechaLarga(p.fecha))}</div>
+        <div class="cv-ttl">Hola ${escapeHtml(cliNombre)},<br>su cotización está lista</div>
+        <div class="cv-sub">Comparamos ${nProds} ${nProds === 1 ? "plan" : "planes"} para ${p.asegurados.length} ${p.asegurados.length === 1 ? "asegurado" : "asegurados"} · Vigente ${p.vigenciaDias} días</div>
+        <div class="cv-chips">
+          ${p.asegurados.map(a => `<div class="cv-chip">${escapeHtml(a.nombre.split(/\s+/).slice(0, 2).join(" "))} · ${a.edad} años</div>`).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCliPriceCards(p, enviarKeys) {
+  const cards = enviarKeys.map(key => {
+    const prod = PRODUCTOS[key];
+    const productData = p.productos[key];
+    const ded = productData.deducible;
+    const total = productData.primaTotal;
+    const isRec = (p.planRecomendado === key);
+    const bestTag = isRec ? `<div class="best-tag">RECOMENDADO</div>` : "";
+    return `
+      <div class="price-card ${prod.color_class}">
+        ${bestTag}
+        <div class="price-card-nm">${escapeHtml(prod.nombre)}</div>
+        <div class="price-card-cov">${escapeHtml(prod.tagline)}</div>
+        <div class="price-card-ded">Ded. $${_fmtMon(parseInt(ded, 10))} por persona</div>
+        <div class="price-card-price">$${_fmtMon(total)}</div>
+        <div class="price-card-psub">USD / año · ${p.asegurados.length} ${p.asegurados.length === 1 ? "asegurado" : "asegurados"}</div>
+        <button class="price-card-cta" onclick="cliSolicitar('${escapeHtml(key)}')">Me interesa este plan</button>
+      </div>
+    `;
+  }).join("");
+  return `
+    <div class="cmp-wrap">
+      <div class="cmp-ttl">Resumen de planes</div>
+      <div class="cmp-sub">Compare las primas y elija el que más se ajuste a su familia. Los precios son anuales en USD.</div>
+      <div class="price-cards n-${enviarKeys.length}">${cards}</div>
+    </div>
+  `;
+}
+
+function renderCliCovTable(p, enviarKeys) {
+  const headerCols = enviarKeys.map(key => {
+    const prod = PRODUCTOS[key];
+    return `<div class="cov-hdr-nm">${escapeHtml(prod.nombre.replace(/^INS Medical /, ""))}</div>`;
+  }).join("");
+
+  const sectionsHtml = COBERTURAS_SECCIONES.map(sec => {
+    const sectionHeader = `<div class="cov-sec"><div class="cov-sec-lbl">${escapeHtml(sec.titulo)}</div></div>`;
+    const rowsHtml = sec.items.map(item => {
+      const cells = enviarKeys.map(key => {
+        const prod = PRODUCTOS[key];
+        const ded = p.productos[key].deducible;
+        const val = item.val(prod, ded, p);
+        let cellCls = "cc cc-val";
+        // Highlight si aplica
+        if (item.hl && item.hl(prod, ded)) {
+          if (key === "grandes_deducibles") cellCls += " gd-val";
+          else if (key === "regional") cellCls += " reg-val";
+          else cellCls += " hl";
+        }
+        // Si es deducible row y producto es GD, marcar como gd-val
+        if (item.clsForGd && key === "grandes_deducibles") cellCls += " gd-val";
+        // N/A para hab mundial en regional
+        if (item.naForRegional && key === "regional") cellCls += " na";
+        return `<div class="${cellCls}">${escapeHtml(val)}</div>`;
+      }).join("");
+      const tipHtml = `<span class="has-tip" data-tip="${escAttr(item.desc)}" tabindex="0">${escapeHtml(item.label)} <span class="tip-ico">i</span></span>`;
+      return `
+        <div class="cov-row">
+          <div class="cc cc-lbl">${tipHtml}</div>
+          ${cells}
+        </div>`;
+    }).join("");
+    return sectionHeader + rowsHtml;
+  }).join("");
+
+  return `
+    <div class="cmp-wrap" style="padding-top:0">
+      <div class="cov-wrap">
+        <div class="cov-hdr">
+          <div class="cov-hdr-lbl">Cobertura</div>
+          ${headerCols}
+        </div>
+        ${sectionsHtml}
+      </div>
+    </div>
+  `;
+}
+
+function renderCliPayment(p, enviarKeys) {
+  const cards = FORMAS_PAGO.map(fp => {
+    const recCls = fp.recomendado ? "rec" : "";
+    const recTag = fp.recomendado ? `<div class="pay-rec-tag">RECOMENDADO</div>` : "";
+    const rows = enviarKeys.map(key => {
+      const prod = PRODUCTOS[key];
+      const total = p.productos[key].primaTotal;
+      const cuota = calcRecargo(total, fp.id);
+      const label = fp.id === "anual" ? "Total" : "Cada pago";
+      return `
+        <div class="pay-row">
+          <span class="pay-prd">${escapeHtml(prod.nombre.replace(/^INS Medical /, "").replace("Grandes Deducibles", "Grandes Ded."))}</span>
+          <span class="pay-amt">$${_fmtMon(cuota)}</span>
+        </div>
+      `;
+    }).join("");
+    return `
+      <div class="pay-card ${recCls}">
+        ${recTag}
+        <div class="pay-frm">${escapeHtml(fp.label)}</div>
+        <div class="pay-rcg">${escapeHtml(fp.nota)}</div>
+        <div class="pay-rows">${rows}</div>
+      </div>
+    `;
+  }).join("");
+  return `
+    <div class="pay-wrap">
+      <div class="pay-hdr">Opciones de pago</div>
+      <div class="pay-sub">El INS permite pagar en una sola cuota anual (sin recargo) o en cuotas semestral/trimestral (con recargo porcentual).</div>
+      <div class="pay-grid">${cards}</div>
+    </div>
+  `;
+}
+
+function renderCliWaiting() {
+  const cols = PERIODOS_ESPERA_COLS.map(col => `
+    <div class="wait-col">
+      <div class="wait-col-title">${escapeHtml(col.titulo)}</div>
+      ${col.items.map(it => `
+        <div class="wait-row">
+          <span class="wait-k">${escapeHtml(it.k)}</span>
+          <span class="wait-v ${it.cls || ""}">${escapeHtml(it.v)}</span>
+        </div>
+      `).join("")}
+    </div>
+  `).join("");
+  return `
+    <div class="wait-wrap">
+      <div class="wait-box">
+        <div class="wait-hd">
+          <h3>Períodos de espera</h3>
+          <p>Tiempo que debe transcurrir desde el inicio de la póliza antes de que una cobertura específica entre en vigor. Los accidentes no tienen período de espera.</p>
+        </div>
+        <div class="wait-grid">${cols}</div>
+        <div class="wait-note"><strong>Nota:</strong> Los períodos de espera de 10 meses aplican aunque la causa sea un accidente o emergencia. Las preexistencias no declaradas no están cubiertas.</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCliDocs(p) {
+  const docs = calcularDocumentos(p.asegurados);
+  const baseHtml = docs.base.map(d => `
+    <div class="doc-item">
+      <div class="doc-icon"></div>
+      <div class="doc-info">
+        <div class="doc-nm">${escapeHtml(d.nombre)}</div>
+        <div class="doc-desc">${escapeHtml(d.desc)}</div>
+      </div>
+      <a class="doc-dl" href="${escAttr(d.archivo)}" download title="Descargar PDF">↓</a>
+    </div>
+  `).join("");
+
+  const dispsHtml = docs.disparadores.map(d => {
+    const items = d.items.map(it => {
+      if (it.tipo === "aviso") {
+        return `
+          <div class="doc-item" style="grid-column:span 2;background:var(--blue-pale);border-color:var(--blue-light)">
+            <div class="doc-icon aviso">📞</div>
+            <div class="doc-info">
+              <div class="doc-nm">${escapeHtml(it.nombre)}</div>
+              <div class="doc-desc">${escapeHtml(it.desc)}</div>
+            </div>
+          </div>`;
+      }
+      return `
+        <div class="doc-item">
+          <div class="doc-icon"></div>
+          <div class="doc-info">
+            <div class="doc-nm">${escapeHtml(it.nombre)}</div>
+            <div class="doc-desc">${escapeHtml(it.desc)}</div>
+          </div>
+          <a class="doc-dl" href="${escAttr(it.archivo)}" download title="Descargar PDF">↓</a>
+        </div>`;
+    }).join("");
+    return `
+      <div class="docs-sec">
+        <div class="docs-sec-lbl"><span class="docs-pin cond"></span>${escapeHtml(d.titulo)} <span class="docs-trigger-chip">${escapeHtml(d.chip)}</span></div>
+        <div class="docs-list">${items}</div>
+      </div>`;
+  }).join("");
+
+  return `
+    <div class="docs-wrap">
+      <div class="docs-box">
+        <div class="docs-hd">
+          <h3>Documentos para <em>iniciar el aseguramiento</em></h3>
+          <p>Cuando decida proceder con cualquiera de los planes cotizados, estos son los formularios que necesitamos completar. <strong>Su agente le acompaña en todo el proceso.</strong></p>
+        </div>
+        <div class="docs-body">
+          <div class="docs-sec">
+            <div class="docs-sec-lbl"><span class="docs-pin base"></span>Para todos los asegurados · ${docs.base.length} documentos base</div>
+            <div class="docs-list">${baseHtml}</div>
+          </div>
+          ${dispsHtml}
+          <div class="docs-note">
+            <strong>Nota sobre cuestionarios médicos adicionales</strong>
+            Si al llenar la Declaración de Salud algún asegurado indica condiciones previas (hipertensión, diabetes, cardiopatías, etc.), el INS puede solicitar cuestionarios específicos adicionales. Su agente le indicará cuáles corresponden según las respuestas. Las pruebas tienen vigencia de 90 días naturales.
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCliInfoDocs() {
+  const items = DOCS_INFO.map(d => `
+    <div class="doc-item">
+      <div class="doc-icon"></div>
+      <div class="doc-info">
+        <div class="doc-nm">${escapeHtml(d.nombre)}</div>
+        <div class="doc-desc">${escapeHtml(d.desc)}</div>
+      </div>
+      <a class="doc-dl" href="${escAttr(d.archivo)}" download title="Descargar PDF">↓</a>
+    </div>
+  `).join("");
+  return `
+    <div class="docs-wrap">
+      <div class="docs-box">
+        <div class="docs-hd">
+          <h3>Material informativo del <em>producto</em></h3>
+          <p>Documentos oficiales del INS para que conozca en detalle las condiciones, coberturas y procedimientos de su seguro.</p>
+        </div>
+        <div class="docs-body">
+          <div class="docs-list">${items}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCliCta(p) {
+  const wa = (p.agente.whatsapp || "").replace(/[^\d]/g, "");
+  const waLink = `https://wa.me/506${wa}?text=` + encodeURIComponent(`Hola ${p.agente.nombre.split(/\s+/)[0]}, vi la cotización INS Medical N.º COT-${p.id} y quiero más información.`);
+  return `
+    <div class="cta-strip">
+      <div class="cta-title">¿Tiene preguntas? Contácteme</div>
+      <div class="cta-sub">${escapeHtml(p.agente.nombre)} · Agente Autorizado INS · Cód. ${escapeHtml(p.agente.codigo || "—")}</div>
+      <div class="cta-btns">
+        <a class="cta-btn cta-wa" href="${escAttr(waLink)}" target="_blank">📱 WhatsApp ${escapeHtml(p.agente.whatsapp)}</a>
+        <a class="cta-btn cta-pri" href="mailto:${escAttr(p.agente.email)}?subject=${encodeURIComponent('Cotización INS Medical COT-' + p.id)}">✉ ${escapeHtml(p.agente.email)}</a>
+      </div>
+    </div>
+  `;
+}
+
+function renderCliDisclaimer(p) {
+  return `
+    <div class="fine-wrap">
+      <div class="fine">
+        <strong>Información importante.</strong> Esta cotización es de carácter informativo y se basa en las tarifas oficiales del Instituto Nacional de Seguros vigentes a la fecha indicada. Mantiene vigencia por ${p.vigenciaDias} días naturales. Las primas mostradas <strong>incluyen el impuesto al valor agregado (IVA 2 %, tarifa especial para seguros de personas, Ley 9635 de Costa Rica)</strong>. ${p.ampliacionEpidemias ? 'Esta cotización incluye la <strong>ampliación de la cobertura de epidemias y pandemias</strong> (prima adicional aplicada).' : 'Esta cotización NO incluye la ampliación de la cobertura de epidemias y pandemias (cobertura base).'} La aceptación final del riesgo y la emisión de la póliza corresponden al INS conforme a la Ley Reguladora del Contrato de Seguros y al producto registrado bajo norma SUGESE P16-35-A01-113.
+      </div>
+    </div>
+  `;
+}
+
+function renderCliFooter(p) {
+  return `
+    <div class="sdi-foot-wrap">
+      <div class="sdi-foot">
+        <div class="sdi-mark">
+          <span class="sdi-word">Seguros Digitales</span>
+          <span class="sdi-bars"><i></i><i></i><i></i></span>
+        </div>
+        <p class="sdi-line">Esta cotización pertenece a <strong>Seguros Digitales SDI<sup>®</sup></strong></p>
+        <p class="sdi-line sub">Agente ${escapeHtml(p.agente.nombre)} · Lic. SUGESE ${escapeHtml(p.agente.licencia || "08-1318")} · Cód. ${escapeHtml(p.agente.codigo || "—")} · ${escapeHtml(p.agente.whatsapp || "")} · ${escapeHtml(p.agente.email || "")}</p>
+        <p class="sdi-line sub">© 2026 Propiedad intelectual de ${escapeHtml(p.agente.nombre)}</p>
+      </div>
+    </div>
+  `;
+}
+
+// Click en "Me interesa este plan" desde la vista cliente — abre WhatsApp con mensaje pre-redactado
+window.cliSolicitar = function(prodKey) {
+  const p = cli.payload;
+  if (!p) return;
+  const prod = PRODUCTOS[prodKey];
+  const wa = (p.agente.whatsapp || "").replace(/[^\d]/g, "");
+  const ded = p.productos[prodKey].deducible;
+  const total = p.productos[prodKey].primaTotal;
+  const msg = `Hola ${p.agente.nombre.split(/\s+/)[0]}, vi la cotización INS Medical N.º COT-${p.id} y me interesa el plan ${prod.nombre} (deducible $${_fmtMon(parseInt(ded, 10))}, prima anual $${_fmtMon(total)} USD). ¿Cómo procedemos?`;
+  const url = `https://wa.me/506${wa}?text=` + encodeURIComponent(msg);
+  window.open(url, "_blank");
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   EMAIL TEMPLATE
+   ═══════════════════════════════════════════════════════════════ */
+
+function buildEmailHTML(payload, link) {
+  const p = payload;
+  const cliNombre = (p.cliente.nombre || "").split(/\s+/).slice(0, 2).join(" ") || "estimado/a";
+  const nProds = Object.keys(p.productos).length;
+  const productosOrden = PRODUCTOS_ORDER.filter(k => p.productos[k]);
+
+  // Cards de cada producto
+  const productCards = productosOrden.map(key => {
+    const prod = PRODUCTOS[key];
+    const data = p.productos[key];
+    const ded = data.deducible;
+    const total = data.primaTotal;
+    const isRec = (p.planRecomendado === key);
+    const accentColor = key === "regional" ? "#5B91D0" : key === "grandes_deducibles" ? "#059669" : "#2563EB";
+    const accentLight = key === "regional" ? "#E0EFFA" : key === "grandes_deducibles" ? "#D1FAE5" : "#DBEAFE";
+    const accentDark  = key === "regional" ? "#2E6FA8" : key === "grandes_deducibles" ? "#047857" : "#1E3A8A";
+    const recBadge = isRec
+      ? `<tr><td style="padding:0 0 10px;"><span style="background:#059669;color:#fff;font-size:10px;font-weight:700;padding:2px 10px;border-radius:100px;letter-spacing:.3px;text-transform:uppercase;">★ Recomendado por su agente</span></td></tr>`
+      : "";
+    return `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:14px;border:1.5px solid #E2E8F0;border-radius:14px;overflow:hidden;background:#fff;">
+      <tr><td style="height:3px;background:${accentColor};"></td></tr>
+      <tr><td style="padding:18px 22px 14px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+          ${recBadge}
+          <tr><td style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:16px;font-weight:700;color:#1E293B;letter-spacing:-.2px;">${escapeHtml(prod.nombre)}</td></tr>
+          <tr><td style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:#64748B;padding-top:2px;">${escapeHtml(prod.tagline)} · Suma Asegurada $${_fmtMon(prod.suma_asegurada)} USD</td></tr>
+          <tr><td style="padding-top:8px;">
+            <span style="display:inline-block;background:${accentLight};color:${accentDark};font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;">Deducible $${_fmtMon(parseInt(ded, 10))}/persona</span>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding:14px 22px;background:${accentLight};border-top:1.5px solid ${accentColor}33;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr>
+            <td style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:${accentDark};">Prima familiar / año</td>
+            <td align="right" style="font-family:'Courier New',monospace;font-size:22px;font-weight:700;color:${accentDark};">$${_fmtMon(total)} <span style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:11px;color:#64748B;font-weight:500;">USD</span></td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+    `;
+  }).join("");
+
+  return `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#F8FAFC;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;color:#1E293B;-webkit-text-size-adjust:100%;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F8FAFC;">
+  <tr><td align="center" style="padding:24px 16px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;width:100%;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(30,58,138,.08);">
+
+      <!-- HEADER (gradient azul + logo INS) -->
+      <tr><td style="background:linear-gradient(135deg,#1E3A8A 0%,#2563EB 100%);padding:28px 28px 24px;text-align:center;">
+        <img src="${LOGO_INS_URL}" alt="INS" height="36" style="display:inline-block;height:36px;filter:brightness(0) invert(1);margin-bottom:10px;" />
+        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:18px;font-weight:700;color:#fff;letter-spacing:-.3px;">INS Medical</div>
+        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:rgba(255,255,255,.6);margin-top:4px;">Cotización N.º COT-${escapeHtml(p.id)} · ${escapeHtml(fechaLarga(p.fecha))}</div>
+      </td></tr>
+
+      <!-- GREETING -->
+      <tr><td style="padding:28px 28px 18px;">
+        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:24px;font-weight:800;color:#1E293B;letter-spacing:-.4px;line-height:1.2;">Hola ${escapeHtml(cliNombre)},</div>
+        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:14.5px;color:#334155;margin-top:10px;line-height:1.6;">Le preparé esta cotización <strong>INS Medical</strong> pensando en su familia: <strong>${p.asegurados.length} ${p.asegurados.length === 1 ? "asegurado" : "asegurados"}</strong> con <strong>${nProds} ${nProds === 1 ? "opción" : "opciones"}</strong> para que pueda comparar.</div>
+      </td></tr>
+
+      <!-- CTA -->
+      <tr><td style="padding:6px 28px 22px;" align="center">
+        <a href="${escAttr(link)}" style="display:inline-block;background:#2563EB;color:#fff;padding:14px 30px;border-radius:10px;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;text-decoration:none;letter-spacing:.3px;">VER COTIZACIÓN COMPLETA →</a>
+      </td></tr>
+
+      <!-- ASEGURADOS list -->
+      <tr><td style="padding:0 28px 18px;">
+        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748B;margin-bottom:8px;">Asegurados incluidos</div>
+        <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:14px 16px;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:13px;color:#334155;line-height:1.7;">
+          ${p.asegurados.map(a => `<div>• <strong>${escapeHtml(a.nombre)}</strong> · ${escapeHtml(parentescoLabel(a.parentesco))} · ${a.edad} años · ${a.genero === "F" ? "Femenino" : "Masculino"}</div>`).join("")}
+        </div>
+      </td></tr>
+
+      <!-- PRODUCTOS -->
+      <tr><td style="padding:0 28px 8px;">
+        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:13px;font-weight:700;color:#1E293B;margin-bottom:12px;">Resumen de planes cotizados</div>
+        ${productCards}
+      </td></tr>
+
+      <!-- INCLUYE -->
+      <tr><td style="padding:14px 28px 24px;">
+        <div style="background:#EFF6FF;border:1px solid #DBEAFE;border-radius:10px;padding:16px 18px;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:13px;color:#1E3A8A;line-height:1.7;">
+          <div style="font-weight:700;color:#1E3A8A;margin-bottom:6px;">En la cotización completa encontrará</div>
+          <div>• Comparativo detallado de coberturas con explicación de cada una</div>
+          <div>• Opciones de pago: anual, semestral, trimestral</div>
+          <div>• Períodos de espera y condiciones generales</div>
+          <div>• Documentos necesarios para iniciar el aseguramiento</div>
+          <div>• Material informativo oficial del INS</div>
+        </div>
+      </td></tr>
+
+      <!-- AGENT SIGNATURE -->
+      <tr><td style="padding:0 28px 22px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid #E2E8F0;padding-top:18px;">
+          <tr>
+            <td style="vertical-align:top;width:50px;">
+              <div style="width:42px;height:42px;border-radius:50%;background:#1E3A8A;color:#fff;text-align:center;line-height:42px;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;">${escapeHtml(iniciales(p.agente.nombre))}</div>
+            </td>
+            <td style="vertical-align:top;padding-left:12px;">
+              <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;color:#1E293B;">${escapeHtml(p.agente.nombre)}</div>
+              <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:#64748B;margin-top:2px;">Agente Autorizado INS · Cód. ${escapeHtml(p.agente.codigo || "—")}</div>
+              <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:#64748B;margin-top:4px;">📱 ${escapeHtml(p.agente.whatsapp || "")} · ✉ ${escapeHtml(p.agente.email || "")}</div>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+
+      <!-- FOOTER SDI -->
+      <tr><td style="background:#1E3A8A;padding:24px 28px;text-align:center;">
+        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:-.3px;margin-bottom:10px;">Seguros Digitales</div>
+        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:#93C5FD;line-height:1.6;">Esta cotización pertenece a <strong style="color:#fff;font-weight:600;">Seguros Digitales SDI<sup>®</sup></strong></div>
+        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:11px;color:#60A5FA;line-height:1.55;margin-top:6px;">Lic. SUGESE ${escapeHtml(p.agente.licencia || "08-1318")} · © 2026 Propiedad intelectual de ${escapeHtml(p.agente.nombre)}</div>
+        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:10.5px;color:#60A5FA;font-style:italic;line-height:1.55;margin-top:14px;">Cotización informativa basada en tarifas oficiales del INS vigentes a la fecha. Vigencia ${p.vigenciaDias} días. Producto registrado bajo norma SUGESE P16-35-A01-113. Las primas no incluyen IVA (2%, Ley 9635).</div>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GMAIL API
+   ═══════════════════════════════════════════════════════════════ */
+
+let _gmailAccessToken = null;
+let _gmailTokenClient = null;
+let _gmailTokenExp = 0;
+
+function initGmailTokenClient() {
+  if (_gmailTokenClient) return;
+  if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
+    console.warn("Google Identity Services aún no cargada");
+    return;
+  }
+  _gmailTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: "https://www.googleapis.com/auth/gmail.send",
+    callback: (resp) => {
+      if (resp.error) {
+        console.error("Token error:", resp);
+        toast("Error obteniendo permiso de Gmail: " + resp.error, "error");
+        return;
+      }
+      _gmailAccessToken = resp.access_token;
+      _gmailTokenExp = Date.now() + ((resp.expires_in || 3600) - 60) * 1000;
+      if (_pendingSend) {
+        const fn = _pendingSend;
+        _pendingSend = null;
+        fn();
+      }
+    }
+  });
+}
+
+let _pendingSend = null;
+function ensureGmailToken(callbackAfter) {
+  initGmailTokenClient();
+  if (_gmailAccessToken && Date.now() < _gmailTokenExp) {
+    callbackAfter();
+    return;
+  }
+  _pendingSend = callbackAfter;
+  if (!_gmailTokenClient) {
+    toast("Google Identity no disponible. Recargue la página.", "error");
+    return;
+  }
+  _gmailTokenClient.requestAccessToken({ prompt: "" });
+}
+
+function clearGmailToken() {
+  _gmailAccessToken = null;
+  _gmailTokenExp = 0;
+}
+
+function _base64UrlEncode(s) {
+  return btoa(unescape(encodeURIComponent(s)))
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function _encodeRFC2047(s) {
+  // Solo si tiene caracteres no-ASCII
+  if (/^[\x00-\x7F]*$/.test(s)) return s;
+  const b64 = btoa(unescape(encodeURIComponent(s)));
+  return `=?UTF-8?B?${b64}?=`;
+}
+
+function buildMime({ to, from, subject, html }) {
+  const boundary = "----=_NextPart_" + Math.random().toString(36).slice(2);
+  const lines = [
+    `From: ${from}`,
+    `To: ${to}`,
+    `Subject: ${_encodeRFC2047(subject)}`,
+    "MIME-Version: 1.0",
+    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+    "",
+    `--${boundary}`,
+    "Content-Type: text/html; charset=\"UTF-8\"",
+    "Content-Transfer-Encoding: base64",
+    "",
+    btoa(unescape(encodeURIComponent(html))).match(/.{1,76}/g).join("\r\n"),
+    "",
+    `--${boundary}--`
+  ];
+  return lines.join("\r\n");
+}
+
+function sendEmailViaGmail({ to, subject, html }, onSuccess, onError) {
+  ensureGmailToken(() => {
+    const from = agenteActual ? `${agenteActual.nombre} <${agenteActual.email}>` : "Cotizador INS Medical";
+    const mime = buildMime({ to, from, subject, html });
+    const raw = _base64UrlEncode(mime);
+    fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + _gmailAccessToken,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ raw })
+    })
+    .then(r => {
+      if (!r.ok) {
+        return r.text().then(t => { throw new Error(`HTTP ${r.status}: ${t}`); });
+      }
+      return r.json();
+    })
+    .then(data => {
+      console.log("Gmail OK:", data.id);
+      if (onSuccess) onSuccess(data);
+    })
+    .catch(err => {
+      console.error("Gmail send failed:", err);
+      if (onError) onError(err);
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   OAUTH / LOGIN
+   ═══════════════════════════════════════════════════════════════ */
+
+let _signInClient = null;
+
+function initSignIn() {
+  if (!window.google || !window.google.accounts) {
+    setTimeout(initSignIn, 200);
+    return;
+  }
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: onSignInCredential,
+    auto_select: false,
+    cancel_on_tap_outside: true
+  });
+  // Render token client too
+  initGmailTokenClient();
+}
+
+function onSignInCredential(resp) {
+  if (!resp || !resp.credential) {
+    toast("Error en la autenticación", "error");
+    return;
+  }
+  // Decodificar JWT (claim "email")
+  const payload = parseJwt(resp.credential);
+  const email = payload && payload.email;
+  if (!email) {
+    toast("No se pudo obtener el correo", "error");
+    return;
+  }
+  const ag = AGENTES[email.toLowerCase()];
+  if (!ag) {
+    $("#bloq-email").textContent = email;
+    showView("bloqueado");
+    return;
+  }
+  agenteActual = ag;
+  try { localStorage.setItem("insmedical.agente", email.toLowerCase()); } catch (e) {}
+  $("#hdr-agent-email").textContent = email;
+  showView("agente");
+  showPaso(1);
+  bindCliForm();
+  renderAsegList();
+  toast("Bienvenido, " + ag.nombre.split(/\s+/)[0], "success");
+}
+
+function parseJwt(token) {
+  try {
+    const parts = token.split(".");
+    const payload = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(decodeURIComponent(atob(payload).split("").map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)).join("")));
+  } catch (e) { return null; }
+}
+
+function triggerSignInPopup() {
+  if (!window.google || !window.google.accounts) {
+    toast("Google Identity Services aún cargando, reintente…", "error");
+    return;
+  }
+  // Usamos el popup con OAuth2 access flow para obtener directamente el email vía userinfo
+  // Más simple: usar prompt() con ID Token
+  google.accounts.id.prompt((notification) => {
+    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+      // Fallback: render botón en su sitio o re-trigger
+      console.warn("One-tap no disponible:", notification.getNotDisplayedReason ? notification.getNotDisplayedReason() : notification.getSkippedReason());
+      // Forzar un flow manual: pedir token y obtener email vía userinfo
+      manualSignInFallback();
+    }
+  });
+}
+
+function manualSignInFallback() {
+  // Usar OAuth2 access token y luego userinfo
+  if (!_gmailTokenClient) initGmailTokenClient();
+  // Crear un client temporal para openid email scope
+  const tempClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: "openid email profile https://www.googleapis.com/auth/gmail.send",
+    callback: (resp) => {
+      if (resp.error) {
+        toast("Error: " + resp.error, "error");
+        return;
+      }
+      // Guardar token Gmail
+      _gmailAccessToken = resp.access_token;
+      _gmailTokenExp = Date.now() + ((resp.expires_in || 3600) - 60) * 1000;
+      // Obtener email vía userinfo
+      fetch("https://openidconnect.googleapis.com/v1/userinfo", {
+        headers: { "Authorization": "Bearer " + resp.access_token }
+      }).then(r => r.json()).then(info => {
+        const email = (info.email || "").toLowerCase();
+        if (!email) { toast("No se pudo obtener el correo", "error"); return; }
+        const ag = AGENTES[email];
+        if (!ag) {
+          $("#bloq-email").textContent = email;
+          showView("bloqueado");
+          return;
+        }
+        agenteActual = ag;
+        try { localStorage.setItem("insmedical.agente", email); } catch (e) {}
+        $("#hdr-agent-email").textContent = email;
+        showView("agente");
+        showPaso(1);
+        bindCliForm();
+        renderAsegList();
+        toast("Bienvenido, " + ag.nombre.split(/\s+/)[0], "success");
+      }).catch(err => {
+        console.error("userinfo err:", err);
+        toast("Error verificando usuario", "error");
+      });
+    }
+  });
+  tempClient.requestAccessToken({ prompt: "consent" });
+}
+
+function logout() {
+  agenteActual = null;
+  clearGmailToken();
+  try {
+    localStorage.removeItem("insmedical.agente");
+  } catch (e) {}
+  showView("login");
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LOCALSTORAGE — DRAFT + HISTORY
+   ═══════════════════════════════════════════════════════════════ */
+
+const LS_DRAFT = "insmedical.borrador";
+const LS_HIST  = "insmedical.historial";
+
+function saveDraft() {
+  if (!agenteActual) return;
+  try {
+    const key = `${LS_DRAFT}.${agenteActual.email.toLowerCase()}`;
+    localStorage.setItem(key, JSON.stringify(state));
+  } catch (e) { console.warn("saveDraft fail:", e); }
+}
+
+function loadDraft() {
+  if (!agenteActual) return false;
+  try {
+    const key = `${LS_DRAFT}.${agenteActual.email.toLowerCase()}`;
+    const raw = localStorage.getItem(key);
+    if (!raw) return false;
+    const obj = JSON.parse(raw);
+    Object.assign(state, obj);
+    return true;
+  } catch (e) { console.warn("loadDraft fail:", e); return false; }
+}
+
+function clearDraft() {
+  if (!agenteActual) return;
+  try {
+    const key = `${LS_DRAFT}.${agenteActual.email.toLowerCase()}`;
+    localStorage.removeItem(key);
+  } catch (e) {}
+}
+
+function loadHistorial() {
+  if (!agenteActual) return [];
+  try {
+    const key = `${LS_HIST}.${agenteActual.email.toLowerCase()}`;
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+
+function saveHistorial(arr) {
+  if (!agenteActual) return;
+  try {
+    const key = `${LS_HIST}.${agenteActual.email.toLowerCase()}`;
+    localStorage.setItem(key, JSON.stringify(arr));
+  } catch (e) { console.warn("saveHistorial fail:", e); }
+}
+
+function persistCurrentCot(linkOverride) {
+  if (!state.cotizacionId) return;
+  const payload = buildClientPayload();
+  if (!payload) return;
+  const link = linkOverride || buildShareLink();
+  const hist = loadHistorial();
+  const existing = hist.find(h => h.id === state.cotizacionId);
+  const record = {
+    id: state.cotizacionId,
+    fecha: state.fechaCreacion,
+    cliente: state.cliente.nombre,
+    asegurados: state.asegurados.length,
+    productos: Object.keys(payload.productos),
+    primaMin: Math.min(...Object.values(payload.productos).map(p => p.primaTotal)),
+    primaMax: Math.max(...Object.values(payload.productos).map(p => p.primaTotal)),
+    estado: existing ? existing.estado : "pendiente",
+    link,
+    updatedAt: new Date().toISOString()
+  };
+  if (existing) Object.assign(existing, record);
+  else hist.unshift(record);
+  saveHistorial(hist);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HISTORIAL VIEW
+   ═══════════════════════════════════════════════════════════════ */
+
+function renderHistorial() {
+  const list = $("#hist-list");
+  const hist = loadHistorial();
+  if (!hist.length) {
+    list.innerHTML = `<div class="hist-empty">No hay cotizaciones guardadas. Cuando finalice una cotización, aparecerá aquí.</div>`;
+    return;
+  }
+  list.innerHTML = hist.map(h => {
+    const prodNames = h.productos.map(k => PRODUCTOS[k].nombre.replace(/^INS Medical /, "")).join(" · ");
+    const rango = h.primaMin === h.primaMax ? `$${_fmtMon(h.primaMin)}` : `$${_fmtMon(h.primaMin)} – $${_fmtMon(h.primaMax)}`;
+    return `
+      <div class="hist-card">
+        <div class="hist-info">
+          <div class="hist-row1">
+            <span class="hist-id">COT-${escapeHtml(h.id)}</span>
+            <span class="hist-cli">${escapeHtml(h.cliente || "Sin nombre")}</span>
+            <span class="hist-state ${escapeHtml(h.estado)}">${escapeHtml(h.estado)}</span>
+          </div>
+          <div class="hist-row2">
+            <span>${escapeHtml(fechaLarga(h.fecha))}</span>
+            <span>${h.asegurados} ${h.asegurados === 1 ? "asegurado" : "asegurados"}</span>
+            <span>${escapeHtml(prodNames)}</span>
+            <span class="meta-amt">${rango} USD/año</span>
+          </div>
+        </div>
+        <div class="hist-actions">
+          <button class="hist-act primary" data-act="abrir" data-id="${escapeHtml(h.id)}">Abrir</button>
+          <button class="hist-act" data-act="copy"  data-id="${escapeHtml(h.id)}">Copiar enlace</button>
+          ${h.estado === "pendiente" ? `<button class="hist-act" data-act="aceptar" data-id="${escapeHtml(h.id)}">Marcar aceptada</button>` : ""}
+          <button class="hist-act danger" data-act="del" data-id="${escapeHtml(h.id)}">Eliminar</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+  list.querySelectorAll(".hist-act").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      const act = btn.dataset.act;
+      const hist2 = loadHistorial();
+      const h = hist2.find(x => x.id === id);
+      if (!h) return;
+      if (act === "abrir") window.open(h.link, "_blank");
+      else if (act === "copy") {
+        navigator.clipboard.writeText(h.link).then(() => toast("Enlace copiado", "success"));
+      }
+      else if (act === "aceptar") {
+        h.estado = "aceptada"; saveHistorial(hist2); renderHistorial(); toast("Marcada como aceptada", "success");
+      }
+      else if (act === "del") {
+        if (!confirm("¿Eliminar esta cotización del historial?")) return;
+        const filtered = hist2.filter(x => x.id !== id);
+        saveHistorial(filtered); renderHistorial(); toast("Cotización eliminada", "success");
+      }
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BIND HANDLERS
+   ═══════════════════════════════════════════════════════════════ */
+
+function bindHandlers() {
+  // Login
+  $("#btn-login").addEventListener("click", triggerSignInPopup);
+  $("#btn-logout").addEventListener("click", logout);
+  $("#btn-logout-bloq").addEventListener("click", logout);
+
+  // Bypass local (solo localhost / 127.0.0.1) — para revisión sin OAuth configurado
+  const isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+  const btnLocal = $("#btn-login-local");
+  if (isLocal && btnLocal) {
+    btnLocal.style.display = "flex";
+    btnLocal.addEventListener("click", () => {
+      const email = "jhernandez@segurosdelins.com";
+      agenteActual = AGENTES[email];
+      try { localStorage.setItem("insmedical.agente", email); } catch (e) {}
+      $("#hdr-agent-email").textContent = email;
+      showView("agente");
+      showPaso(1);
+      bindCliForm();
+      renderAsegList();
+      toast("Modo local · sesión sin Google OAuth", "success");
+    });
+  }
+
+  // Stepper tabs
+  $$(".step").forEach(s => {
+    s.addEventListener("click", () => {
+      const sp = s.dataset.step;
+      if (sp === "hist") { showPaso("hist"); return; }
+      const target = parseInt(sp, 10);
+      // No saltar adelante si no validamos
+      if (target > currentPaso) {
+        if (currentPaso === 1 && !validarPaso1()) return;
+        if (currentPaso === 2 && !validarPaso2()) return;
+      }
+      showPaso(target);
+    });
+  });
+
+  // Paso 1
+  $("#btn-aseg-add").addEventListener("click", () => openAsegModal(null));
+  $("#aseg-modal-close").addEventListener("click", closeAsegModal);
+  $("#aseg-modal-cancel").addEventListener("click", closeAsegModal);
+  $("#aseg-modal-save").addEventListener("click", saveAseg);
+  $("#aseg-modal-del").addEventListener("click", deleteAsegFromModal);
+  $("#aseg-modal").addEventListener("click", (e) => { if (e.target.id === "aseg-modal") closeAsegModal(); });
+  $("#btn-paso1-next").addEventListener("click", () => { if (validarPaso1()) showPaso(2); });
+
+  // Paso 2 nav
+  $("#btn-paso2-back").addEventListener("click", () => showPaso(1));
+  $("#btn-paso2-next").addEventListener("click", () => { if (validarPaso2()) showPaso(3); });
+
+  // Paso 3
+  $("#btn-paso3-back").addEventListener("click", () => showPaso(2));
+  $("#btn-copy").addEventListener("click", () => {
+    const link = buildShareLink();
+    if (!link) { toast("Active al menos un producto", "error"); return; }
+    navigator.clipboard.writeText(link).then(() => toast("Enlace copiado", "success"))
+      .catch(() => toast("No se pudo copiar", "error"));
+    persistCurrentCot(link);
+  });
+  $("#btn-preview").addEventListener("click", () => {
+    const payload = buildClientPayload();
+    if (!payload) { toast("Active al menos un producto", "error"); return; }
+    // Abrir vista cliente en nueva pestaña con el link
+    const link = buildShareLink();
+    if (link) window.open(link, "_blank");
+    persistCurrentCot(link);
+  });
+  $("#btn-wa").addEventListener("click", () => {
+    const link = buildShareLink();
+    if (!link) { toast("Active al menos un producto", "error"); return; }
+    const tel = (state.cliente.telefono || "").replace(/[^\d]/g, "");
+    const msg = `Hola ${(state.cliente.nombre || "").split(/\s+/)[0]}, le envío la cotización INS Medical preparada para usted:\n\n${link}\n\nCualquier consulta me escribe.\n${agenteActual ? agenteActual.nombre + " · " + agenteActual.whatsapp : ""}`;
+    const url = tel
+      ? `https://wa.me/506${tel}?text=` + encodeURIComponent(msg)
+      : `https://wa.me/?text=` + encodeURIComponent(msg);
+    window.open(url, "_blank");
+    persistCurrentCot(link);
+  });
+  $("#btn-email").addEventListener("click", () => {
+    const link = buildShareLink();
+    if (!link) { toast("Active al menos un producto", "error"); return; }
+    $("#email-to").value = state.cliente.email || "";
+    $("#email-subj").value = `Su cotización INS Medical — N.º COT-${state.cotizacionId}`;
+    $("#email-modal").classList.add("open");
+  });
+  $("#email-modal-close").addEventListener("click", () => $("#email-modal").classList.remove("open"));
+  $("#email-modal-cancel").addEventListener("click", () => $("#email-modal").classList.remove("open"));
+  $("#email-modal-send").addEventListener("click", () => {
+    const to = $("#email-to").value.trim();
+    const subj = $("#email-subj").value.trim();
+    if (!to || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) { toast("Correo del destinatario inválido", "error"); return; }
+    const link = buildShareLink();
+    const payload = buildClientPayload();
+    const html = buildEmailHTML(payload, link);
+    const btn = $("#email-modal-send");
+    btn.disabled = true;
+    btn.textContent = "Enviando…";
+    sendEmailViaGmail({ to, subject: subj, html }, () => {
+      btn.disabled = false; btn.textContent = "Enviar";
+      $("#email-modal").classList.remove("open");
+      toast("Correo enviado a " + to, "success");
+      persistCurrentCot(link);
+    }, (err) => {
+      btn.disabled = false; btn.textContent = "Enviar";
+      toast("Error enviando correo: " + err.message, "error");
+    });
+  });
+
+  $("#btn-finalizar").addEventListener("click", () => {
+    const link = buildShareLink();
+    if (!link) { toast("Active al menos un producto antes de finalizar", "error"); return; }
+    persistCurrentCot(link);
+    toast("Cotización guardada en su historial", "success");
+    showPaso("hist");
+  });
+
+  $("#btn-new").addEventListener("click", () => {
+    if (state.cotizacionId && state.asegurados.length) {
+      if (!confirm("¿Iniciar una nueva cotización? La actual ya está guardada en el historial.")) return;
+    }
+    state = clone(ESTADO_INICIAL);
+    clearDraft();
+    bindCliForm();
+    renderAsegList();
+    showPaso(1);
+  });
+
+  // Cerrar modales con Esc
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      $$(".modal-overlay.open").forEach(m => m.classList.remove("open"));
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BOOTSTRAP
+   ═══════════════════════════════════════════════════════════════ */
+
+function bootstrap() {
+  const params = new URLSearchParams(window.location.search);
+  const cParam = params.get("c");
+  if (cParam) {
+    // Vista cliente
+    const payload = decodePayload(cParam);
+    if (!payload) {
+      document.body.innerHTML = `<div style="padding:60px;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;color:#64748B;">No pudimos cargar esta cotización. Solicite a su agente un nuevo enlace.</div>`;
+      return;
+    }
+    showView("cliente");
+    renderCliente(payload);
+    return;
+  }
+
+  // Vista agente - verificar si hay sesión guardada
+  let agenteEmail = null;
+  try { agenteEmail = localStorage.getItem("insmedical.agente"); } catch (e) {}
+  if (agenteEmail && AGENTES[agenteEmail]) {
+    agenteActual = AGENTES[agenteEmail];
+    $("#hdr-agent-email").textContent = agenteEmail;
+    if (loadDraft()) {
+      // si hay draft con asegurados, ir al paso correspondiente
+      showView("agente");
+      bindCliForm();
+      renderAsegList();
+      // Determinar paso por contenido
+      const start = state.asegurados.length ? (PRODUCTOS_ORDER.some(k => state.productos[k].sel) ? 3 : 2) : 1;
+      showPaso(start);
+    } else {
+      showView("agente");
+      bindCliForm();
+      renderAsegList();
+      showPaso(1);
+    }
+  } else {
+    showView("login");
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SMOKE TESTS
+   ═══════════════════════════════════════════════════════════════ */
+
+function runSmokeTests() {
+  const T = [];
+  function ok(name, pass, detail) { T.push({ name, pass, detail }); }
+
+  // 1. PRIMAS está cargado con 2 versiones
+  ok("PRIMAS cargado", !!window.PRIMAS, "");
+  ok("PRIMAS tiene 2 versiones (base + amp)", window.PRIMAS && Object.keys(window.PRIMAS).length === 2, "");
+  ok("PRIMAS.base.regional existe", !!(window.PRIMAS && window.PRIMAS.base && window.PRIMAS.base.regional), "");
+  ok("PRIMAS.amp.grandes_deducibles existe", !!(window.PRIMAS && window.PRIMAS.amp && window.PRIMAS.amp.grandes_deducibles), "");
+
+  // 2. Edades 0-99 completas en las 12 secciones
+  let ok99 = true;
+  ["base", "amp"].forEach(v => {
+    ["regional", "internacional", "grandes_deducibles"].forEach(p => {
+      ["con_reduccion", "sin_reduccion"].forEach(s => {
+        for (let e = 0; e <= 99; e++) {
+          if (!window.PRIMAS[v][p][s][String(e)]) ok99 = false;
+        }
+      });
+    });
+  });
+  ok("Edades 0-99 completas en las 12 secciones", ok99, "");
+
+  // 3. Validación crítica vs PDF oficial INS (Tierney, GD $5000 sin AMP, edad 33 M)
+  const primaBaseM33 = lookupPrima("grandes_deducibles", 33, "M", "5000", false, false);
+  ok("BASE GD $5000 con_red edad 33 M = $1,107", primaBaseM33 === 1107, `got=${primaBaseM33}`);
+  const primaConIVA33 = primaConIVA(primaBaseM33);
+  ok("Con IVA 2% → $1,129.14 (PDF INS Tierney)", Math.abs(primaConIVA33 - 1129.14) < 0.01, `got=${primaConIVA33}`);
+  // AMP comparación
+  const primaAmpM33 = lookupPrima("grandes_deducibles", 33, "M", "5000", false, true);
+  ok("AMP GD $5000 con_red edad 33 M = $1,299", primaAmpM33 === 1299, `got=${primaAmpM33}`);
+
+  // 4. Lookups conocidos base
+  ok("BASE Regional edad 0 $1000 M (lookup)", typeof lookupPrima("regional", 0, "M", "1000", false, false) === "number", "");
+  ok("BASE Internacional edad 70 sin_red F (lookup)", typeof lookupPrima("internacional", 70, "F", "1000", true, false) === "number", "");
+
+  // 5. Cálculo familia (3 asegurados) base
+  const familia = [
+    { edad: 48, genero: "M" },
+    { edad: 45, genero: "F" },
+    { edad: 22, genero: "M" }
+  ];
+  const rBase = calcPrimaProducto(familia, "regional", "1000", false, false);
+  ok("Familia Regional $1000 base sin faltantes", rBase.totalSinIVA > 0 && rBase.faltantes === 0, `total sin IVA=${rBase.totalSinIVA}`);
+  ok("Familia total con IVA > sin IVA", rBase.total > rBase.totalSinIVA, `cIVA=${rBase.total} sIVA=${rBase.totalSinIVA}`);
+
+  // 6. encode/decode payload
+  const orig = { a: 1, b: "test", arr: [1, 2, 3], es: "ñoño €" };
+  const enc = encodePayload(orig);
+  const dec = decodePayload(enc);
+  ok("encode/decode payload preserva contenido", JSON.stringify(orig) === JSON.stringify(dec), "");
+
+  // 7. Recargos
+  ok("Recargo anual = total", calcRecargo(4280, "anual") === 4280, "");
+  ok("Recargo semestral = total*1.05/2", calcRecargo(4280, "semestral") === Math.round(4280 * 1.05 / 2), "");
+  ok("Recargo trimestral = total*1.07/4", calcRecargo(4280, "trimestral") === Math.round(4280 * 1.07 / 4), "");
+
+  // 8. Documentos por edad
+  const docs66 = calcularDocumentos([{ edad: 67, genero: "M" }]);
+  ok("Aseg 67 dispara telesuscripción", docs66.disparadores.some(d => d.items.some(it => it.tipo === "aviso")), "");
+  const docs75 = calcularDocumentos([{ edad: 75, genero: "F" }]);
+  ok("Aseg 75 dispara batería de exámenes", docs75.disparadores.some(d => d.items.some(it => it.tipo === "pdf")), "");
+  const docs30 = calcularDocumentos([{ edad: 30, genero: "M" }]);
+  ok("Aseg 30 NO dispara extras", docs30.disparadores.length === 0, "");
+
+  // Print
+  let pass = T.filter(t => t.pass).length;
+  let fail = T.length - pass;
+  if (fail) {
+    console.error(`%c[SMOKE] ${pass}/${T.length} OK · ${fail} FALLOS`, "color:#DC2626;font-weight:bold");
+    T.filter(t => !t.pass).forEach(t => console.error("  FAIL:", t.name, t.detail));
+  } else {
+    console.log(`%c[SMOKE] ${pass}/${T.length} OK · TARIFAS ${TARIFAS_VERSION}`, "color:#059669;font-weight:bold");
+  }
+  return { pass, fail, total: T.length };
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════════ */
+
+function init() {
+  console.log("INS Medical Cotizador v" + COTIZADOR_VERSION + " · Tarifas " + TARIFAS_VERSION);
+  bindHandlers();
+  initSignIn();
+  runSmokeTests();
+  bootstrap();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>
