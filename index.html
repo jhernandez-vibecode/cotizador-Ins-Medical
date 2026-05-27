@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="description" content="Cotizador INS Medical — Seguros Digitales SDI. Cotización familiar de seguros de gastos médicos." />
 <title>INS Medical · Cotizador · Seguros Digitales</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="apple-touch-icon" href="favicon.svg" />
+<meta name="theme-color" content="#1E3A8A" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -356,6 +359,16 @@ a:hover { text-decoration: underline; }
   background: var(--white); color: #92400E; font-size: 12px; font-weight: 600; cursor: pointer;
 }
 .variant-toggle .ctl button.on { background: #92400E; color: #fff; }
+
+/* Banner de aviso de datos */
+.data-warn {
+  background: var(--amber-light); border: 1px solid #FBBF24;
+  border-radius: var(--rl); padding: 12px 18px; margin-bottom: 14px;
+  display: flex; gap: 14px; align-items: flex-start;
+  font-size: 12.5px; color: #78350F; line-height: 1.55;
+}
+.data-warn .icon { font-size: 18px; flex-shrink: 0; }
+.data-warn strong { color: #92400E; }
 
 /* Opciones cotización (AMP epidemias) */
 .opt-toggle {
@@ -1083,6 +1096,14 @@ a:hover { text-decoration: underline; }
       </div>
 
       <div class="aseg-bar" id="aseg-bar"></div>
+
+      <div class="data-warn" id="data-warn-int1k" style="display:none">
+        <div class="icon">⚠</div>
+        <div>
+          <strong>Internacional con deducible $1,000 (sin AMP) no disponible.</strong>
+          Las tarifas oficiales del INS para esta combinación específica presentan inconsistencias (la columna duplica valores de Grandes Deducibles $5,000 para algunas edades). Mientras INS publica el archivo corregido, esta combinación está deshabilitada. Para cotizar Internacional con $1,000 active la <strong>Ampliación de epidemias y pandemias</strong> arriba — en esa versión los datos sí están correctos.
+        </div>
+      </div>
 
       <div class="opt-toggle">
         <div class="icon">🦠</div>
@@ -2002,6 +2023,15 @@ function validarPaso1() {
    ═══════════════════════════════════════════════════════════════ */
 
 function renderPaso2() {
+  // Auto-corrección: Internacional $1000 sin AMP está deshabilitado por
+  // inconsistencia conocida en el XLSX BASE del INS (36 edades duplican GD $5000).
+  if (!state.ampliacionEpidemias && state.productos.internacional.deducible === "1000") {
+    state.productos.internacional.deducible = "500";
+  }
+  // Banner de aviso visible solo cuando AMP está OFF
+  const warn = $("#data-warn-int1k");
+  if (warn) warn.style.display = state.ampliacionEpidemias ? "none" : "";
+
   // Aseg bar (chips)
   $("#aseg-bar").innerHTML = `
     <span class="aseg-bar-lbl">Asegurados:</span>
@@ -2075,9 +2105,13 @@ function renderProductCard(key) {
   const classes = ["pc"];
   if (sel) classes.push("sel");
   if (prod.color_class) classes.push(prod.color_class);
-  const dedOptions = prod.deducibles.map(d =>
-    `<option value="${d}"${d === ded ? " selected" : ""}>${escapeHtml(DEDUCIBLE_LABELS[d])}</option>`
-  ).join("");
+  const dedOptions = prod.deducibles.map(d => {
+    // Internacional $1,000 sin AMP está deshabilitado por bug de datos del INS.
+    const isBlocked = (key === "internacional" && d === "1000" && !state.ampliacionEpidemias);
+    const labelExtra = isBlocked ? " (no disponible sin AMP)" : "";
+    const disabledAttr = isBlocked ? " disabled" : "";
+    return `<option value="${d}"${d === ded ? " selected" : ""}${disabledAttr}>${escapeHtml(DEDUCIBLE_LABELS[d] + labelExtra)}</option>`;
+  }).join("");
   const primasRows = state.asegurados.map((a, i) => {
     const p = primas.porAseg[i];
     const primaStr = (p && p.primaConIVA !== null) ? "$" + _fmtMon(p.primaConIVA) : "—";
