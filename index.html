@@ -573,6 +573,28 @@ a:hover { text-decoration: underline; }
 .hist-act:hover { background: var(--bg); }
 .hist-act.danger { color: var(--red); }
 .hist-act.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.hist-act.poliza { background: #D97706; color: #fff; border-color: #D97706; font-weight: 600; }
+.hist-act.poliza:hover { background: #B45309; border-color: #B45309; }
+
+/* ═══════════════════════ PÓLIZAS VIGENTES (TAB) ═══════════════════════ */
+.step-vig .step-dot { background: #FEF3C7; border-color: #D97706; color: #D97706; }
+.step-vig.active .step-dot { background: #D97706; border-color: #D97706; color: #fff; }
+.step-vig.active { color: #92400E; border-bottom-color: #D97706; }
+.paso-vig.active { display: block; }
+.vig-badge { background: #D97706; color: #fff; border-radius: 100px; font-size: 10px; padding: 1px 6px; margin-left: 4px; display: none; }
+.vig-wrap { background: var(--white); border: 1.5px solid var(--line); border-radius: var(--rl); overflow: hidden; box-shadow: var(--sh); }
+.vig-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.vig-table th { text-align: left; padding: 9px 14px; color: var(--ink-3); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; background: var(--bg); border-bottom: 1px solid var(--line); }
+.vig-table td { padding: 13px 14px; border-bottom: 1px solid var(--line-2); vertical-align: middle; }
+.vig-table tr:last-child td { border-bottom: none; }
+.vig-nm { font-weight: 700; color: var(--ink); font-size: 13.5px; }
+.vig-meta { font-size: 11.5px; color: var(--ink-3); margin-top: 1px; }
+.vig-prod { font-size: 12px; color: var(--ink-2); }
+.vig-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--ink); }
+.vig-num.sin { color: var(--ink-3); font-style: italic; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 400; }
+.vig-guia { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 100px; text-transform: uppercase; letter-spacing: .3px; }
+.vig-guia.enviada { background: var(--green-light); color: var(--green-dark); }
+.vig-guia.pendiente { background: var(--amber-light); color: var(--amber); }
 
 /* ═══════════════════════ TOASTS ═══════════════════════ */
 .toast-wrap {
@@ -1032,6 +1054,7 @@ a:hover { text-decoration: underline; }
     <div class="step-div"></div>
     <button class="step" data-step="3"><div class="step-dot">3</div>Enviar</button>
     <button class="step step-hist" data-step="hist"><div class="step-dot">H</div>Mis cotizaciones</button>
+    <button class="step step-vig" data-step="vig"><div class="step-dot">P</div>Pólizas vigentes<span class="vig-badge" id="vig-badge">0</span></button>
   </nav>
 
   <div class="main">
@@ -1188,6 +1211,17 @@ a:hover { text-decoration: underline; }
         <button class="btn btn-out" id="btn-new">+ Nueva cotización</button>
       </div>
       <div class="hist-list" id="hist-list"></div>
+    </section>
+
+    <!-- PÓLIZAS VIGENTES -->
+    <section class="paso paso-vig" data-paso="vig">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Pólizas vigentes</div>
+          <div class="page-sub">Envíe la guía de uso y reclamos a sus clientes cuando el INS emita la póliza.</div>
+        </div>
+      </div>
+      <div id="vig-list"></div>
     </section>
 
   </div><!-- /main -->
@@ -1655,6 +1689,24 @@ let editingAsegId = null;
 let currentPaso = 1;
 let cli = { payload: null };
 
+// Contactos INS Medical — extraídos verbatim de Condiciones Generales INS Medical y Procedimiento GD
+const INS_CONTACTOS = {
+  autorizaciones_email:        "autorizacionesins@grupoins.com",   // Cláusula XXIII
+  consultas_email:             "contactenos@grupoins.com",          // consultas + estado de reclamo
+  internacional_email:         "insinternacional@grupoins.com",     // asistencia internacional
+  tele_ins:                    "800-8353467",                       // 800-TELEINS
+  red_medica:                  "800-633-4225",                      // 800-MEDICAL — pre-auth + red proveedores
+  linea_central:               "2287-6000",                         // teléfono central INS
+  asistencia_usa_gratis:       "1-844-865-0804",
+  asistencia_esp_gratis:       "900-995-484",
+  asistencia_directo_usa:      "+1 (407) 264-7118",
+  asistencia_directo_esp:      "+34 (91) 189-5152",
+  plazo_resolucion_dias:       30,   // Ley 8956 Cláusula XXVI
+  plazo_reembolso_dias:        60,   // Cláusula XXIV — días naturales desde inicio del tratamiento
+  plazo_emergencia_intl_horas: 48,   // Cláusula XXIII — horas para notificar emergencia internacional
+  preautorizacion_dias_habiles: 5    // Cláusula XXIII — días hábiles anticipación para cirugía electiva
+};
+
 /* ═══════════════════════════════════════════════════════════════
    UTILIDADES
    ═══════════════════════════════════════════════════════════════ */
@@ -1856,7 +1908,7 @@ function showPaso(p) {
     s.classList.remove("active", "done");
     if (sp === String(p)) {
       s.classList.add("active");
-    } else if (sp !== "hist" && !isNaN(sp) && parseInt(sp, 10) < (p === "hist" ? 0 : p)) {
+    } else if (sp !== "hist" && sp !== "vig" && !isNaN(sp) && parseInt(sp, 10) < (["hist","vig"].includes(p) ? 0 : p)) {
       s.classList.add("done");
     }
   });
@@ -1865,6 +1917,9 @@ function showPaso(p) {
   if (p === "hist") {
     $(".paso-hist").classList.add("active");
     renderHistorial();
+  } else if (p === "vig") {
+    $(".paso-vig").classList.add("active");
+    renderPolizasVigentes();
   } else {
     const sec = $(`.paso-${p}`);
     if (sec) sec.classList.add("active");
@@ -2906,6 +2961,7 @@ function onSignInCredential(resp) {
   showPaso(1);
   bindCliForm();
   renderAsegList();
+  updateVigBadge();
   toast("Bienvenido, " + ag.nombre.split(/\s+/)[0], "success");
 }
 
@@ -3097,7 +3153,8 @@ function renderHistorial() {
           <button class="hist-act primary" data-act="abrir" data-id="${escapeHtml(h.id)}">Abrir</button>
           <button class="hist-act" data-act="edit"  data-id="${escapeHtml(h.id)}">Editar</button>
           <button class="hist-act" data-act="copy"  data-id="${escapeHtml(h.id)}">Copiar enlace</button>
-          ${h.estado === "pendiente" ? `<button class="hist-act" data-act="aceptar" data-id="${escapeHtml(h.id)}">Marcar aceptada</button>` : ""}
+          ${h.estado === "pendiente" ? `<button class="hist-act" data-act="aceptar" data-id="${escapeHtml(h.id)}">✓ Aceptar</button>` : ""}
+          ${h.estado === "aceptada" ? `<button class="hist-act poliza" data-act="poliza" data-id="${escapeHtml(h.id)}">📨 Enviar póliza</button>` : ""}
           <button class="hist-act danger" data-act="del" data-id="${escapeHtml(h.id)}">Eliminar</button>
         </div>
       </div>
@@ -3126,7 +3183,10 @@ function renderHistorial() {
         navigator.clipboard.writeText(h.link).then(() => toast("Enlace copiado", "success"));
       }
       else if (act === "aceptar") {
-        h.estado = "aceptada"; saveHistorial(hist2); renderHistorial(); toast("Marcada como aceptada", "success");
+        h.estado = "aceptada"; saveHistorial(hist2); renderHistorial(); updateVigBadge(); toast("Marcada como aceptada · aparece en Pólizas vigentes", "success");
+      }
+      else if (act === "poliza") {
+        openPolizaModal(h);
       }
       else if (act === "del") {
         if (!confirm("¿Eliminar esta cotización del historial?")) return;
@@ -3135,6 +3195,379 @@ function renderHistorial() {
       }
     });
   });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PÓLIZAS VIGENTES
+   ═══════════════════════════════════════════════════════════════ */
+
+function polizasVigentes() {
+  return loadHistorial().filter(h => h.estado === "aceptada");
+}
+
+function updateVigBadge() {
+  const n = polizasVigentes().length;
+  const badge = document.getElementById("vig-badge");
+  if (!badge) return;
+  badge.textContent = n;
+  badge.style.display = n ? "" : "none";
+}
+
+function renderPolizasVigentes() {
+  const list = document.getElementById("vig-list");
+  if (!list) return;
+  const items = polizasVigentes();
+  items.sort((a, b) => (b.updatedAt || b.fecha).localeCompare(a.updatedAt || a.fecha));
+
+  if (!items.length) {
+    list.innerHTML = `<div class="hist-empty">Todavía no hay pólizas emitidas. En <strong>Mis cotizaciones</strong>, marque una cotización como <strong>✓ Aceptar</strong> cuando el INS emita la póliza: aparecerá aquí para enviarle la guía de uso y reclamos al cliente.</div>`;
+    return;
+  }
+
+  const rows = items.map(h => {
+    const st = h.state || {};
+    const cli = st.cliente || {};
+    const pol = h.polizaData;
+    const prodsSel = h.productos || [];
+    const prodKey = pol ? pol.productoKey : (prodsSel.length ? prodsSel[0] : null);
+    const prodNombre = (prodKey && PRODUCTOS[prodKey]) ? PRODUCTOS[prodKey].nombre : (pol ? pol.productoNombre || "—" : "—");
+    const guiaEnviada = !!h.guiaEnviada;
+    const nombreMostrar = h.cliente || cli.nombre || "(sin nombre)";
+    const contacto = cli.email || cli.telefono || "sin contacto";
+    return `<tr>
+      <td><div class="vig-nm">${escapeHtml(nombreMostrar)}</div><div class="vig-meta">${escapeHtml(contacto)}</div></td>
+      <td><span class="vig-prod">${escapeHtml(prodNombre)}</span></td>
+      <td>${pol && pol.numero ? `<span class="vig-num">${escapeHtml(pol.numero)}</span>` : `<span class="vig-num sin">por capturar</span>`}</td>
+      <td><span>${pol && pol.fechaInicio ? escapeHtml(pol.fechaInicio) : "—"}</span></td>
+      <td><span class="vig-guia ${guiaEnviada ? 'enviada' : 'pendiente'}">${guiaEnviada ? 'Enviada' + (h.guiaEnviadaAt ? ' ' + h.guiaEnviadaAt.slice(0,10) : '') : 'Pendiente'}</span></td>
+      <td><div class="hist-actions">
+        <button class="hist-act poliza" data-act="enviar-guia" data-id="${escapeHtml(h.id)}">${guiaEnviada ? '📨 Reenviar' : '📨 Enviar póliza'}</button>
+      </div></td>
+    </tr>`;
+  }).join("");
+
+  list.innerHTML = `
+    <div class="page-sub" style="margin-bottom:16px;">${items.length} ${items.length === 1 ? 'póliza emitida' : 'pólizas emitidas'} · envíe la guía de uso y reclamos a sus clientes</div>
+    <div class="vig-wrap">
+      <table class="vig-table">
+        <thead><tr><th>Cliente</th><th>Producto</th><th>N.º Póliza</th><th>Emisión</th><th>Guía</th><th>Acciones</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+
+  list.querySelectorAll("[data-act='enviar-guia']").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const hist = loadHistorial();
+      const h = hist.find(x => x.id === btn.dataset.id);
+      if (h) openPolizaModal(h);
+    });
+  });
+}
+
+function guardarDatosPoliza(id, polizaData) {
+  const hist = loadHistorial();
+  const h = hist.find(x => x.id === id);
+  if (!h) return;
+  h.polizaData = polizaData;
+  h.guiaEnviada = true;
+  h.guiaEnviadaAt = new Date().toISOString();
+  h.updatedAt = new Date().toISOString();
+  saveHistorial(hist);
+  renderPolizasVigentes();
+  updateVigBadge();
+}
+
+function openPolizaModal(h) {
+  const st = h.state || {};
+  const cli = st.cliente || {};
+  const pol = h.polizaData || {};
+  const prodsSel = h.productos || [];
+  const productoDefault = pol.productoKey || (prodsSel.length ? prodsSel[0] : "regional");
+  const fechaDefault = pol.fechaInicio || new Date().toISOString().slice(0, 10);
+  const numeroDefault = pol.numero || "";
+  const cliEmail = cli.email || "";
+  const tel = String(cli.telefono || "").replace(/\D/g, "");
+  const nombreCliente = h.cliente || cli.nombre || "el cliente";
+
+  const opsProd = PRODUCTOS_ORDER.map(key => {
+    const pr = PRODUCTOS[key];
+    const cotizado = prodsSel.includes(key);
+    const esRec = st.planRecomendado === key;
+    const marca = esRec ? "★ " : (cotizado ? "· " : "");
+    const tag   = esRec ? " (recomendado)" : (cotizado ? " (cotizado)" : "");
+    return `<option value="${key}" ${key === productoDefault ? "selected" : ""}>${escapeHtml(marca + pr.nombre + tag)}</option>`;
+  }).join("");
+
+  const modalHtml = `
+    <div class="modal-overlay open" id="poliza-vigente-modal" style="z-index:1100;">
+      <div class="modal" style="max-width:540px;width:100%;">
+        <div class="modal-hd">
+          <div class="modal-title">Datos de la póliza emitida</div>
+          <button class="modal-close" data-act="cerrar">✕</button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size:12.5px;color:var(--ink-3);margin-bottom:16px;line-height:1.55;">Capture los datos finales del INS para generar y enviar la guía de uso y reclamos a <strong>${escapeHtml(nombreCliente)}</strong>.</p>
+          <div class="cli-grid">
+            <div class="field">
+              <label class="field-lbl">N.º de póliza <span class="req">*</span></label>
+              <input class="field-input" id="pvm-numero" placeholder="ej. 01-101-0123456" value="${escapeHtml(numeroDefault)}" autofocus />
+            </div>
+            <div class="field">
+              <label class="field-lbl">Vigencia desde <span class="req">*</span></label>
+              <input class="field-input" id="pvm-fecha" type="date" value="${escapeHtml(fechaDefault)}" />
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-lbl">Producto contratado</label>
+            <select class="field-input" id="pvm-prod">${opsProd}</select>
+          </div>
+          <div class="field">
+            <label class="field-lbl">Deducible</label>
+            <select class="field-input" id="pvm-ded"></select>
+          </div>
+        </div>
+        <div class="modal-foot" style="justify-content:flex-end;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-out" data-act="cerrar">Cancelar</button>
+          ${tel ? `<button class="btn btn-out" data-act="wa">💬 WhatsApp</button>` : ""}
+          <button class="btn btn-primary" data-act="enviar-gmail">🚀 Enviar por Gmail</button>
+        </div>
+      </div>
+    </div>`;
+
+  document.body.insertAdjacentHTML("beforeend", modalHtml);
+  const ovl = document.getElementById("poliza-vigente-modal");
+
+  function llenarDeducibles() {
+    const key = document.getElementById("pvm-prod").value;
+    const prod = PRODUCTOS[key];
+    const sel = document.getElementById("pvm-ded");
+    if (!prod || !sel) return;
+    const defDed = pol.deducible || prod.deducible_default;
+    sel.innerHTML = prod.deducibles.map(d => `<option value="${d}" ${d === defDed ? "selected" : ""}>${escapeHtml(DEDUCIBLE_LABELS[d] || ("$" + d))}</option>`).join("");
+  }
+  llenarDeducibles();
+  document.getElementById("pvm-prod").addEventListener("change", llenarDeducibles);
+
+  function getPolizaData() {
+    const numero      = (document.getElementById("pvm-numero").value || "").trim();
+    const fechaInicio = (document.getElementById("pvm-fecha").value  || "").trim();
+    const productoKey = (document.getElementById("pvm-prod").value   || "").trim();
+    const deducible   = (document.getElementById("pvm-ded").value    || "").trim();
+    return { numero, fechaInicio, productoKey, deducible, productoNombre: PRODUCTOS[productoKey] ? PRODUCTOS[productoKey].nombre : productoKey };
+  }
+
+  function validar() {
+    const d = getPolizaData();
+    if (!d.numero)      { toast("Ingrese el N.º de póliza", "error");     document.getElementById("pvm-numero").focus(); return null; }
+    if (!d.fechaInicio) { toast("Ingrese la fecha de vigencia", "error"); document.getElementById("pvm-fecha").focus();  return null; }
+    return d;
+  }
+
+  ovl.addEventListener("click", e => {
+    const act = (e.target.dataset.act || (e.target.closest("[data-act]") || {}).dataset?.act);
+    if (!act) return;
+
+    if (act === "cerrar") { ovl.remove(); return; }
+
+    const polizaData = validar();
+    if (!polizaData) return;
+
+    if (act === "wa") {
+      const msg = `Hola ${nombreCliente.split(/\s+/)[0]}, su póliza INS Medical ya está vigente (N.° ${polizaData.numero}). Aquí tiene la guía de uso y reclamos para cuando la necesite.`;
+      window.open("https://wa.me/506" + tel + "?text=" + encodeURIComponent(msg), "_blank");
+      guardarDatosPoliza(h.id, polizaData);
+      ovl.remove();
+      toast("WhatsApp abierto · guía marcada como enviada", "success");
+    }
+
+    if (act === "enviar-gmail") {
+      const emailHtml = buildEmailPolizaVigenteMedical(st, polizaData);
+      const subj = `Su póliza INS Medical está vigente · N.º ${polizaData.numero} · Guía de uso y reclamos`;
+      const btn = ovl.querySelector("[data-act='enviar-gmail']");
+      btn.disabled = true; btn.textContent = "Enviando…";
+      sendEmailViaGmail({ to: cliEmail, subject: subj, html: emailHtml }, () => {
+        guardarDatosPoliza(h.id, polizaData);
+        ovl.remove();
+        toast("Guía de uso y reclamos enviada a " + cliEmail, "success");
+      }, err => {
+        btn.disabled = false; btn.textContent = "🚀 Enviar por Gmail";
+        toast("Error al enviar: " + err.message, "error");
+      });
+    }
+  });
+
+  setTimeout(() => { const el = document.getElementById("pvm-numero"); if (el) el.focus(); }, 80);
+}
+
+function buildEmailPolizaVigenteMedical(st, polizaData) {
+  const productoKey = polizaData.productoKey || polizaData.producto || "regional";
+  const prod = PRODUCTOS[productoKey] || PRODUCTOS.regional;
+  const deducibleLabel = DEDUCIBLE_LABELS[polizaData.deducible] || ("Deducible $" + polizaData.deducible);
+  const esInternacional = (productoKey === "internacional" || productoKey === "grandes_deducibles");
+  const agente = agenteActual || {};
+  const _esc = s => escapeHtml(String(s || ""));
+
+  const cli = (st && st.cliente) || {};
+  const nombreCorto = (cli.nombre || "").split(/\s+/)[0] || "cliente";
+  const aseguradosList = (st && st.asegurados || []).map(a => `${a.nombre} (${a.edad} años, ${a.genero})`).join(", ");
+
+  const fechaDisplay = polizaData.fechaInicio ? (() => {
+    const [y, m, d] = polizaData.fechaInicio.split("-");
+    const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+    return `${parseInt(d,10)} de ${meses[parseInt(m,10)-1]} de ${y}`;
+  })() : "—";
+
+  const headerGrad = productoKey === "grandes_deducibles"
+    ? "linear-gradient(135deg,#047857 0%,#065F46 100%)"
+    : productoKey === "regional"
+    ? "linear-gradient(135deg,#2E6FA8 0%,#1E4D7B 100%)"
+    : "linear-gradient(135deg,#2563EB 0%,#1E3A8A 100%)";
+
+  const sumaDisplay = (productoKey === "regional") ? "USD 200,000" : "USD 2,000,000";
+
+  return `<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>Su póliza INS Medical está vigente</title></head>
+<body style="margin:0;padding:0;background:#F1F5F9;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#F1F5F9;padding:20px 0;">
+<tr><td>
+<table width="600" cellpadding="0" cellspacing="0" align="center" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08);">
+
+<!-- HEADER -->
+<tr><td style="background:${headerGrad};padding:32px 40px 28px;">
+  <table width="100%" cellpadding="0" cellspacing="0"><tr>
+    <td><img src="${LOGO_INS_URL}" alt="INS" height="32" style="height:32px;filter:brightness(0) invert(1);display:block;" /></td>
+    <td style="text-align:right;"><span style="font-size:11px;color:rgba(255,255,255,.7);font-family:'Courier New',Courier,monospace;">N.º ${_esc(polizaData.numero)}</span></td>
+  </tr></table>
+  <h1 style="margin:14px 0 4px;font-size:26px;font-weight:700;color:#ffffff;letter-spacing:-0.015em;line-height:1.15;">Su póliza está vigente</h1>
+  <p style="margin:0;font-size:13px;color:rgba(255,255,255,.85);">${_esc(prod.nombre)} · ${_esc(deducibleLabel)}</p>
+</td></tr>
+
+<!-- BODY -->
+<tr><td style="padding:32px 40px 0;">
+  <p style="margin:0 0 22px;font-size:14.5px;color:#1E293B;line-height:1.7;">Estimado(a) <strong>${_esc(nombreCorto)}</strong>, su póliza INS Medical quedó emitida y está vigente. A continuación los datos de su contrato y una guía de uso para cuando la necesite.</p>
+
+  <!-- TARJETA PÓLIZA -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:8px;margin-bottom:28px;">
+  <tr><td style="padding:20px 24px;">
+    <p style="margin:0 0 12px;font-size:10px;color:#64748B;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;">Datos de su póliza</p>
+    <table cellpadding="0" cellspacing="0">
+      <tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;width:140px;">N.º de póliza</td><td style="font-family:'Courier New',Courier,monospace;color:#0F172A;font-weight:700;font-size:14px;">${_esc(polizaData.numero)}</td></tr>
+      <tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;">Producto</td><td style="color:#0F172A;font-size:13px;font-weight:600;">${_esc(prod.nombre)}</td></tr>
+      <tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;">Deducible</td><td style="color:#0F172A;font-size:13px;">${_esc(deducibleLabel)}</td></tr>
+      <tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;">Vigencia desde</td><td style="font-family:'Courier New',Courier,monospace;color:#0F172A;font-weight:600;font-size:13px;">${_esc(fechaDisplay)}</td></tr>
+      <tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;">Suma asegurada</td><td style="color:#0F172A;font-size:13px;font-weight:600;">${sumaDisplay}</td></tr>
+      ${aseguradosList ? `<tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;vertical-align:top;">Asegurados</td><td style="color:#0F172A;font-size:12px;line-height:1.6;">${_esc(aseguradosList)}</td></tr>` : ""}
+    </table>
+  </td></tr></table>
+
+  <h2 style="margin:0 0 16px;font-size:17px;font-weight:700;color:#0F172A;">¿Cómo usar su seguro INS Medical?</h2>
+
+  <!-- MODALIDAD 1: MEDICINA VIRTUAL -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F0FDF4;border-left:4px solid #16A34A;border-radius:0 4px 4px 0;margin-bottom:12px;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#15803D;text-transform:uppercase;letter-spacing:0.04em;">① Medicina Virtual · Incluida en su póliza</p>
+    <p style="margin:0 0 8px;font-size:13px;color:#166534;line-height:1.6;">Consultas médicas virtuales 24/7 sin costo adicional. Descargue la <strong>App INS 24/7</strong> (Android e iOS) o ingrese en <strong>medicinavirtual.ins-cr.com</strong></p>
+  </td></tr></table>
+
+  <!-- MODALIDAD 2: ATENCIÓN MÉDICA INMEDIATA -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F0FDFA;border-left:4px solid #0D9488;border-radius:0 4px 4px 0;margin-bottom:12px;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#0F766E;text-transform:uppercase;letter-spacing:0.04em;">② Atención médica inmediata · Red de proveedores INS</p>
+    <p style="margin:0 0 8px;font-size:13px;color:#134E4A;line-height:1.6;">Acuda directamente a cualquier hospital o clínica de la <strong>Red de Proveedores del INS</strong>. El proveedor gestiona la atención y la coordina con el INS. Si la cobertura es aprobada, usted primero cubre su <strong>deducible anual</strong> (p.ej. $200); una vez superado ese monto, el seguro cubre los gastos y usted <strong>paga únicamente el coaseguro</strong>.</p>
+    <ul style="margin:0;padding-left:18px;font-size:12.5px;color:#134E4A;line-height:1.9;">
+      <li>Identifíquese como asegurado INS Medical al llegar al proveedor.</li>
+      <li>Para verificar o localizar un proveedor de la red: <strong>${INS_CONTACTOS.red_medica}</strong> (800-MEDICAL).</li>
+    </ul>
+  </td></tr></table>
+
+  <!-- MODALIDAD 3: HOSPITALIZACIÓN ELECTIVA -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#EFF6FF;border-left:4px solid #2563EB;border-radius:0 4px 4px 0;margin-bottom:12px;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#1D4ED8;text-transform:uppercase;letter-spacing:0.04em;">③ Hospitalización o cirugía electiva · Pre-autorización obligatoria</p>
+    <p style="margin:0 0 8px;font-size:13px;color:#1E3A8A;line-height:1.6;">El INS coordina el pago directamente con el hospital (red de proveedores).</p>
+    <ul style="margin:0;padding-left:18px;font-size:12.5px;color:#1E3A8A;line-height:1.9;">
+      <li>Solicite la pre-autorización con al menos <strong>${INS_CONTACTOS.preautorizacion_dias_habiles} días hábiles de anticipación</strong> (Cláusula XXIII).</li>
+      <li>Envíe a <strong>${INS_CONTACTOS.autorizaciones_email}</strong>: formulario de pre-autorización + orden de hospitalización del médico tratante + exámenes que la justifican.</li>
+      <li>También puede llamar al <strong>${INS_CONTACTOS.red_medica}</strong> (800-MEDICAL) para ubicar un proveedor en la red.</li>
+    </ul>
+  </td></tr></table>
+
+  <!-- MODALIDAD 4: AMBULATORIO / REEMBOLSO -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFF7ED;border-left:4px solid #EA580C;border-radius:0 4px 4px 0;margin-bottom:12px;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#C2410C;text-transform:uppercase;letter-spacing:0.04em;">④ Consultas ambulatorias y exámenes · Reembolso</p>
+    <p style="margin:0 0 8px;font-size:13px;color:#9A3412;line-height:1.6;">Para consultas médicas, exámenes y tratamientos ambulatorios, usted paga primero y luego solicita el reembolso. Tiene <strong>${INS_CONTACTOS.plazo_reembolso_dias} días naturales desde el inicio del tratamiento</strong> para presentar el reclamo ante el INS (Cláusula XXIV).</p>
+    <ul style="margin:0;padding-left:18px;font-size:12.5px;color:#9A3412;line-height:1.9;">
+      <li>Guarde <strong>todas las facturas electrónicas canceladas</strong>, recetas médicas y resultados de exámenes.</li>
+      <li>Llene el formulario <strong>Solicitud de Beneficios</strong> y la <strong>Autorización de Consulta de Expediente</strong>.</li>
+      <li>Envíe el expediente completo a: <strong>clientescgsp@grupoins.com</strong></li>
+      <li>Para consultar el estado del reclamo: <strong>${INS_CONTACTOS.consultas_email}</strong></li>
+    </ul>
+  </td></tr></table>
+
+  ${esInternacional ? `<!-- MODALIDAD 5: EMERGENCIA INTERNACIONAL -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F3FF;border-left:4px solid #7C3AED;border-radius:0 4px 4px 0;margin-bottom:12px;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#6D28D9;text-transform:uppercase;letter-spacing:0.04em;">⑤ Emergencia fuera del país · Aviso en ${INS_CONTACTOS.plazo_emergencia_intl_horas} horas</p>
+    <p style="margin:0 0 8px;font-size:13px;color:#4C1D95;line-height:1.6;">En caso de emergencia médica fuera de Costa Rica, notifique al INS o al Administrador de Servicios Médicos <strong>dentro de las ${INS_CONTACTOS.plazo_emergencia_intl_horas} horas siguientes</strong> a la emergencia (Cláusula XXIII):</p>
+    <table cellpadding="0" cellspacing="0">
+      <tr><td style="color:#6B7280;padding:2px 14px 2px 0;font-size:12px;">USA (gratuito)</td><td style="font-family:'Courier New',Courier,monospace;color:#4C1D95;font-weight:600;font-size:12px;">${INS_CONTACTOS.asistencia_usa_gratis}</td></tr>
+      <tr><td style="color:#6B7280;padding:2px 14px 2px 0;font-size:12px;">España (gratuito)</td><td style="font-family:'Courier New',Courier,monospace;color:#4C1D95;font-weight:600;font-size:12px;">${INS_CONTACTOS.asistencia_esp_gratis}</td></tr>
+      <tr><td style="color:#6B7280;padding:2px 14px 2px 0;font-size:12px;">USA / Américas (directo)</td><td style="font-family:'Courier New',Courier,monospace;color:#4C1D95;font-weight:600;font-size:12px;">${INS_CONTACTOS.asistencia_directo_usa}</td></tr>
+      <tr><td style="color:#6B7280;padding:2px 14px 2px 0;font-size:12px;">Europa / Mundo (directo)</td><td style="font-family:'Courier New',Courier,monospace;color:#4C1D95;font-weight:600;font-size:12px;">${INS_CONTACTOS.asistencia_directo_esp}</td></tr>
+      <tr><td style="color:#6B7280;padding:2px 14px 2px 0;font-size:12px;">Email</td><td style="font-family:'Courier New',Courier,monospace;color:#4C1D95;font-weight:600;font-size:12px;">${INS_CONTACTOS.internacional_email}</td></tr>
+    </table>
+  </td></tr></table>` : ""}
+
+  <!-- CONTACTOS CLAVE -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0F172A;border-radius:8px;margin-bottom:16px;">
+  <tr><td style="padding:20px 24px;">
+    <p style="margin:0 0 12px;font-size:10px;color:#94A3B8;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;">Números y correos clave</p>
+    <table cellpadding="0" cellspacing="0">
+      <tr><td style="color:#94A3B8;padding:2px 16px 2px 0;font-size:12px;width:170px;">Tele-INS (800-TELEINS)</td><td style="font-family:'Courier New',Courier,monospace;color:#ffffff;font-weight:600;font-size:13px;">${INS_CONTACTOS.tele_ins}</td></tr>
+      <tr><td style="color:#94A3B8;padding:2px 16px 2px 0;font-size:12px;">Red Médica (800-MEDICAL)</td><td style="font-family:'Courier New',Courier,monospace;color:#ffffff;font-weight:600;font-size:13px;">${INS_CONTACTOS.red_medica}</td></tr>
+      <tr><td style="color:#94A3B8;padding:2px 16px 2px 0;font-size:12px;">Teléfono central INS</td><td style="font-family:'Courier New',Courier,monospace;color:#ffffff;font-weight:600;">${INS_CONTACTOS.linea_central}</td></tr>
+      <tr><td style="color:#94A3B8;padding:6px 16px 2px 0;font-size:12px;">Autorizaciones</td><td style="font-family:'Courier New',Courier,monospace;color:#ffffff;font-weight:600;padding-top:6px;">${INS_CONTACTOS.autorizaciones_email}</td></tr>
+      <tr><td style="color:#94A3B8;padding:2px 16px 2px 0;font-size:12px;">Consultas / reclamos</td><td style="font-family:'Courier New',Courier,monospace;color:#ffffff;font-weight:600;">${INS_CONTACTOS.consultas_email}</td></tr>
+    </table>
+  </td></tr></table>
+
+  <!-- DERECHOS -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFBEB;border:1.5px solid #FCD34D;border-radius:8px;margin-bottom:28px;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:0.04em;">Sus derechos como asegurado</p>
+    <p style="margin:0;font-size:12.5px;color:#78350F;line-height:1.7;">El INS resuelve cada reclamo en máximo <strong>${INS_CONTACTOS.plazo_resolucion_dias} días naturales</strong> (Ley 8956, art. 16). Si su reclamo es declinado parcial o totalmente, tiene derecho a presentar <strong>recurso de revocatoria</strong> ante el departamento que dictó la resolución y, después, <strong>apelación</strong> al superior jerárquico.</p>
+  </td></tr></table>
+
+  <!-- FIRMA AGENTE -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+  <tr>
+    <td width="48" style="vertical-align:top;padding-right:14px;">
+      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1E3A8A);font-size:15px;font-weight:700;color:#fff;text-align:center;line-height:42px;">${_esc(iniciales(agente.nombre || ""))}</div>
+    </td>
+    <td style="vertical-align:top;">
+      <p style="margin:0;font-size:13.5px;font-weight:700;color:#0F172A;">${_esc(agente.nombre || "Agente INS")}</p>
+      <p style="margin:2px 0 0;font-size:12px;color:#64748B;">Lic. SUGESE ${_esc(agente.licencia || "08-1318")} · Seguros Digitales SDI</p>
+      ${agente.whatsapp ? `<p style="margin:4px 0 0;font-size:12px;color:#16A34A;">📱 ${_esc(agente.whatsapp)}</p>` : ""}
+      ${agente.email ? `<p style="margin:2px 0 0;font-size:12px;color:#64748B;">${_esc(agente.email)}</p>` : ""}
+    </td>
+  </tr>
+  </table>
+</td></tr>
+
+<!-- DISCLAIMER -->
+<tr><td style="padding:0 40px 16px;">
+  <p style="font-size:10.5px;color:#94A3B8;font-style:italic;line-height:1.55;margin:0;">Esta comunicación es de carácter informativo y se basa en las Condiciones Generales del seguro INS Medical (norma SUGESE P16-35-A01-113). La operación de las coberturas se rige por dichas condiciones generales y por las condiciones particulares de su póliza.</p>
+</td></tr>
+
+<!-- FOOTER SDI -->
+<tr><td style="background:#0F172A;padding:20px 40px;border-radius:0 0 10px 10px;">
+  <p style="margin:0;font-size:12px;color:#94A3B8;line-height:1.6;"><strong style="color:#E2E8F0;">Seguros Digitales SDI</strong> · Propiedad intelectual Juan Carlos Hernández<br>Lic. SUGESE ${_esc(agente.licencia || "08-1318")} · Cód. ${_esc(agente.codigo || "110113")} · INS Costa Rica</p>
+</td></tr>
+
+</table>
+</td></tr></table>
+</body></html>`;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -3161,6 +3594,7 @@ function bindHandlers() {
       showPaso(1);
       bindCliForm();
       renderAsegList();
+      updateVigBadge();
       toast("Modo local · sesión sin Google OAuth", "success");
     });
   }
@@ -3170,6 +3604,7 @@ function bindHandlers() {
     s.addEventListener("click", () => {
       const sp = s.dataset.step;
       if (sp === "hist") { showPaso("hist"); return; }
+      if (sp === "vig")  { showPaso("vig");  return; }
       const target = parseInt(sp, 10);
       // No saltar adelante si no validamos
       if (target > currentPaso) {
@@ -3311,6 +3746,7 @@ function bootstrap() {
       showView("agente");
       bindCliForm();
       renderAsegList();
+      updateVigBadge();
       // Determinar paso por contenido
       const start = state.asegurados.length ? (PRODUCTOS_ORDER.some(k => state.productos[k].sel) ? 3 : 2) : 1;
       showPaso(start);
@@ -3318,6 +3754,7 @@ function bootstrap() {
       showView("agente");
       bindCliForm();
       renderAsegList();
+      updateVigBadge();
       showPaso(1);
     }
   } else {
