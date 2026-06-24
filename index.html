@@ -2773,10 +2773,7 @@ function buildEmailHTML(payload, link) {
       <tr><td style="padding:0 28px 22px;">
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid #E2E8F0;padding-top:18px;">
           <tr>
-            <td style="vertical-align:top;width:50px;">
-              <div style="width:42px;height:42px;border-radius:50%;background:#1E3A8A;color:#fff;text-align:center;line-height:42px;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;">${escapeHtml(iniciales(p.agente.nombre))}</div>
-            </td>
-            <td style="vertical-align:top;padding-left:12px;">
+            <td style="vertical-align:top;">
               <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;color:#1E293B;">${escapeHtml(p.agente.nombre)}</div>
               <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:#64748B;margin-top:2px;">Agente Autorizado INS · Cód. ${escapeHtml(p.agente.codigo || "—")}</div>
               <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:#64748B;margin-top:4px;">📱 ${escapeHtml(p.agente.whatsapp || "")} · ✉ ${escapeHtml(p.agente.email || "")}</div>
@@ -2865,39 +2862,74 @@ function _encodeRFC2047(s) {
   return `=?UTF-8?B?${b64}?=`;
 }
 
-function buildMime({ to, from, subject, html }) {
-  const boundary = "----=_NextPart_" + Math.random().toString(36).slice(2);
-  const lines = [
-    `From: ${from}`,
-    `To: ${to}`,
-    `Subject: ${_encodeRFC2047(subject)}`,
-    "MIME-Version: 1.0",
-    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+function buildMime({ to, from, subject, html, attachments }) {
+  const atts = (attachments || []).filter(a => a && a.b64);
+  const altBoundary = "----=_Alt_" + Math.random().toString(36).slice(2);
+
+  // Bloque multipart/alternative con el cuerpo HTML
+  const altBlock = [
+    `Content-Type: multipart/alternative; boundary="${altBoundary}"`,
     "",
-    `--${boundary}`,
+    `--${altBoundary}`,
     "Content-Type: text/html; charset=\"UTF-8\"",
     "Content-Transfer-Encoding: base64",
     "",
     btoa(unescape(encodeURIComponent(html))).match(/.{1,76}/g).join("\r\n"),
     "",
-    `--${boundary}--`
+    `--${altBoundary}--`
+  ].join("\r\n");
+
+  const headers = [
+    `From: ${from}`,
+    `To: ${to}`,
+    `Subject: ${_encodeRFC2047(subject)}`,
+    "MIME-Version: 1.0"
   ];
-  return lines.join("\r\n");
+
+  // Sin adjuntos: el cuerpo es directamente el multipart/alternative (comportamiento original)
+  if (!atts.length) {
+    return headers.concat([altBlock]).join("\r\n");
+  }
+
+  // Con adjuntos: multipart/mixed que envuelve [ alternative, adjunto1, adjunto2, ... ]
+  const mixBoundary = "----=_Mix_" + Math.random().toString(36).slice(2);
+  const segs = [`--${mixBoundary}`, altBlock];
+  atts.forEach(a => {
+    const safeName = String(a.name || "documento").replace(/[\r\n"]/g, "");
+    const data = (String(a.b64 || "").replace(/\s+/g, "").match(/.{1,76}/g) || []).join("\r\n");
+    segs.push(`--${mixBoundary}`);
+    segs.push(`Content-Type: ${a.type || "application/octet-stream"}; name="${safeName}"`);
+    segs.push("Content-Transfer-Encoding: base64");
+    segs.push(`Content-Disposition: attachment; filename="${safeName}"`);
+    segs.push("");
+    segs.push(data);
+  });
+  segs.push(`--${mixBoundary}--`);
+
+  headers.push(`Content-Type: multipart/mixed; boundary="${mixBoundary}"`);
+  return headers.join("\r\n") + "\r\n\r\n" + segs.join("\r\n");
 }
 
-function sendEmailViaGmail({ to, subject, html }, onSuccess, onError) {
+function sendEmailViaGmail({ to, subject, html, attachments }, onSuccess, onError) {
   ensureGmailToken(() => {
     const from = agenteActual ? `${agenteActual.nombre} <${agenteActual.email}>` : "Cotizador INS Medical";
-    const mime = buildMime({ to, from, subject, html });
-    const raw = _base64UrlEncode(mime);
-    fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + _gmailAccessToken,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ raw })
-    })
+    const atts = (attachments || []).filter(a => a && a.b64);
+    const mime = buildMime({ to, from, subject, html, attachments: atts });
+
+    let url, headers, body;
+    if (atts.length) {
+      // Con adjuntos: endpoint de subida (acepta mensajes grandes, hasta ~35 MB)
+      url = "https://gmail.googleapis.com/upload/gmail/v1/users/me/messages/send?uploadType=media";
+      headers = { "Authorization": "Bearer " + _gmailAccessToken, "Content-Type": "message/rfc822" };
+      body = mime;
+    } else {
+      // Sin adjuntos: endpoint clásico con raw en JSON (comportamiento original)
+      url = "https://gmail.googleapis.com/gmail/v1/users/me/messages/send";
+      headers = { "Authorization": "Bearer " + _gmailAccessToken, "Content-Type": "application/json" };
+      body = JSON.stringify({ raw: _base64UrlEncode(mime) });
+    }
+
+    fetch(url, { method: "POST", headers, body })
     .then(r => {
       if (!r.ok) {
         return r.text().then(t => { throw new Error(`HTTP ${r.status}: ${t}`); });
@@ -3288,6 +3320,7 @@ function openPolizaModal(h) {
   const cliEmail = cli.email || "";
   const tel = String(cli.telefono || "").replace(/\D/g, "");
   const nombreCliente = h.cliente || cli.nombre || "el cliente";
+  const pvmAttachments = [];
 
   const opsProd = PRODUCTOS_ORDER.map(key => {
     const pr = PRODUCTOS[key];
@@ -3325,6 +3358,13 @@ function openPolizaModal(h) {
             <label class="field-lbl">Deducible</label>
             <select class="field-input" id="pvm-ded"></select>
           </div>
+          <div class="field">
+            <label class="field-lbl">📎 Documentos adjuntos <span style="font-weight:400;color:var(--ink-3);">(opcional)</span></label>
+            <div id="pvm-att-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;"></div>
+            <button type="button" class="btn btn-gray" id="pvm-att-btn" style="width:100%;justify-content:center;">＋ Agregar documentos</button>
+            <input type="file" id="pvm-att-input" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx" style="display:none;" />
+            <div class="field-help" style="margin-top:6px;">Adjunte la póliza emitida y demás documentos. Se enviarán junto al correo. Máximo 20 MB en total.</div>
+          </div>
         </div>
         <div class="modal-foot" style="justify-content:flex-end;gap:8px;flex-wrap:wrap;">
           <button class="btn btn-out" data-act="cerrar">Cancelar</button>
@@ -3347,6 +3387,55 @@ function openPolizaModal(h) {
   }
   llenarDeducibles();
   document.getElementById("pvm-prod").addEventListener("change", llenarDeducibles);
+
+  // ── Adjuntos ───────────────────────────────────────────────
+  const MAX_ATT_BYTES = 20 * 1024 * 1024; // 20 MB en total
+  function fmtBytes(n) {
+    if (n < 1024) return n + " B";
+    if (n < 1024 * 1024) return (n / 1024).toFixed(0) + " KB";
+    return (n / (1024 * 1024)).toFixed(1) + " MB";
+  }
+  function totalAttBytes() { return pvmAttachments.reduce((s, a) => s + (a.size || 0), 0); }
+  function renderPvmAtt() {
+    const cont = document.getElementById("pvm-att-list");
+    if (!cont) return;
+    cont.innerHTML = pvmAttachments.map((a, i) => `
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;">
+        <span style="font-size:14px;flex-shrink:0;">📄</span>
+        <span style="flex:1;min-width:0;font-size:12.5px;color:var(--ink-1,#0F172A);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(a.name)}</span>
+        <span style="font-size:11px;color:var(--ink-3);flex-shrink:0;">${fmtBytes(a.size || 0)}</span>
+        <button type="button" data-att-rm="${i}" title="Quitar" style="border:none;background:none;cursor:pointer;color:var(--red);font-size:15px;line-height:1;flex-shrink:0;padding:0 2px;">✕</button>
+      </div>`).join("");
+  }
+  const attInput = document.getElementById("pvm-att-input");
+  document.getElementById("pvm-att-btn").addEventListener("click", () => attInput.click());
+  attInput.addEventListener("change", () => {
+    const files = Array.from(attInput.files || []);
+    let pending = files.length;
+    if (!pending) return;
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const res = String(reader.result || "");
+        const b64 = res.includes(",") ? res.slice(res.indexOf(",") + 1) : res;
+        if (totalAttBytes() + (file.size || 0) > MAX_ATT_BYTES) {
+          toast(`"${file.name}" supera el límite de 20 MB en total y no se adjuntó`, "error");
+        } else {
+          pvmAttachments.push({ name: file.name, type: file.type || "application/octet-stream", size: file.size || 0, b64 });
+        }
+        if (--pending === 0) renderPvmAtt();
+      };
+      reader.onerror = () => { toast(`No se pudo leer "${file.name}"`, "error"); if (--pending === 0) renderPvmAtt(); };
+      reader.readAsDataURL(file);
+    });
+    attInput.value = "";
+  });
+  document.getElementById("pvm-att-list").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-att-rm]");
+    if (!btn) return;
+    const idx = parseInt(btn.dataset.attRm, 10);
+    if (idx >= 0) { pvmAttachments.splice(idx, 1); renderPvmAtt(); }
+  });
 
   function getPolizaData() {
     const numero      = (document.getElementById("pvm-numero").value || "").trim();
@@ -3385,10 +3474,11 @@ function openPolizaModal(h) {
       const subj = `Su póliza INS Medical está vigente · N.º ${polizaData.numero} · Guía de uso y reclamos`;
       const btn = ovl.querySelector("[data-act='enviar-gmail']");
       btn.disabled = true; btn.textContent = "Enviando…";
-      sendEmailViaGmail({ to: cliEmail, subject: subj, html: emailHtml }, () => {
+      sendEmailViaGmail({ to: cliEmail, subject: subj, html: emailHtml, attachments: pvmAttachments }, () => {
         guardarDatosPoliza(h.id, polizaData);
         ovl.remove();
-        toast("Guía de uso y reclamos enviada a " + cliEmail, "success");
+        const nAtt = pvmAttachments.length;
+        toast("Guía enviada a " + cliEmail + (nAtt ? ` con ${nAtt} ${nAtt === 1 ? "adjunto" : "adjuntos"}` : ""), "success");
       }, err => {
         btn.disabled = false; btn.textContent = "🚀 Enviar por Gmail";
         toast("Error al enviar: " + err.message, "error");
@@ -3542,9 +3632,6 @@ function buildEmailPolizaVigenteMedical(st, polizaData) {
   <!-- FIRMA AGENTE -->
   <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
   <tr>
-    <td width="48" style="vertical-align:top;padding-right:14px;">
-      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1E3A8A);font-size:15px;font-weight:700;color:#fff;text-align:center;line-height:42px;">${_esc(iniciales(agente.nombre || ""))}</div>
-    </td>
     <td style="vertical-align:top;">
       <p style="margin:0;font-size:13.5px;font-weight:700;color:#0F172A;">${_esc(agente.nombre || "Agente INS")}</p>
       <p style="margin:2px 0 0;font-size:12px;color:#64748B;">Lic. SUGESE ${_esc(agente.licencia || "08-1318")} · Seguros Digitales SDI</p>
