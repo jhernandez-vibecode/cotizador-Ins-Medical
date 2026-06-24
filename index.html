@@ -2914,22 +2914,18 @@ function sendEmailViaGmail({ to, subject, html, attachments }, onSuccess, onErro
   ensureGmailToken(() => {
     const from = agenteActual ? `${agenteActual.nombre} <${agenteActual.email}>` : "Cotizador INS Medical";
     const atts = (attachments || []).filter(a => a && a.b64);
+    // El endpoint de subida (/upload/...) NO permite CORS desde el navegador → "Failed to fetch".
+    // Usamos siempre el endpoint clásico: el adjunto viaja dentro del MIME (multipart/mixed) en `raw`.
     const mime = buildMime({ to, from, subject, html, attachments: atts });
-
-    let url, headers, body;
-    if (atts.length) {
-      // Con adjuntos: endpoint de subida (acepta mensajes grandes, hasta ~35 MB)
-      url = "https://gmail.googleapis.com/upload/gmail/v1/users/me/messages/send?uploadType=media";
-      headers = { "Authorization": "Bearer " + _gmailAccessToken, "Content-Type": "message/rfc822" };
-      body = mime;
-    } else {
-      // Sin adjuntos: endpoint clásico con raw en JSON (comportamiento original)
-      url = "https://gmail.googleapis.com/gmail/v1/users/me/messages/send";
-      headers = { "Authorization": "Bearer " + _gmailAccessToken, "Content-Type": "application/json" };
-      body = JSON.stringify({ raw: _base64UrlEncode(mime) });
-    }
-
-    fetch(url, { method: "POST", headers, body })
+    const raw = _base64UrlEncode(mime);
+    fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + _gmailAccessToken,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ raw })
+    })
     .then(r => {
       if (!r.ok) {
         return r.text().then(t => { throw new Error(`HTTP ${r.status}: ${t}`); });
@@ -3340,6 +3336,10 @@ function openPolizaModal(h) {
         </div>
         <div class="modal-body">
           <p style="font-size:12.5px;color:var(--ink-3);margin-bottom:16px;line-height:1.55;">Capture los datos finales del INS para generar y enviar la guía de uso y reclamos a <strong>${escapeHtml(nombreCliente)}</strong>.</p>
+          <div class="field">
+            <label class="field-lbl">Correo del cliente <span class="req">*</span></label>
+            <input class="field-input" id="pvm-email" type="email" value="${escapeHtml(cliEmail)}" placeholder="cliente@correo.com" />
+          </div>
           <div class="cli-grid">
             <div class="field">
               <label class="field-lbl">N.º de póliza <span class="req">*</span></label>
@@ -3470,15 +3470,21 @@ function openPolizaModal(h) {
     }
 
     if (act === "enviar-gmail") {
+      const destinatario = (document.getElementById("pvm-email").value || "").trim();
+      if (!destinatario || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(destinatario)) {
+        toast("Ingrese un correo válido para el cliente", "error");
+        const ef = document.getElementById("pvm-email"); if (ef) ef.focus();
+        return;
+      }
       const emailHtml = buildEmailPolizaVigenteMedical(st, polizaData);
       const subj = `Su póliza INS Medical está vigente · N.º ${polizaData.numero} · Guía de uso y reclamos`;
       const btn = ovl.querySelector("[data-act='enviar-gmail']");
       btn.disabled = true; btn.textContent = "Enviando…";
-      sendEmailViaGmail({ to: cliEmail, subject: subj, html: emailHtml, attachments: pvmAttachments }, () => {
+      sendEmailViaGmail({ to: destinatario, subject: subj, html: emailHtml, attachments: pvmAttachments }, () => {
         guardarDatosPoliza(h.id, polizaData);
         ovl.remove();
         const nAtt = pvmAttachments.length;
-        toast("Guía enviada a " + cliEmail + (nAtt ? ` con ${nAtt} ${nAtt === 1 ? "adjunto" : "adjuntos"}` : ""), "success");
+        toast("Guía enviada a " + destinatario + (nAtt ? ` con ${nAtt} ${nAtt === 1 ? "adjunto" : "adjuntos"}` : ""), "success");
       }, err => {
         btn.disabled = false; btn.textContent = "🚀 Enviar por Gmail";
         toast("Error al enviar: " + err.message, "error");
