@@ -542,6 +542,25 @@ a:hover { text-decoration: underline; }
   border-radius: var(--rl); padding: 40px 20px;
   text-align: center; color: var(--ink-3); font-size: 13px;
 }
+
+/* Banda de respaldo del historial */
+.hist-backup {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 22px; flex-wrap: wrap; margin-bottom: 14px; padding: 13px 16px;
+  background: var(--amber-light); border: 1px solid #F0D89B;
+  border-left: 3px solid var(--amber); border-radius: 0 var(--rl) var(--rl) 0;
+}
+.hist-backup .hb-txt { font-size: 12px; color: var(--ink-2); line-height: 1.55; max-width: 74ch; }
+.hist-backup .hb-txt strong { display: block; color: var(--ink); font-size: 12.5px; margin-bottom: 2px; }
+.hist-backup .hb-btns { display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
+.hist-backup button {
+  padding: 8px 13px; border: 1px solid var(--line); background: var(--white);
+  color: var(--ink-2); border-radius: 6px; font-family: inherit; font-size: 12.5px;
+  font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.hist-backup button:hover { border-color: var(--ink-3); color: var(--ink); }
+.hist-backup .hb-exp { background: var(--amber); color: #fff; border-color: var(--amber); }
+.hist-backup .hb-exp:hover { background: #92400E; border-color: #92400E; color: #fff; }
 .hist-card {
   background: var(--white); border: 1.5px solid var(--line);
   border-radius: var(--rl); padding: 16px 20px;
@@ -1209,6 +1228,17 @@ a:hover { text-decoration: underline; }
           <div class="page-sub">Historial local de cotizaciones generadas desde este navegador.</div>
         </div>
         <button class="btn btn-out" id="btn-new">+ Nueva cotización</button>
+      </div>
+      <div class="hist-backup">
+        <div class="hb-txt">
+          <strong>Respaldo</strong>
+          Este historial vive solo en este navegador: un limpiador de disco o "borrar datos de
+          navegación" lo elimina sin aviso y sin vuelta atrás. Descargue el archivo cada cierto tiempo.
+        </div>
+        <div class="hb-btns">
+          <button class="hb-exp" id="btn-exp-hist">⬇ Respaldar</button>
+          <button id="btn-imp-hist">⬆ Importar</button>
+        </div>
       </div>
       <div class="hist-list" id="hist-list"></div>
     </section>
@@ -3149,6 +3179,64 @@ function persistCurrentCot(linkOverride) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   RESPALDO DEL HISTORIAL (exportar / importar JSON)
+   El historial vive en localStorage y cualquier limpiador de disco lo borra
+   sin aviso. El archivo JSON es lo único que no depende del navegador.
+   ═══════════════════════════════════════════════════════════════ */
+
+function exportarRespaldo() {
+  const hist = loadHistorial();
+  if (!hist.length) { toast("No hay cotizaciones que respaldar", "warn"); return; }
+  const data = {
+    app: "cotizador-ins-medical",
+    version: 1,
+    exportadoEl: new Date().toISOString(),
+    agente: agenteActual ? agenteActual.email : "",
+    historial: hist
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "insmedical-respaldo-" + new Date().toISOString().slice(0, 10) + ".json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast(hist.length + (hist.length === 1 ? " cotización respaldada" : " cotizaciones respaldadas"), "success");
+}
+
+function importarRespaldo(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    let data;
+    try { data = JSON.parse(reader.result); }
+    catch (e) { toast("El archivo no es un respaldo válido", "error"); return; }
+    const lista = Array.isArray(data) ? data : (data && Array.isArray(data.historial) ? data.historial : null);
+    if (!lista) { toast("El archivo no contiene un historial de INS Medical", "error"); return; }
+
+    const hist = loadHistorial();
+    const ids = new Set(hist.map(h => h.id));
+    const nuevos = lista.filter(r => r && r.id && !ids.has(r.id));
+    if (!nuevos.length) { toast("El respaldo no trae nada nuevo", "warn"); return; }
+    if (!confirm("El respaldo trae " + nuevos.length + " cotizaciones que no están en el historial.\n\n¿Agregarlas?")) return;
+
+    saveHistorial(hist.concat(nuevos));
+    renderHistorial();
+    if (typeof renderPolizasVigentes === "function") renderPolizasVigentes();
+    toast(nuevos.length + " cotizaciones importadas", "success");
+  };
+  reader.onerror = () => toast("No se pudo leer el archivo", "error");
+  reader.readAsText(file);
+}
+
+function pedirArchivoRespaldo() {
+  const inp = document.createElement("input");
+  inp.type = "file";
+  inp.accept = "application/json,.json";
+  inp.addEventListener("change", () => { if (inp.files && inp.files[0]) importarRespaldo(inp.files[0]); });
+  inp.click();
+}
+
+/* ═══════════════════════════════════════════════════════════════
    HISTORIAL VIEW
    ═══════════════════════════════════════════════════════════════ */
 
@@ -3800,6 +3888,8 @@ function bindHandlers() {
   }
   $("#btn-new").addEventListener("click", iniciarNuevaCotizacion);
   $("#btn-new-hdr").addEventListener("click", iniciarNuevaCotizacion);
+  $("#btn-exp-hist").addEventListener("click", exportarRespaldo);
+  $("#btn-imp-hist").addEventListener("click", pedirArchivoRespaldo);
 
   // Cerrar modales con Esc
   document.addEventListener("keydown", (e) => {
