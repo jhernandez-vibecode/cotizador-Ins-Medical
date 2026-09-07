@@ -220,4 +220,4 @@ Si INS publica nuevas tarifas:
 
 ---
 
-> **Ubicaciones canon (desde el 7 sep 2026, decisión 10-C):** `jhernandez-vibecode/cotizador-Ins-Medical` → `.claude/skills/especialista-cotizador-ins-medical/SKILL.md` y `C:\Users\segur\.claude\skills\especialista-cotizador-ins-medical\SKILL.md`, byte-idénticas. Se edita en el repo, se commitea y se copia al user-level (o al revés, pero siempre las dos en el mismo día).
+> **Ubicaciones canon (desde el 6 sep 2026, decisión 10-C):** `jhernandez-vibecode/cotizador-Ins-Medical` → `.claude/skills/especialista-cotizador-ins-medical/SKILL.md` y `C:\Users\segur\.claude\skills\especialista-cotizador-ins-medical\SKILL.md`, byte-idénticas. Se edita en el repo, se commitea y se copia al user-level (o al revés, pero siempre las dos en el mismo día).
