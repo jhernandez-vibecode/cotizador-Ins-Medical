@@ -4,4 +4,7 @@ node_modules/
 .vscode/
 .idea/
 *.log
-.claude/
+# .claude/ se versiona (skills del proyecto). Solo queda fuera lo local:
+/.claude/launch.json
+/.claude/settings.local.json
+/.claude/**/*.backup-*
