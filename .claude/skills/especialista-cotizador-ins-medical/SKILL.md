@@ -94,8 +94,8 @@ cotización completa encontrará" con los 5 renglones transcritos; cierre; pie c
   cuando la app muestra TODO con IVA (regla operativa #1). Ahora dice "Las primas ya incluyen el IVA".
   Es el mismo defecto que Vital 360 tuvo en su aviso legal (`54ee093`).
 - El correo conserva el `?c=` largo (no hay enlace corto en este proyecto todavía).
-- **Falta el smoke real de JC en Gmail del teléfono** — mandarse una cotización de prueba a
-  `segurosjhernandez@outlook.com`, nunca al corporativo.
+- ✅ **Smoke real de JC hecho el 11 sep 2026 — NO volver a pedirlo:** remitente bien escrito, filete,
+  logo SDI al pie y el botón debajo de las tarjetas, vistos en su Gmail.
 
 ### El correo de póliza emitida · `buildEmailPolizaVigenteMedical` (11 sep 2026, segundo commit)
 JC lo pidió el mismo día. **El texto se TRANSCRIBIÓ, no se redactó**: se guardó la salida de la
@@ -114,7 +114,7 @@ tocando texto legal aprobado.
 - Barra, filete, píldora "Póliza emitida y vigente", tarjeta de la póliza sobre banda pálida y pie con
   `sdi-logo-color.png`: mismas piezas que el correo de cotización (constantes `EMAIL_IMG`, `_LC_F`, `_LC_M`).
 - Fuera el 📱 de la firma. Con esto **no queda ningún emoji** en la app salvo ✓ ✕ ★.
-- **Falta el smoke real de JC en Gmail** (a `segurosjhernandez@outlook.com`), igual que el de cotización.
+- ✅ **Smoke real de JC hecho el 11 sep 2026** (remitente, filete y logo OK) — no volver a pedirlo.
 
 ## Stack
 
@@ -231,7 +231,7 @@ tilde/ñ van en **RFC 2231** (`filename*=UTF-8''…`), la lección de Vital 360 
 - **Los otros cotizadores ya lo hacían bien** (Vital `fromEnc`, autos `mime-builder.js`, hogar
   `encFrom`): revisado por grep el mismo día. Regla: **todo encabezado con texto libre (From, To con
   nombre, Subject, filename) pasa por RFC 2047/2231; nunca crudo.**
-- **Falta que JC confirme con un correo real** que el remitente ya sale bien.
+- ✅ JC confirmó con un correo real el 11 sep 2026: "ya salió bien el remitente".
 
 ## Documentos del producto
 
