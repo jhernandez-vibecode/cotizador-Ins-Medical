@@ -10,7 +10,8 @@
 <meta name="theme-color" content="#1E3A8A" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&family=Google+Sans+Code:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
 /* ═══════════════════════ DESIGN TOKENS ═══════════════════════ */
 :root {
@@ -998,6 +999,8 @@ a:hover { text-decoration: underline; }
   .has-tip::after { width: 220px; font-size: 10.5px; }
 }
 </style>
+<!-- Línea clara SDI (11 sep 2026): hoja de sobreescritura, va de última a propósito -->
+<link rel="stylesheet" href="linea-clara.css?v=1" />
 </head>
 <body>
 
@@ -1015,7 +1018,7 @@ a:hover { text-decoration: underline; }
 <div data-view="login">
   <div class="login-wrap">
     <div class="login-card">
-      <img class="ins-logo" src="https://cotizador.appsegurosdigitales.com/img/ins-logo.png" alt="INS" style="filter:invert(.15);" />
+      <img class="ins-logo" src="img/sdi-logo-compacto.svg" alt="Seguros Digitales SDI" />
       <h1>INS Medical · Cotizador</h1>
       <div class="sub">Acceso exclusivo para agentes autorizados de Seguros Digitales SDI</div>
       <button class="gsi-btn" id="btn-login">
@@ -1028,7 +1031,7 @@ a:hover { text-decoration: underline; }
         Iniciar sesión con Google
       </button>
       <button class="gsi-btn" id="btn-login-local" style="display:none;margin-top:10px;background:#FEF3C7;border-color:#FBBF24;color:#92400E">
-        🔧 Modo local · Continuar como Juan Carlos
+        Modo local · Continuar como Juan Carlos
       </button>
       <div class="footnote">
         Su correo será verificado contra la lista de agentes autorizados. Si tiene problemas, contacte a su administrador.
@@ -1041,7 +1044,7 @@ a:hover { text-decoration: underline; }
 <div data-view="bloqueado">
   <div class="bloq-wrap">
     <div class="bloq-card">
-      <div class="icon">🔒</div>
+      <div class="icon"></div>
       <h1>Acceso restringido</h1>
       <p>Este cotizador está reservado para agentes autorizados de Seguros Digitales SDI.</p>
       <div class="ag-email" id="bloq-email">—</div>
@@ -1056,7 +1059,7 @@ a:hover { text-decoration: underline; }
 
   <header class="hdr">
     <div class="hdr-logo">
-      <img src="https://cotizador.appsegurosdigitales.com/img/ins-logo.png" alt="INS" class="hdr-ins-logo" />
+      <img src="img/sdi-logo-compacto.svg" alt="Seguros Digitales SDI" class="hdr-ins-logo" />
       <div class="hdr-sep"></div>
       <span class="hdr-prod">INS Medical <span>/ Cotizador</span></span>
     </div>
@@ -1141,7 +1144,7 @@ a:hover { text-decoration: underline; }
       <div class="aseg-bar" id="aseg-bar"></div>
 
       <div class="data-warn" id="data-warn-int1k" style="display:none">
-        <div class="icon">⚠</div>
+        <div class="icon"></div>
         <div>
           <strong>Internacional con deducible $1,000 (sin AMP) no disponible.</strong>
           Las tarifas oficiales del INS para esta combinación específica presentan inconsistencias (la columna duplica valores de Grandes Deducibles $5,000 para algunas edades). Mientras INS publica el archivo corregido, esta combinación está deshabilitada. Para cotizar Internacional con $1,000 active la <strong>Ampliación de epidemias y pandemias</strong> arriba — en esa versión los datos sí están correctos.
@@ -1149,7 +1152,7 @@ a:hover { text-decoration: underline; }
       </div>
 
       <div class="opt-toggle">
-        <div class="icon">🦠</div>
+        <div class="icon"></div>
         <div class="text">
           <strong>Ampliar cobertura de epidemias y pandemias</strong>
           <div class="note">Sin ampliar: $7.500 (Regional) / $15.000 (Internacional y GD). Con ampliación: $75.000 / $200.000. <strong>La prima sube ~17%</strong>.</div>
@@ -1161,7 +1164,7 @@ a:hover { text-decoration: underline; }
       </div>
 
       <div class="variant-toggle" id="variant-toggle" style="display:none">
-        <div class="icon">⚠</div>
+        <div class="icon"></div>
         <div class="text">
           Hay asegurados de 70 años o más. El INS permite escoger entre <strong>Con Reducción de Suma Asegurada</strong> (la suma asegurada baja a partir de los 70) o <strong>Sin Reducción</strong> (la suma asegurada se mantiene, con prima mayor).
         </div>
@@ -1209,7 +1212,7 @@ a:hover { text-decoration: underline; }
             <button class="btn btn-gray" id="btn-preview">Vista previa</button>
             <button class="btn btn-out" id="btn-copy">Copiar enlace</button>
             <button class="btn btn-wa" id="btn-wa">WhatsApp</button>
-            <button class="btn btn-pri" id="btn-email">✉ Enviar por correo</button>
+            <button class="btn btn-pri" id="btn-email">Enviar por correo</button>
           </div>
         </div>
       </div>
@@ -1236,8 +1239,8 @@ a:hover { text-decoration: underline; }
           navegación" lo elimina sin aviso y sin vuelta atrás. Descargue el archivo cada cierto tiempo.
         </div>
         <div class="hb-btns">
-          <button class="hb-exp" id="btn-exp-hist">⬇ Respaldar</button>
-          <button id="btn-imp-hist">⬆ Importar</button>
+          <button class="hb-exp" id="btn-exp-hist">Respaldar</button>
+          <button id="btn-imp-hist">Importar</button>
         </div>
       </div>
       <div class="hist-list" id="hist-list"></div>
@@ -1253,6 +1256,21 @@ a:hover { text-decoration: underline; }
       </div>
       <div id="vig-list"></div>
     </section>
+
+    <footer class="sdi-foot-agente">
+      <img src="img/sdi-logo-compacto.svg" alt="Seguros Digitales SDI" />
+      <p class="l1">Un producto de <strong>SDI · Seguros Digitales</strong></p>
+      <p class="l2">© 2026 · Propiedad intelectual de <strong>Juan Carlos Hernández Vargas</strong></p>
+      <details class="sdi-changelog">
+        <summary>Última actualización: 11 sep 2026 — cara nueva en toda la aplicación y en el correo de la cotización</summary>
+        <ul>
+          <li><strong>11 sep 2026</strong> — Cara nueva (línea clara SDI) en la consola, en la página del cliente y en el correo de la cotización: fondo blanco, más aire, botones en píldora y un solo color de acento. El correo presenta las opciones como tarjetas, con la propuesta marcada como "Opción a valorar" y el aporte de cada asegurado. Fuera los emojis de los botones. El pie lleva el logo SDI oficial. Las primas, los deducibles y las coberturas son exactamente los mismos.</li>
+          <li><strong>11 sep 2026</strong> — Corregido el aviso legal del correo: decía que las primas no incluyen el IVA, cuando sí lo incluyen desde el inicio.</li>
+          <li><strong>16 jul 2026</strong> — Respaldo del historial: exportar e importar un archivo JSON desde "Mis cotizaciones".</li>
+          <li><strong>24 jun 2026</strong> — El correo de póliza emitida permite adjuntar documentos (hasta 20 MB).</li>
+        </ul>
+      </details>
+    </footer>
 
   </div><!-- /main -->
 
@@ -2424,7 +2442,7 @@ function renderCliPriceCards(p, enviarKeys) {
     const ded = productData.deducible;
     const total = productData.primaTotal;
     const isRec = (p.planRecomendado === key);
-    const bestTag = isRec ? `<div class="best-tag">RECOMENDADO</div>` : "";
+    const bestTag = isRec ? `<div class="best-tag">Opción a valorar</div>` : "";
     return `
       <div class="price-card ${prod.color_class}">
         ${bestTag}
@@ -2573,7 +2591,7 @@ function renderCliDocs(p) {
       if (it.tipo === "aviso") {
         return `
           <div class="doc-item" style="grid-column:span 2;background:var(--blue-pale);border-color:var(--blue-light)">
-            <div class="doc-icon aviso">📞</div>
+            <div class="doc-icon aviso"></div>
             <div class="doc-info">
               <div class="doc-nm">${escapeHtml(it.nombre)}</div>
               <div class="doc-desc">${escapeHtml(it.desc)}</div>
@@ -2654,8 +2672,8 @@ function renderCliCta(p) {
       <div class="cta-title">¿Tiene preguntas? Contácteme</div>
       <div class="cta-sub">${escapeHtml(p.agente.nombre)} · Agente Autorizado INS · Cód. ${escapeHtml(p.agente.codigo || "—")}</div>
       <div class="cta-btns">
-        <a class="cta-btn cta-wa" href="${escAttr(waLink)}" target="_blank">📱 WhatsApp ${escapeHtml(p.agente.whatsapp)}</a>
-        <a class="cta-btn cta-pri" href="mailto:${escAttr(p.agente.email)}?subject=${encodeURIComponent('Cotización INS Medical COT-' + p.id)}">✉ ${escapeHtml(p.agente.email)}</a>
+        <a class="cta-btn cta-wa" href="${escAttr(waLink)}" target="_blank">WhatsApp ${escapeHtml(p.agente.whatsapp)}</a>
+        <a class="cta-btn cta-pri" href="mailto:${escAttr(p.agente.email)}?subject=${encodeURIComponent('Cotización INS Medical COT-' + p.id)}">${escapeHtml(p.agente.email)}</a>
       </div>
     </div>
   `;
@@ -2679,9 +2697,9 @@ function renderCliFooter(p) {
           <span class="sdi-word">Seguros Digitales</span>
           <span class="sdi-bars"><i></i><i></i><i></i></span>
         </div>
-        <p class="sdi-line">Esta cotización pertenece a <strong>Seguros Digitales SDI<sup>®</sup></strong></p>
         <p class="sdi-line sub">Agente ${escapeHtml(p.agente.nombre)} · Lic. SUGESE ${escapeHtml(p.agente.licencia || "08-1318")} · Cód. ${escapeHtml(p.agente.codigo || "—")} · ${escapeHtml(p.agente.whatsapp || "")} · ${escapeHtml(p.agente.email || "")}</p>
-        <p class="sdi-line sub">© 2026 Propiedad intelectual de ${escapeHtml(p.agente.nombre)}</p>
+        <p class="sdi-line">Un producto de <strong>SDI · Seguros Digitales</strong></p>
+        <p class="sdi-line sub">© 2026 · Propiedad intelectual de <strong>Juan Carlos Hernández Vargas</strong></p>
       </div>
     </div>
   `;
@@ -2704,126 +2722,224 @@ window.cliSolicitar = function(prodKey) {
    EMAIL TEMPLATE
    ═══════════════════════════════════════════════════════════════ */
 
+// Plantilla del correo de cotización — línea clara (11 sep 2026), misma forma que
+// la Plantilla A de Vital 360: barra INS en tinta, píldora de estado, titular,
+// botón, y las opciones en TARJETAS (la propuesta ancha con "★ Opción a valorar"
+// y el aporte por asegurado; las demás en pares). Un correo no es una página:
+// tablas y estilos en línea, sin webfonts (Gmail cae a Arial / Courier New), sin
+// flex ni SVG. Los dos logos son PNG con URL absoluta (EMAIL_IMG) y viven en
+// ESTE repo: si se despliega el correo sin img/, salen rotos.
+const EMAIL_IMG = "https://insmedical.appsegurosdigitales.com";
+const _LC_F = "Arial,Helvetica,sans-serif";
+const _LC_M = "'Courier New',Courier,monospace";
+
 function buildEmailHTML(payload, link) {
   const p = payload;
+  const a = p.agente;
   const cliNombre = (p.cliente.nombre || "").split(/\s+/).slice(0, 2).join(" ") || "estimado/a";
-  const nProds = Object.keys(p.productos).length;
   const productosOrden = PRODUCTOS_ORDER.filter(k => p.productos[k]);
+  const nProds = productosOrden.length;
+  const nAseg = p.asegurados.length;
+  const recKey = (p.planRecomendado && p.productos[p.planRecomendado]) ? p.planRecomendado : null;
+  const otras = productosOrden.filter(k => k !== recKey);
+  const F = _LC_F, M = _LC_M;
 
-  // Cards de cada producto
-  const productCards = productosOrden.map(key => {
+  const regla = `<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 0 12px;"><tr><td bgcolor="#1E3A8A" style="background:#1E3A8A;width:28px;height:3px;font-size:0;line-height:0;">&nbsp;</td></tr></table>`;
+
+  // Tarjeta chica (las demás opciones)
+  const tarjeta = key => {
     const prod = PRODUCTOS[key];
-    const data = p.productos[key];
-    const ded = data.deducible;
-    const total = data.primaTotal;
-    const isRec = (p.planRecomendado === key);
-    const accentColor = key === "regional" ? "#5B91D0" : key === "grandes_deducibles" ? "#059669" : "#2563EB";
-    const accentLight = key === "regional" ? "#E0EFFA" : key === "grandes_deducibles" ? "#D1FAE5" : "#DBEAFE";
-    const accentDark  = key === "regional" ? "#2E6FA8" : key === "grandes_deducibles" ? "#047857" : "#1E3A8A";
-    const recBadge = isRec
-      ? `<tr><td style="padding:0 0 10px;"><span style="background:#059669;color:#fff;font-size:10px;font-weight:700;padding:2px 10px;border-radius:100px;letter-spacing:.3px;text-transform:uppercase;">★ Recomendado por su agente</span></td></tr>`
-      : "";
-    return `
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:14px;border:1.5px solid #E2E8F0;border-radius:14px;overflow:hidden;background:#fff;">
-      <tr><td style="height:3px;background:${accentColor};"></td></tr>
-      <tr><td style="padding:18px 22px 14px;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-          ${recBadge}
-          <tr><td style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:16px;font-weight:700;color:#1E293B;letter-spacing:-.2px;">${escapeHtml(prod.nombre)}</td></tr>
-          <tr><td style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:#64748B;padding-top:2px;">${escapeHtml(prod.tagline)} · Suma Asegurada $${_fmtMon(prod.suma_asegurada)} USD</td></tr>
-          <tr><td style="padding-top:8px;">
-            <span style="display:inline-block;background:${accentLight};color:${accentDark};font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;">Deducible $${_fmtMon(parseInt(ded, 10))}/persona</span>
-          </td></tr>
-        </table>
-      </td></tr>
-      <tr><td style="padding:14px 22px;background:${accentLight};border-top:1.5px solid ${accentColor}33;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-          <tr>
-            <td style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:${accentDark};">Prima familiar / año</td>
-            <td align="right" style="font-family:'Courier New',monospace;font-size:22px;font-weight:700;color:${accentDark};">$${_fmtMon(total)} <span style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:11px;color:#64748B;font-weight:500;">USD</span></td>
-          </tr>
-        </table>
-      </td></tr>
-    </table>
-    `;
-  }).join("");
+    const d = p.productos[key];
+    return `<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background:#ffffff;border:1px solid #DADCE0;border-radius:20px;"><tr><td style="padding:18px 20px 16px;">
+      <p style="margin:0 0 5px;font-size:12px;color:#6B7681;">${escapeHtml(prod.tagline)}</p>
+      <p style="margin:0;font-size:19px;font-weight:bold;color:#1B1F23;letter-spacing:-0.02em;">${escapeHtml(prod.nombre)}</p>
+      <p style="margin:8px 0 0;font-size:12px;color:#6B7681;">suma asegurada &middot; deducible</p>
+      <p style="margin:2px 0 0;font-family:${M};font-size:13px;font-weight:bold;color:#1B1F23;">$${_fmtMon(prod.suma_asegurada)} &middot; $${_fmtMon(parseInt(d.deducible, 10))}</p>
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:12px 0 10px;"><tr><td style="border-top:1px solid #EDEFF2;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+      <p style="margin:0;font-size:11.5px;color:#6B7681;">Prima familiar del a&ntilde;o</p>
+      <p style="margin:4px 0 0;font-family:${M};font-size:19px;font-weight:bold;color:#1B1F23;">$${_fmtMon(d.primaTotal)} <span style="font-family:${F};font-size:11px;font-weight:normal;color:#6B7681;">USD</span></p>
+      <p style="margin:5px 0 0;font-size:11px;color:#6B7681;">con IVA &middot; $${_fmtMon(d.primaTotalSinIVA)} sin IVA</p>
+    </td></tr></table>`;
+  };
+
+  // Tarjeta ancha (la propuesta) con el aporte de cada asegurado
+  let anchaHtml = "";
+  if (recKey) {
+    const prod = PRODUCTOS[recKey];
+    const d = p.productos[recKey];
+    const filas = p.asegurados.map((as, i) => {
+      const pa = (d.primasPorAseg || [])[i];
+      const monto = (pa && pa.primaConIVA !== null && pa.primaConIVA !== undefined) ? "$" + _fmtMon(pa.primaConIVA) : "&mdash;";
+      return `<tr>
+        <td style="padding:8px 0;border-bottom:1px solid #EDEFF2;${i === 0 ? "border-top:1px solid #EDEFF2;" : ""}font-size:13px;color:#5A6570;">${escapeHtml(as.nombre.split(/\s+/).slice(0, 2).join(" "))} <span style="color:#6B7681;font-size:12px;">&middot; ${escapeHtml(parentescoLabel(as.parentesco))} &middot; ${escapeHtml(as.edad)} a&ntilde;os</span></td>
+        <td align="right" style="padding:8px 0;border-bottom:1px solid #EDEFF2;${i === 0 ? "border-top:1px solid #EDEFF2;" : ""}font-family:${M};font-size:13px;font-weight:bold;color:#1B1F23;white-space:nowrap;">${monto}</td>
+      </tr>`;
+    }).join("");
+    anchaHtml = `
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background:#ffffff;border:2px solid #0369A1;border-radius:20px;margin:0 0 12px;">
+                <tr>
+                  <td style="padding:20px 22px 0;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                      <tr>
+                        <td valign="top">
+                          <p style="margin:0 0 6px;font-size:12px;color:#6B7681;">${escapeHtml(prod.tagline)}</p>
+                          <p style="margin:0;font-size:24px;font-weight:bold;color:#1B1F23;line-height:1.1;letter-spacing:-0.02em;">${escapeHtml(prod.nombre)}</p>
+                          <p style="margin:8px 0 0;font-size:12px;color:#6B7681;">suma asegurada &middot; deducible por persona</p>
+                          <p style="margin:2px 0 0;font-family:${M};font-size:14px;font-weight:bold;color:#1B1F23;">$${_fmtMon(prod.suma_asegurada)} &middot; $${_fmtMon(parseInt(d.deducible, 10))}</p>
+                        </td>
+                        <td valign="top" align="right">
+                          <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="right">
+                            <tr><td bgcolor="#E9EDF6" style="background:#E9EDF6;border-radius:999px;padding:5px 13px 5px 11px;font-size:11.5px;font-weight:bold;color:#1E3A8A;white-space:nowrap;"><span style="color:#F4B400;font-size:12px;">&#9733;</span>&nbsp;Opci&oacute;n a valorar</td></tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:14px 22px 0;"><table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"><tr><td style="border-top:1px solid #EDEFF2;font-size:0;line-height:0;">&nbsp;</td></tr></table></td>
+                </tr>
+                <tr>
+                  <td style="padding:12px 22px 18px;">
+                    <p style="margin:0;font-size:12px;color:#6B7681;">Prima familiar del a&ntilde;o</p>
+                    <p style="margin:6px 0 0;font-family:${M};font-size:28px;font-weight:bold;color:#1B1F23;line-height:1.1;">$${_fmtMon(d.primaTotal)} <span style="font-family:${F};font-size:12px;font-weight:normal;color:#6B7681;">USD</span></p>
+                    <p style="margin:7px 0 0;font-size:11.5px;color:#6B7681;">con IVA 2 % incluido &middot; <span style="font-family:${M};">$${_fmtMon(d.primaTotalSinIVA)}</span> sin IVA</p>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-top:14px;">${filas}</table>
+                    <p style="margin:12px 0 0;font-size:11.5px;color:#6B7681;line-height:1.6;">La prima depende de la edad y el g&eacute;nero de cada persona; sumadas dan el total. No hay cargos por grupo.</p>
+                  </td>
+                </tr>
+              </table>`;
+  }
+
+  let paresHtml = "";
+  for (let i = 0; i < otras.length; i += 2) {
+    paresHtml += `<tr>
+                  <td width="50%" valign="top" style="padding:0 6px 12px 0;">${tarjeta(otras[i])}</td>
+                  <td width="50%" valign="top" style="padding:0 0 12px 6px;">${otras[i + 1] ? tarjeta(otras[i + 1]) : "&nbsp;"}</td>
+                </tr>`;
+  }
 
   return `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"></head>
-<body style="margin:0;padding:0;background:#F8FAFC;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;color:#1E293B;-webkit-text-size-adjust:100%;">
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F8FAFC;">
-  <tr><td align="center" style="padding:24px 16px;">
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;width:100%;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(30,58,138,.08);">
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Su cotización INS Medical está lista</title>
+</head>
+<body style="margin:0;padding:0;background:#F4F7FA;font-family:${F};color:#1B1F23;-webkit-text-size-adjust:100%;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background:#F4F7FA;padding:26px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background:#ffffff;border:1px solid #DADCE0;border-radius:16px;max-width:600px;">
 
-      <!-- HEADER (gradient azul + logo INS) -->
-      <tr><td style="background:linear-gradient(135deg,#1E3A8A 0%,#2563EB 100%);padding:28px 28px 24px;text-align:center;">
-        <img src="${LOGO_INS_URL}" alt="INS" height="36" style="display:inline-block;height:36px;filter:brightness(0) invert(1);margin-bottom:10px;" />
-        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:18px;font-weight:700;color:#fff;letter-spacing:-.3px;">INS Medical</div>
-        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:rgba(255,255,255,.6);margin-top:4px;">Cotización N.º COT-${escapeHtml(p.id)} · ${escapeHtml(fechaLarga(p.fecha))}</div>
-      </td></tr>
-
-      <!-- GREETING -->
-      <tr><td style="padding:28px 28px 18px;">
-        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:24px;font-weight:800;color:#1E293B;letter-spacing:-.4px;line-height:1.2;">Hola ${escapeHtml(cliNombre)},</div>
-        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:14.5px;color:#334155;margin-top:10px;line-height:1.6;">Le preparé esta cotización <strong>INS Medical</strong> pensando en su familia: <strong>${p.asegurados.length} ${p.asegurados.length === 1 ? "asegurado" : "asegurados"}</strong> con <strong>${nProds} ${nProds === 1 ? "opción" : "opciones"}</strong> para que pueda comparar.</div>
-      </td></tr>
-
-      <!-- CTA -->
-      <tr><td style="padding:6px 28px 22px;" align="center">
-        <a href="${escAttr(link)}" style="display:inline-block;background:#2563EB;color:#fff;padding:14px 30px;border-radius:10px;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;text-decoration:none;letter-spacing:.3px;">VER COTIZACIÓN COMPLETA →</a>
-      </td></tr>
-
-      <!-- ASEGURADOS list -->
-      <tr><td style="padding:0 28px 18px;">
-        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748B;margin-bottom:8px;">Asegurados incluidos</div>
-        <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:14px 16px;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:13px;color:#334155;line-height:1.7;">
-          ${p.asegurados.map(a => `<div>• <strong>${escapeHtml(a.nombre)}</strong> · ${escapeHtml(parentescoLabel(a.parentesco))} · ${a.edad} años · ${a.genero === "F" ? "Femenino" : "Masculino"}</div>`).join("")}
-        </div>
-      </td></tr>
-
-      <!-- PRODUCTOS -->
-      <tr><td style="padding:0 28px 8px;">
-        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:13px;font-weight:700;color:#1E293B;margin-bottom:12px;">Resumen de planes cotizados</div>
-        ${productCards}
-      </td></tr>
-
-      <!-- INCLUYE -->
-      <tr><td style="padding:14px 28px 24px;">
-        <div style="background:#EFF6FF;border:1px solid #DBEAFE;border-radius:10px;padding:16px 18px;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:13px;color:#1E3A8A;line-height:1.7;">
-          <div style="font-weight:700;color:#1E3A8A;margin-bottom:6px;">En la cotización completa encontrará</div>
-          <div>• Comparativo detallado de coberturas con explicación de cada una</div>
-          <div>• Opciones de pago: anual, semestral, trimestral</div>
-          <div>• Períodos de espera y condiciones generales</div>
-          <div>• Documentos necesarios para iniciar el aseguramiento</div>
-          <div>• Material informativo oficial del INS</div>
-        </div>
-      </td></tr>
-
-      <!-- AGENT SIGNATURE -->
-      <tr><td style="padding:0 28px 22px;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid #E2E8F0;padding-top:18px;">
+          <!-- filete SDI + barra en dos niveles -->
           <tr>
-            <td style="vertical-align:top;">
-              <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;color:#1E293B;">${escapeHtml(p.agente.nombre)}</div>
-              <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:#64748B;margin-top:2px;">Agente Autorizado INS · Cód. ${escapeHtml(p.agente.codigo || "—")}</div>
-              <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:#64748B;margin-top:4px;">📱 ${escapeHtml(p.agente.whatsapp || "")} · ✉ ${escapeHtml(p.agente.email || "")}</div>
+            <td style="padding:0;border-radius:16px 16px 0 0;overflow:hidden;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"><tr>
+                <td width="25%" bgcolor="#0369A1" style="background:#0369A1;height:4px;font-size:0;line-height:0;">&nbsp;</td>
+                <td width="25%" bgcolor="#0D9488" style="background:#0D9488;height:4px;font-size:0;line-height:0;">&nbsp;</td>
+                <td width="25%" bgcolor="#EA580C" style="background:#EA580C;height:4px;font-size:0;line-height:0;">&nbsp;</td>
+                <td width="25%" bgcolor="#C9A227" style="background:#C9A227;height:4px;font-size:0;line-height:0;">&nbsp;</td>
+              </tr></table>
             </td>
           </tr>
+          <tr>
+            <td style="padding:14px 26px;border-bottom:1px solid #EDEFF2;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td valign="middle"><img src="${EMAIL_IMG}/img/ins-logo-tinta.png" alt="Instituto Nacional de Seguros" width="120" height="28" style="display:block;border:0;width:120px;height:28px;" /></td>
+                  <td valign="middle" align="right" style="font-family:${M};font-size:11px;color:#6B7681;white-space:nowrap;">N.&ordm; COT-${escapeHtml(p.id)} &middot; ${escapeHtml(fechaLarga(p.fecha))}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:11px 26px;border-bottom:1px solid #EDEFF2;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td valign="middle" style="font-size:18px;font-weight:bold;color:#1B1F23;letter-spacing:-0.02em;">INS Medical</td>
+                  <td valign="middle" align="right" style="font-size:12px;color:#6B7681;">Seguro de gastos m&eacute;dicos &middot; INS Costa Rica</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- titular -->
+          <tr>
+            <td align="center" style="padding:40px 34px 6px;">
+              <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" style="margin:0 auto 20px;">
+                <tr><td bgcolor="#E9F5F0" style="background:#E9F5F0;border-radius:999px;padding:7px 15px;font-size:12px;font-weight:bold;color:#037D61;white-space:nowrap;">&bull;&nbsp; Cotizaci&oacute;n vigente ${escapeHtml(p.vigenciaDias)} d&iacute;as</td></tr>
+              </table>
+              <h1 style="margin:0;font-size:30px;line-height:1.15;font-weight:bold;color:#1B1F23;letter-spacing:-0.02em;">Su cotizaci&oacute;n INS Medical est&aacute; lista</h1>
+              <p style="margin:14px auto 0;font-size:15px;line-height:1.6;color:#5A6570;max-width:430px;">
+                ${escapeHtml(cliNombre)}, le prepar&eacute; ${nProds === 1 ? "una opci&oacute;n" : nProds + " opciones"} para ${nAseg} ${nAseg === 1 ? "asegurado" : "asegurados"}. Cada monto es la prima del a&ntilde;o en d&oacute;lares, con el IVA ya incluido.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:26px 34px 36px;">
+              <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" style="margin:0 auto;">
+                <tr>
+                  <td bgcolor="#0369A1" style="background:#0369A1;border-radius:999px;">
+                    <a href="${escAttr(link)}" style="display:inline-block;padding:15px 32px;font-family:${F};font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">Ver mi cotizaci&oacute;n completa &rarr;</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- las opciones en tarjetas -->
+          <tr>
+            <td bgcolor="#EEF4F9" style="background:#EEF4F9;padding:26px 22px 14px;">
+              <p style="margin:0 0 3px;font-size:12px;color:#6B7681;">${nProds === 1 ? "Su opci&oacute;n" : "Las " + nProds + " opciones"} &middot; ${nAseg} ${nAseg === 1 ? "asegurado" : "asegurados"}${p.ampliacionEpidemias ? " &middot; con ampliaci&oacute;n de epidemias" : ""}</p>
+              <p style="margin:0 0 16px;font-size:20px;font-weight:bold;color:#1B1F23;letter-spacing:-0.02em;">Prima del a&ntilde;o, con IVA</p>
+              ${anchaHtml}
+              ${paresHtml ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">${paresHtml}</table>` : ""}
+              <p style="margin:4px 0 0;font-size:11.5px;color:#6B7681;line-height:1.6;">En la cotizaci&oacute;n completa ver&aacute; las coberturas de cada plan lado a lado y el pago anual, semestral o trimestral.</p>
+            </td>
+          </tr>
+
+          <!-- qué trae la cotización completa -->
+          <tr>
+            <td style="padding:32px 34px 10px;">
+              ${regla}
+              <p style="margin:0 0 14px;font-size:20px;font-weight:bold;color:#1B1F23;letter-spacing:-0.02em;">En la cotizaci&oacute;n completa encontrar&aacute;</p>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="font-size:14px;color:#5A6570;line-height:1.55;">
+                <tr><td style="padding:7px 0;border-bottom:1px solid #EDEFF2;">Comparativo detallado de coberturas con explicaci&oacute;n de cada una</td></tr>
+                <tr><td style="padding:7px 0;border-bottom:1px solid #EDEFF2;">Opciones de pago: anual, semestral, trimestral</td></tr>
+                <tr><td style="padding:7px 0;border-bottom:1px solid #EDEFF2;">Per&iacute;odos de espera y condiciones generales</td></tr>
+                <tr><td style="padding:7px 0;border-bottom:1px solid #EDEFF2;">Documentos necesarios para iniciar el aseguramiento</td></tr>
+                <tr><td style="padding:7px 0;">Material informativo oficial del INS</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- cierre -->
+          <tr>
+            <td style="padding:30px 34px 34px;">
+              <p style="margin:0 0 12px;font-size:14.5px;color:#5A6570;line-height:1.7;">Cualquier duda me escribe directo, sin compromiso.</p>
+              <p style="margin:0;font-size:14.5px;color:#1B1F23;font-weight:bold;">${escapeHtml(a.nombre)}</p>
+              <p style="margin:3px 0 0;font-size:12.5px;color:#6B7681;">Agente autorizado INS &middot; C&oacute;d. ${escapeHtml(a.codigo || "—")} &middot; WhatsApp ${escapeHtml(a.whatsapp || "")}</p>
+            </td>
+          </tr>
+
+          <!-- pie -->
+          <tr>
+            <td bgcolor="#EEF4F9" style="background:#EEF4F9;padding:28px 26px 24px;text-align:center;border-radius:0 0 16px 16px;">
+              <img src="${EMAIL_IMG}/img/sdi-logo-color.png" alt="Seguros Digitales SDI" width="118" height="41" style="display:block;border:0;width:118px;height:41px;margin:0 auto 14px;" />
+              <p style="margin:0;font-size:12.5px;color:#6B7681;">Agente ${escapeHtml(a.nombre)} &middot; Lic. SUGESE ${escapeHtml(a.licencia || "08-1318")} &middot; C&oacute;d. ${escapeHtml(a.codigo || "—")} &middot; ${escapeHtml(a.whatsapp || "")}${a.email ? " &middot; " + escapeHtml(a.email) : ""}</p>
+              <p style="margin:12px 0 0;font-size:11px;color:#6B7681;line-height:1.6;">Cotizaci&oacute;n informativa basada en tarifas oficiales del INS vigentes a la fecha. Vigencia ${escapeHtml(p.vigenciaDias)} d&iacute;as. Las primas ya incluyen el IVA (2 %, Ley 9635). Producto registrado bajo norma SUGESE P16-35-A01-113.</p>
+              <p style="margin:12px 0 0;font-size:11.5px;color:#5A6570;">Un producto de <strong style="color:#1B1F23;">SDI &middot; Seguros Digitales</strong></p>
+              <p style="margin:4px 0 0;font-size:11px;color:#6B7681;">&copy; 2026 &middot; Propiedad intelectual de <strong style="color:#5A6570;">Juan Carlos Hern&aacute;ndez Vargas</strong></p>
+            </td>
+          </tr>
+
         </table>
-      </td></tr>
-
-      <!-- FOOTER SDI -->
-      <tr><td style="background:#1E3A8A;padding:24px 28px;text-align:center;">
-        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:-.3px;margin-bottom:10px;">Seguros Digitales</div>
-        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:12px;color:#93C5FD;line-height:1.6;">Esta cotización pertenece a <strong style="color:#fff;font-weight:600;">Seguros Digitales SDI<sup>®</sup></strong></div>
-        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:11px;color:#60A5FA;line-height:1.55;margin-top:6px;">Lic. SUGESE ${escapeHtml(p.agente.licencia || "08-1318")} · © 2026 Propiedad intelectual de ${escapeHtml(p.agente.nombre)}</div>
-        <div style="font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-size:10.5px;color:#60A5FA;font-style:italic;line-height:1.55;margin-top:14px;">Cotización informativa basada en tarifas oficiales del INS vigentes a la fecha. Vigencia ${p.vigenciaDias} días. Producto registrado bajo norma SUGESE P16-35-A01-113. Las primas no incluyen IVA (2%, Ley 9635).</div>
-      </td></tr>
-
-    </table>
-  </td></tr>
-</table>
-</body></html>`;
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -3270,7 +3386,7 @@ function renderHistorial() {
           <button class="hist-act" data-act="edit"  data-id="${escapeHtml(h.id)}">Editar</button>
           <button class="hist-act" data-act="copy"  data-id="${escapeHtml(h.id)}">Copiar enlace</button>
           ${h.estado === "pendiente" ? `<button class="hist-act" data-act="aceptar" data-id="${escapeHtml(h.id)}">✓ Aceptar</button>` : ""}
-          ${h.estado === "aceptada" ? `<button class="hist-act poliza" data-act="poliza" data-id="${escapeHtml(h.id)}">📨 Enviar póliza</button>` : ""}
+          ${h.estado === "aceptada" ? `<button class="hist-act poliza" data-act="poliza" data-id="${escapeHtml(h.id)}">Enviar póliza</button>` : ""}
           <button class="hist-act danger" data-act="del" data-id="${escapeHtml(h.id)}">Eliminar</button>
         </div>
       </div>
@@ -3357,7 +3473,7 @@ function renderPolizasVigentes() {
       <td><span>${pol && pol.fechaInicio ? escapeHtml(pol.fechaInicio) : "—"}</span></td>
       <td><span class="vig-guia ${guiaEnviada ? 'enviada' : 'pendiente'}">${guiaEnviada ? 'Enviada' + (h.guiaEnviadaAt ? ' ' + h.guiaEnviadaAt.slice(0,10) : '') : 'Pendiente'}</span></td>
       <td><div class="hist-actions">
-        <button class="hist-act poliza" data-act="enviar-guia" data-id="${escapeHtml(h.id)}">${guiaEnviada ? '📨 Reenviar' : '📨 Enviar póliza'}</button>
+        <button class="hist-act poliza" data-act="enviar-guia" data-id="${escapeHtml(h.id)}">${guiaEnviada ? 'Reenviar' : 'Enviar póliza'}</button>
       </div></td>
     </tr>`;
   }).join("");
@@ -3447,7 +3563,7 @@ function openPolizaModal(h) {
             <select class="field-input" id="pvm-ded"></select>
           </div>
           <div class="field">
-            <label class="field-lbl">📎 Documentos adjuntos <span style="font-weight:400;color:var(--ink-3);">(opcional)</span></label>
+            <label class="field-lbl">Documentos adjuntos <span style="font-weight:400;color:var(--ink-3);">(opcional)</span></label>
             <div id="pvm-att-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;"></div>
             <button type="button" class="btn btn-gray" id="pvm-att-btn" style="width:100%;justify-content:center;">＋ Agregar documentos</button>
             <input type="file" id="pvm-att-input" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx" style="display:none;" />
@@ -3456,8 +3572,8 @@ function openPolizaModal(h) {
         </div>
         <div class="modal-foot" style="justify-content:flex-end;gap:8px;flex-wrap:wrap;">
           <button class="btn btn-out" data-act="cerrar">Cancelar</button>
-          ${tel ? `<button class="btn btn-out" data-act="wa">💬 WhatsApp</button>` : ""}
-          <button class="btn btn-primary" data-act="enviar-gmail">🚀 Enviar por Gmail</button>
+          ${tel ? `<button class="btn btn-out" data-act="wa">WhatsApp</button>` : ""}
+          <button class="btn btn-primary" data-act="enviar-gmail">Enviar por Gmail</button>
         </div>
       </div>
     </div>`;
@@ -3489,7 +3605,7 @@ function openPolizaModal(h) {
     if (!cont) return;
     cont.innerHTML = pvmAttachments.map((a, i) => `
       <div style="display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;">
-        <span style="font-size:14px;flex-shrink:0;">📄</span>
+        <span style="font-size:14px;flex-shrink:0;"></span>
         <span style="flex:1;min-width:0;font-size:12.5px;color:var(--ink-1,#0F172A);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(a.name)}</span>
         <span style="font-size:11px;color:var(--ink-3);flex-shrink:0;">${fmtBytes(a.size || 0)}</span>
         <button type="button" data-att-rm="${i}" title="Quitar" style="border:none;background:none;cursor:pointer;color:var(--red);font-size:15px;line-height:1;flex-shrink:0;padding:0 2px;">✕</button>
@@ -3574,7 +3690,7 @@ function openPolizaModal(h) {
         const nAtt = pvmAttachments.length;
         toast("Guía enviada a " + destinatario + (nAtt ? ` con ${nAtt} ${nAtt === 1 ? "adjunto" : "adjuntos"}` : ""), "success");
       }, err => {
-        btn.disabled = false; btn.textContent = "🚀 Enviar por Gmail";
+        btn.disabled = false; btn.textContent = "Enviar por Gmail";
         toast("Error al enviar: " + err.message, "error");
       });
     }

@@ -1,0 +1,442 @@
+/* ================================================================
+   INS MEDICAL · LÍNEA CLARA · hoja de sobreescritura · 11 sep 2026
+   ----------------------------------------------------------------
+   Se carga AL FINAL del <head>, después del <style> de la app, y
+   gana por orden de fuente. Solo la cara: mismos ids, mismas clases
+   y mismos enganches de JS. Tokens y reglas: skill imagen-de-marca-sdi
+   + SDI-BRAND-KIT/linea-clara/linea-clara.css (v1.3).
+   Los !important van SOLO contra estilos en línea del HTML/JS y cada
+   uno dice contra cuál.
+   ================================================================ */
+
+:root{
+  --lc-blue:#0369A1;          /* acento ÚNICO de botones (SDI) */
+  --lc-blue-ink:#02557F;
+  --lc-blue-soft:#E8F1F8;
+  --lc-band:#EEF4F9;
+  --lc-line:#DADCE0;
+  --lc-line-btn:#8A939C;
+  --lc-line-soft:#EDEFF2;
+  --lc-ink:#1B1F23;
+  --lc-ink-2:#5A6570;
+  --lc-ink-3:#6B7681;
+  --lc-ok-bg:#E9F5F0;
+  --lc-ok-tx:#037D61;
+  --lc-warn-tx:#B26A00;
+  --lc-star:#F4B400;
+  /* color del producto INS Medical: navy. Solo chip, regla 28×3 o tinte */
+  --lc-prod:#1E3A8A;
+  --lc-prod-tint:#E9EDF6;
+  --lc-r-xl:32px; --lc-r-lg:24px; --lc-r-md:20px;
+  --lc-shadow:0 1px 2px rgba(27,31,35,.05);
+  --lc-ease:cubic-bezier(.22,.61,.36,1);
+  --font-display:'Google Sans Flex','Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-body:'Google Sans Flex','Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'Google Sans Code',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  --font-big:var(--font-display);
+
+  /* los tokens viejos que la app usa por todos lados se re-mapean a la paleta clara:
+     así los estilos en línea que leen var(--bg) / var(--ink-3) también caen bien */
+  --bg:#FFFFFF;
+  --ink:#1B1F23; --ink-2:#5A6570; --ink-3:#6B7681; --ink-4:#6B7681;
+  --line:#DADCE0; --line-2:#EDEFF2;
+  --blue:#0369A1; --blue-dark:#02557F; --blue-mid:#0369A1;
+  --blue-light:#E8F1F8; --blue-pale:#EEF4F9;
+  --reg:#0369A1; --reg-dark:#02557F; --reg-light:#EEF4F9; --reg-line:#DADCE0;
+  --green:#037D61; --green-dark:#037D61; --green-light:#E9F5F0;
+  --amber:#B26A00; --amber-light:#EEF4F9;
+  --red:#B3261E; --red-light:#FBEAE9;
+  --r:12px; --rl:20px; --rxl:24px;
+  --sh:none; --sh-md:var(--lc-shadow); --sh-lg:var(--lc-shadow);
+}
+
+/* ---------- base ---------------------------------------------------- */
+html,body{background:#fff;color:var(--lc-ink)}
+body{font-family:var(--font-body);font-optical-sizing:auto;-webkit-font-smoothing:antialiased}
+a{color:var(--lc-blue)}
+.page-title,.cmp-ttl,.pay-hdr,.wait-hd h3,.docs-hd h3,.cta-title,.modal-title,.login-card h1,.bloq-card h1{
+  font-family:var(--font-display);font-weight:500;letter-spacing:-.025em;color:var(--lc-ink)}
+.page-title{font-size:28px;line-height:1.18}
+.page-sub{font-size:14px;color:var(--lc-ink-2);margin-top:6px}
+.pr-amt,.tot-n,.send-prod .pr,.send-link-box,.hist-id,.hist-row2 .meta-amt,.vig-num,.bloq-card .ag-email,
+.price-card-price,.cc-val,.pay-amt,.wait-v,.docs-trigger-chip{
+  font-family:var(--font-mono);font-variant-numeric:tabular-nums lining-nums}
+.tot-c,.vig-num.sin{font-family:var(--font-body)}
+
+/* píldoras de botón: 44 px, un solo acento */
+.btn,.aseg-add,.hdr-out,.aseg-btn,.hist-act,.hist-backup button,.price-card-cta,.cta-btn,
+.opt-toggle .ctl button,.variant-toggle .ctl button,.login-card .gsi-btn,.bloq-card .btn-logout{
+  font-family:var(--font-body);border-radius:999px;font-weight:600;letter-spacing:-.005em;
+  transition:background .15s ease,border-color .15s ease,color .15s ease}
+.btn{min-height:44px;padding:0 22px;font-size:14px;border:1px solid transparent}
+.btn:hover{opacity:1}
+.btn-pri,.aseg-add,.hist-act.primary,.hist-backup .hb-exp,.cta-btn.cta-wa,.bloq-card .btn-logout{
+  background:var(--lc-blue);color:#fff;border:1px solid var(--lc-blue)}
+.btn-pri:hover,.aseg-add:hover,.hist-act.primary:hover,.hist-backup .hb-exp:hover,.cta-btn.cta-wa:hover{
+  background:var(--lc-blue-ink);border-color:var(--lc-blue-ink);color:#fff}
+.btn-out,.btn-wa,.btn-success,.hist-act.poliza,.price-card-cta,.cta-btn.cta-pri{
+  background:#fff;color:var(--lc-blue);border:1px solid var(--lc-blue)}
+.btn-out:hover,.btn-wa:hover,.btn-success:hover,.hist-act.poliza:hover,.price-card-cta:hover,.cta-btn.cta-pri:hover{
+  background:var(--lc-blue-soft);opacity:1}
+.btn-gray,.aseg-btn,.hist-act,.hist-backup button,.hdr-out,.login-card .gsi-btn{
+  background:#fff;color:var(--lc-ink-2);border:1px solid var(--lc-line-btn)}
+.btn-gray:hover,.aseg-btn:hover,.hist-act:hover,.hist-backup button:hover,.hdr-out:hover,.login-card .gsi-btn:hover{
+  background:var(--lc-blue-soft);border-color:var(--lc-blue);color:var(--lc-blue);box-shadow:none}
+.btn-danger,.aseg-btn.danger,.hist-act.danger{background:#fff;color:var(--red);border:1px solid var(--lc-line-btn)}
+.btn-danger:hover,.aseg-btn.danger:hover,.hist-act.danger:hover{background:var(--red-light);border-color:var(--red);color:var(--red)}
+.aseg-add{min-height:40px;padding:0 18px;font-size:13.5px}
+.aseg-btn,.hist-act,.hist-backup button{min-height:36px;padding:0 14px;font-size:12.5px}
+.hdr-out{min-height:36px;padding:0 16px;font-size:12.5px}
+.nav-band .btn{min-height:44px;padding:0 24px;font-size:14px}
+.btn:focus-visible,.aseg-add:focus-visible,.price-card-cta:focus-visible{outline:3px solid rgba(3,105,161,.35);outline-offset:2px}
+
+/* ================================================================
+   CONSOLA DEL AGENTE
+   ================================================================ */
+/* barra en dos niveles: arriba SDI a color + agente; abajo el producto y los pasos */
+.hdr{background:#F8F9FA;color:var(--lc-ink);height:56px;padding:0 28px;border-bottom:1px solid var(--lc-line-soft)}
+.hdr-ins-logo{height:30px;filter:none;opacity:1}          /* el src pasa al logo SDI (02-compacto) en el HTML */
+.hdr-sep{background:var(--lc-line)}
+.hdr-prod{font-family:var(--font-display);font-size:19px;font-weight:600;letter-spacing:-.025em;color:var(--lc-ink)}
+.hdr-prod span{color:var(--lc-ink-3);font-weight:400;font-size:14px}
+.hdr-badge{display:none}                                   /* el logo ya dice SDI */
+.hdr-user{color:var(--lc-ink-2);font-size:12.5px}
+.hdr-user strong{color:var(--lc-ink)}
+#btn-new-hdr{background:var(--lc-blue)!important;border-color:var(--lc-blue)!important;color:#fff}  /* contra el style="" en línea del botón */
+#btn-new-hdr:hover{background:var(--lc-blue-ink)!important;border-color:var(--lc-blue-ink)!important}
+
+.stepper{background:#fff;border-bottom:1px solid var(--lc-line);padding:0 28px;height:60px;align-items:center}
+.step{font-family:var(--font-body);font-size:14px;font-weight:500;color:var(--lc-ink-2);padding:0 4px;height:60px;
+  border-bottom:2px solid transparent;margin-right:22px;transition:color .15s}
+.step:hover{color:var(--lc-blue)}
+.step.active{color:var(--lc-blue);border-bottom-color:var(--lc-blue);font-weight:600}
+.step.done{color:var(--lc-ink-2)}
+.step-dot{width:24px;height:24px;background:#fff;border:1px solid var(--lc-line-btn);color:var(--lc-ink-2);font-size:11px;font-weight:600}
+.step.active .step-dot{background:var(--lc-blue);border-color:var(--lc-blue);color:#fff}
+.step.done .step-dot{background:var(--lc-ok-bg);border-color:var(--lc-ok-bg);color:var(--lc-ok-tx)}
+.step-div{display:none}
+.step-hist{margin-left:auto}
+.step-hist.active,.step-vig.active{color:var(--lc-blue);border-bottom-color:var(--lc-blue)}
+.step-hist.active .step-dot,.step-vig.active .step-dot{background:var(--lc-blue);border-color:var(--lc-blue);color:#fff}
+.step-vig .step-dot{background:#fff;border-color:var(--lc-line-btn);color:var(--lc-ink-2)}
+.vig-badge{background:var(--lc-blue)}
+
+.main{padding:36px 28px 48px}
+.page-hdr{margin-bottom:26px}
+
+/* bloques: borde 1 px, radio 24, sin sombra */
+.cli-form,.aseg-section,.send-band,.hist-card,.vig-wrap,.hist-empty{
+  border:1px solid var(--lc-line);border-radius:var(--lc-r-lg);box-shadow:none;background:#fff}
+.cli-form,.aseg-section{padding:28px 30px}
+.cli-form-title,.aseg-head-title,.send-band-title{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.aseg-head-sub,.send-band-sub{color:var(--lc-ink-3)}
+.field-lbl{text-transform:none;letter-spacing:.01em;font-size:12px;font-weight:600;color:var(--lc-ink-3)}
+.field-lbl .req{color:var(--lc-ink-3)}
+.field-input,.fld-sel,.send-recommended select{border:1px solid var(--lc-line-btn);border-radius:10px;padding:10px 12px;font-size:13.5px;background:#fff;color:var(--lc-ink)}
+.field-input:focus,.fld-sel:focus{border-color:var(--lc-blue);box-shadow:0 0 0 3px var(--lc-blue-soft);background:#fff}
+.field-input.error{border-color:var(--red)}
+.field-help{color:var(--lc-ink-3)}
+.fld-l{text-transform:none;letter-spacing:.01em;font-size:12px;font-weight:600;color:var(--lc-ink-3)}
+
+.aseg-item{background:#fff;border:1px solid var(--lc-line);border-radius:var(--lc-r-md);padding:14px 18px}
+.aseg-av{background:var(--lc-band);color:var(--lc-ink-2);font-weight:600;font-size:12.5px}
+.aseg-name{font-weight:600}
+.aseg-meta{color:var(--lc-ink-3)}
+.aseg-empty{background:var(--lc-band);border:0;border-radius:var(--lc-r-md);color:var(--lc-ink-2)}
+
+/* chips de asegurados en paso 2 */
+.aseg-bar-lbl{text-transform:none;letter-spacing:.01em;color:var(--lc-ink-3)}
+.aseg-pill{border:1px solid var(--lc-line-btn);box-shadow:none;min-height:38px;padding:0 14px 0 6px}
+.aseg-pill-av{background:var(--lc-band);color:var(--lc-ink-2)}
+
+/* avisos y opciones: banda pálida, un punto de color, sin emoji ni borde de color */
+.opt-toggle,.variant-toggle,.data-warn,.send-recommended,.hist-backup{
+  background:var(--lc-band);border:0;border-left:0;border-radius:var(--lc-r-md);padding:16px 20px;color:var(--lc-ink-2)}
+.opt-toggle .icon,.variant-toggle .icon,.data-warn .icon,.send-recommended-icon{display:none}
+.opt-toggle .text,.variant-toggle .text,.data-warn,.send-recommended{font-size:13.5px;line-height:1.6;color:var(--lc-ink-2)}
+.opt-toggle .text strong,.variant-toggle .text strong,.data-warn strong,.send-recommended strong,.hist-backup .hb-txt strong{color:var(--lc-ink);font-weight:600}
+.opt-toggle .text .note{color:var(--lc-ink-3);font-size:12.5px}
+.variant-toggle .text::before,.data-warn::before,.hist-backup .hb-txt::before{
+  content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lc-warn-tx);margin:0 8px 2px 0}
+.opt-toggle .ctl button,.variant-toggle .ctl button{
+  min-height:38px;padding:0 16px;font-size:13px;background:#fff;color:var(--lc-ink-2);border:1px solid var(--lc-line-btn)}
+.opt-toggle .ctl button:hover,.variant-toggle .ctl button:hover{border-color:var(--lc-blue);color:var(--lc-blue)}
+.opt-toggle .ctl button.on,.variant-toggle .ctl button.on{background:var(--lc-blue);border-color:var(--lc-blue);color:#fff}
+
+/* tarjetas de producto (paso 2) */
+.pc{border:1px solid var(--lc-line);border-radius:var(--lc-r-md);box-shadow:none;transition:border-color .2s var(--lc-ease)}
+.pc.sel,.pc.sel.reg,.pc.sel.gd{border:2px solid var(--lc-blue);box-shadow:none}     /* seleccionada = estado, no reposo */
+.pc-bar,.pc.sel .pc-bar{display:none}                                                 /* fuera las barras de color */
+.pc-hd{padding:20px 20px 16px;border-bottom:1px solid var(--lc-line-soft)}
+.pc-nm{font-family:var(--font-display);font-size:17px;font-weight:600;letter-spacing:-.02em}
+.pc-tg{color:var(--lc-ink-3)}
+.pc-ck{border-radius:50%;border:1px solid var(--lc-line-btn)}
+.sel .pc-ck,.sel.reg .pc-ck,.sel.gd .pc-ck{background:var(--lc-blue);border-color:var(--lc-blue);color:#fff}
+.pc-pill,.sel.reg .pc-pill,.sel.gd .pc-pill{background:var(--lc-prod-tint);color:var(--lc-prod);font-weight:600;letter-spacing:.01em;padding:4px 11px}
+.pc-bd,.pc-primas{padding:16px 20px;border-bottom:1px solid var(--lc-line-soft)}
+.fld-sel{background:#fff}
+.sel.reg .fld-sel:focus,.sel.gd .fld-sel:focus{border-color:var(--lc-blue)}
+.pr-row{padding:8px 0}
+.pr-row + .pr-row{border-top:1px solid var(--lc-line-soft)}
+.pr-nm{font-weight:500;color:var(--lc-ink)}
+.pr-rel{color:var(--lc-ink-3)}
+.pr-amt{font-size:13.5px;font-weight:500;color:var(--lc-ink)}
+.pc-tot,.sel .pc-tot,.sel.reg .pc-tot,.sel.gd .pc-tot{background:var(--lc-band);border-top:0;padding:16px 20px;border-radius:0 0 18px 18px}
+.tot-l,.sel .tot-l,.sel.reg .tot-l,.sel.gd .tot-l{text-transform:none;letter-spacing:.01em;font-size:12.5px;font-weight:600;color:var(--lc-ink-3)}
+.tot-n,.sel .tot-n,.sel.reg .tot-n,.sel.gd .tot-n{font-family:var(--font-big);font-size:24px;font-weight:500;letter-spacing:-.02em;color:var(--lc-ink)}  /* ninguna cifra pintada */
+.tot-c{color:var(--lc-ink-3)}
+
+/* paso 3 */
+.send-band{padding:28px 30px}
+.send-prod{border:1px solid var(--lc-line-btn);border-radius:999px;background:#fff;min-height:40px;padding:0 16px;font-weight:500;color:var(--lc-ink-2)}
+.send-prod:has(input:checked),.send-prod:has(input:checked).reg,.send-prod:has(input:checked).gd{
+  background:var(--lc-blue);border-color:var(--lc-blue);color:#fff}
+.send-prod input{accent-color:#fff}
+.send-recommended select{margin-left:8px;padding:6px 10px;font-weight:500;color:var(--lc-ink);border-radius:8px}
+.send-link-box{background:var(--lc-band);border:0;border-radius:12px;color:var(--lc-ink-3);font-size:11.5px;padding:12px 16px}
+.nav-band{border-top:1px solid var(--lc-line-soft);margin-top:28px;padding-top:22px}
+
+/* historial y pólizas vigentes */
+.hist-backup{padding:16px 20px}
+.hist-backup .hb-txt{color:var(--lc-ink-2);font-size:13px}
+.hist-backup .hb-txt strong{display:inline;margin-right:6px}
+.hist-card{padding:18px 22px}
+.hist-cli{font-weight:600}
+.hist-state{text-transform:none;letter-spacing:.01em;font-size:11.5px;font-weight:600;padding:3px 10px}
+.hist-state.pendiente{background:var(--lc-band);color:var(--lc-ink-2)}
+.hist-state.aceptada{background:var(--lc-ok-bg);color:var(--lc-ok-tx)}
+.hist-state.eliminada{background:var(--lc-line-soft);color:var(--lc-ink-3)}
+.hist-row2{color:var(--lc-ink-3)}
+.vig-table th{background:#fff;text-transform:none;letter-spacing:.01em;font-size:11.5px;color:var(--lc-ink-3);padding:14px;border-bottom:1px solid var(--lc-line)}
+.vig-table td{border-bottom:1px solid var(--lc-line-soft)}
+.vig-nm{font-weight:600}
+.vig-guia{text-transform:none;letter-spacing:.01em;font-weight:600}
+.vig-guia.enviada{background:var(--lc-ok-bg);color:var(--lc-ok-tx)}
+.vig-guia.pendiente{background:var(--lc-band);color:var(--lc-ink-2)}
+
+/* modales */
+.modal{border-radius:var(--lc-r-lg);box-shadow:0 24px 60px rgba(27,31,35,.18)}
+.modal-hd{border-bottom:1px solid var(--lc-line-soft)}
+.modal-title{font-size:20px}
+.modal-foot{background:var(--lc-band);border-top:0}
+.radio-pill{border:1px solid var(--lc-line-btn);border-radius:999px;font-weight:500}
+.radio-pill:has(input:checked){border-color:var(--lc-blue);background:var(--lc-blue-soft);color:var(--lc-blue)}
+.radio-pill .icon{display:none}                                     /* ♀ ♂: el texto ya lo dice */
+
+/* login / bloqueado */
+.login-wrap,.bloq-wrap{background:var(--lc-band)}
+.login-card,.bloq-card{border:1px solid var(--lc-line);border-radius:var(--lc-r-xl);box-shadow:var(--lc-shadow);padding:44px 40px}
+.login-card .ins-logo{height:40px;filter:none!important}            /* contra el style="filter:invert(.15)" del <img> */
+.login-card h1{font-size:26px}
+.login-card .sub{color:var(--lc-ink-2)}
+.login-card .gsi-btn{min-height:44px;font-size:14px}
+#btn-login-local{background:#fff!important;border-color:var(--lc-line-btn)!important;color:var(--lc-ink-2)!important}   /* contra el style="" ámbar del botón */
+.login-card .footnote{color:var(--lc-ink-3)}
+.bloq-card .icon{display:none}
+.bloq-card .ag-email{background:var(--lc-band);border-radius:999px;padding:6px 14px}
+
+/* toasts: la única superficie oscura que queda; sin cambio de color de éxito/error */
+.toast{border-radius:12px;font-family:var(--font-body)}
+
+/* ================================================================
+   VISTA DEL CLIENTE
+   ================================================================ */
+[data-view="cliente"]{font-size:14.5px}
+
+/* hero: blanco, INS en tinta arriba, titular grande y centrado */
+.cv-hero{background:#fff;color:var(--lc-ink);overflow:visible}
+.cv-hero::before{display:none}
+.ins-topbar{background:#F8F9FA;border-bottom:1px solid var(--lc-line-soft);padding:12px 28px}
+.ins-logo-img{filter:brightness(0);opacity:1;height:28px}          /* el PNG hosteado es blanco: a tinta */
+.ins-topbar-sep{background:var(--lc-line)}
+.ins-topbar-prod{color:var(--lc-ink);font-family:var(--font-display);font-weight:600;letter-spacing:-.02em;font-size:16px}
+.ins-topbar-agent{color:var(--lc-ink-2);font-size:12.5px}
+.ins-topbar-r{color:var(--lc-ink-3);font-family:var(--font-mono);font-size:11.5px}
+.cv-hero-body{padding:56px 28px 44px;max-width:840px;margin:0 auto}
+.cv-ey{display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:999px;background:var(--lc-ok-bg);color:var(--lc-ok-tx);
+  font-size:12.5px;font-weight:600;letter-spacing:.01em;text-transform:none;margin-bottom:22px}
+.cv-ey::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.cv-ttl{font-family:var(--font-display);font-size:clamp(34px,4.2vw,48px);font-weight:500;letter-spacing:-.025em;line-height:1.08;text-wrap:balance}
+.cv-sub{font-size:17px;color:var(--lc-ink-2);margin-top:16px;line-height:1.6}
+.cv-chips{margin-top:24px}
+.cv-chip{background:#fff;border:1px solid var(--lc-line-btn);color:var(--lc-ink-2);font-weight:500;min-height:38px;display:inline-flex;align-items:center;padding:0 16px}
+
+/* resumen de planes: banda pálida a todo lo ancho, tarjetas blancas r20 */
+.cmp-wrap:has(.price-cards){background:var(--lc-band);box-shadow:0 0 0 100vmax var(--lc-band);clip-path:inset(0 -100vmax);padding:44px 28px 40px}
+.cmp-ttl{font-size:28px;text-align:center}
+.cmp-ttl::before{content:"";display:block;width:28px;height:3px;border-radius:2px;background:var(--lc-prod);margin:0 auto 12px}
+.cmp-sub{text-align:center;color:var(--lc-ink-2);font-size:14.5px;margin-bottom:26px}
+.price-card{border:1px solid var(--lc-line);border-radius:var(--lc-r-md);padding:26px 22px 22px;overflow:visible;
+  transition:border-color .2s var(--lc-ease),background .2s var(--lc-ease)}
+.price-card::before,.price-card.reg::before,.price-card.gd::before{display:none}   /* fuera la barra de color de arriba */
+.price-card:hover{border-color:var(--lc-prod);background:#fff}
+.price-card-nm{font-family:var(--font-display);font-size:19px;font-weight:600;letter-spacing:-.02em}
+.price-card-cov{color:var(--lc-ink-3);font-size:13px}
+.price-card-ded,.price-card.reg .price-card-ded,.price-card.gd .price-card-ded{
+  background:var(--lc-prod-tint);color:var(--lc-prod);font-weight:600;letter-spacing:.01em;margin:12px 0 14px;padding:4px 11px}
+.price-card-price,.price-card.reg .price-card-price,.price-card.gd .price-card-price{
+  font-family:var(--font-big);font-size:clamp(34px,3.6vw,42px);font-weight:500;letter-spacing:-.02em;color:var(--lc-ink);line-height:1.1}
+.price-card-psub{color:var(--lc-ink-3);font-size:12.5px;margin-top:6px}
+.price-card-cta,.price-card.reg .price-card-cta,.price-card.gd .price-card-cta{margin-top:18px;min-height:44px;font-size:14px;width:100%}
+/* la recomendada: estrella amarilla discreta + texto, sin color de fondo fuerte */
+.best-tag{position:static;display:inline-flex;align-items:center;gap:6px;background:var(--lc-prod-tint);color:var(--lc-prod);
+  font-size:11.5px;font-weight:600;letter-spacing:.01em;padding:5px 12px 5px 10px;margin-bottom:12px;text-transform:none}
+.best-tag::before{content:"\2605";color:var(--lc-star);font-size:12px}
+
+/* tabla de coberturas: sin cabecera navy ni zebra; el color solo en el punto */
+.cmp-wrap:has(.cov-wrap){padding-top:36px!important}                 /* contra el style="padding-top:0" del contenedor */
+.cov-wrap{border:1px solid var(--lc-line);border-radius:var(--lc-r-md);overflow-x:auto}
+.cov-hdr{background:#fff;color:var(--lc-ink);border-bottom:1px solid var(--lc-line)}
+.cov-hdr-lbl{text-transform:none;letter-spacing:.01em;font-size:12px;color:var(--lc-ink-3);padding:16px}
+.cov-hdr-nm{font-family:var(--font-display);font-weight:600;font-size:14px;border-left:1px solid var(--lc-line-soft);padding:16px}
+.cov-sec{background:var(--lc-band)}
+.cov-sec-lbl{text-transform:none;letter-spacing:.01em;font-size:12px;color:var(--lc-ink-2);padding:8px 16px}
+.cov-row:nth-child(even){background:#fff}
+.cov-row{border-bottom:1px solid var(--lc-line-soft)}
+.cc{border-left:1px solid var(--lc-line-soft);padding:11px 16px}
+.cc-lbl{color:var(--lc-ink);font-weight:400}
+.cc-val{font-size:13px;color:var(--lc-ink)}
+.cc-val.hl,.cc-val.gd-val,.cc-val.reg-val{color:var(--lc-ink);font-weight:600}   /* ninguna cifra pintada */
+.cc-val.na{color:var(--lc-ink-3)}
+.tip-ico{background:var(--lc-band);color:var(--lc-ink-2)}
+.has-tip:hover .tip-ico,.has-tip:focus .tip-ico,.has-tip.tipped .tip-ico{background:var(--lc-blue);color:#fff}
+.has-tip::after{font-family:var(--font-body);border-radius:12px;background:var(--lc-ink)}
+.has-tip::before{border-bottom-color:var(--lc-ink)}
+
+/* secciones con regla 28×3 */
+.pay-hdr,.wait-hd h3,.docs-hd h3{font-size:24px}
+.pay-hdr::before,.wait-hd h3::before,.docs-hd h3::before{content:"";display:block;width:28px;height:3px;border-radius:2px;background:var(--lc-prod);margin-bottom:12px}
+.pay-sub,.wait-hd p,.docs-hd p{color:var(--lc-ink-2);font-size:14px}
+.pay-wrap,.wait-wrap,.docs-wrap{padding-top:36px}
+
+/* opciones de pago */
+.pay-card{border:1px solid var(--lc-line);border-radius:var(--lc-r-md);padding:22px 20px;overflow:visible}
+.pay-card.rec{border:1px solid var(--lc-line);box-shadow:none}
+.pay-card.rec::before{display:none}
+.pay-rec-tag{background:var(--lc-ok-bg);color:var(--lc-ok-tx);text-transform:none;letter-spacing:.01em;font-size:11.5px;font-weight:600;padding:4px 11px}
+.pay-rec-tag::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px;vertical-align:.1em}
+.pay-frm{font-family:var(--font-display);font-size:18px;font-weight:600;letter-spacing:-.02em}
+.pay-rcg{color:var(--lc-ink-3);font-size:12.5px}
+.pay-row{border-bottom:1px solid var(--lc-line-soft);padding:7px 0}
+.pay-prd{color:var(--lc-ink-2)}
+.pay-amt{color:var(--lc-ink);font-weight:500}
+
+/* períodos de espera */
+.wait-box{border:1px solid var(--lc-line);border-radius:var(--lc-r-lg)}
+.wait-hd{background:#fff;border-bottom:1px solid var(--lc-line-soft);padding:28px 30px 22px}
+.wait-grid{padding:22px 30px}
+.wait-col{border-right:1px solid var(--lc-line-soft)}
+.wait-col-title{text-transform:none;letter-spacing:.01em;font-size:12px;color:var(--lc-ink-3);border-bottom:1px solid var(--lc-line-soft)}
+.wait-row{border-bottom:1px solid var(--lc-line-soft);font-size:13px}
+.wait-k{color:var(--lc-ink)}
+.wait-v,.wait-v.long,.wait-v.good{color:var(--lc-ink);font-weight:500}
+.wait-v.long::before,.wait-v.good::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:7px;vertical-align:.1em}
+.wait-v.long::before{background:var(--lc-warn-tx)}      /* lo que tarda más: un punto ámbar, no una cifra roja */
+.wait-v.good::before{background:var(--lc-ok-tx)}
+.wait-note{background:var(--lc-band);border-top:0;color:var(--lc-ink-2);padding:16px 30px;border-radius:0 0 22px 22px}
+.wait-note strong{color:var(--lc-ink)}
+
+/* documentos */
+.docs-box{border:1px solid var(--lc-line);border-radius:var(--lc-r-lg)}
+.docs-hd{background:#fff;border-bottom:1px solid var(--lc-line-soft);padding:28px 30px 22px}
+.docs-hd h3 em{font-style:normal;color:var(--lc-ink)}
+.docs-body{padding:24px 30px 28px}
+.docs-sec-lbl{text-transform:none;letter-spacing:.01em;font-size:12.5px;color:var(--lc-ink-2)}
+.docs-pin.base{background:var(--lc-ok-tx)}
+.docs-pin.cond{background:var(--lc-warn-tx)}
+.docs-pin.info{background:var(--lc-ink-3)}
+.docs-trigger-chip{background:var(--lc-prod-tint);color:var(--lc-prod);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:600}
+.doc-item{background:#fff;border:1px solid var(--lc-line);border-radius:16px;padding:14px 16px;transition:border-color .2s var(--lc-ease)}
+.doc-item:hover{border-color:var(--lc-prod)}
+.doc-item[style]{background:var(--lc-band)!important;border-color:transparent!important}   /* contra el style="" del aviso de telesuscripción */
+.doc-icon{border:1px solid var(--lc-line);border-radius:10px;background:#fff}
+.doc-icon::before{border-color:var(--lc-ink-2)}
+.doc-icon::after{color:var(--lc-ink-2)}
+.doc-icon.aviso{color:var(--lc-ink-2);font-size:0}
+.doc-icon.aviso::before{display:block;content:"";width:16px;height:13px;border:1.5px solid var(--lc-ink-2);border-radius:2px}
+.doc-nm{font-weight:600}
+.doc-desc{color:var(--lc-ink-3)}
+.doc-dl{background:#fff;color:var(--lc-blue);border:1px solid var(--lc-blue);border-radius:50%;width:36px;height:36px;font-size:14px}
+.doc-dl:hover{background:var(--lc-blue-soft);color:var(--lc-blue)}
+.docs-note{background:var(--lc-band);border-left:0;border-radius:var(--lc-r-md);padding:16px 20px;color:var(--lc-ink-2);margin-top:20px}
+.docs-note strong{color:var(--lc-ink)}
+
+/* contacto: banda pálida, dos píldoras (una rellena, una de contorno) */
+.cta-strip{background:var(--lc-band);color:var(--lc-ink);padding:56px 28px;margin-top:36px}
+.cta-title{font-size:32px}
+.cta-sub{color:var(--lc-ink-2);font-size:15px;margin-bottom:26px}
+.cta-btn{min-height:48px;padding:0 26px;font-size:15px}
+
+/* aviso legal: sin caja naranja */
+.fine-wrap{padding:36px 28px 20px}
+.fine{background:#fff;border:1px solid var(--lc-line);border-radius:var(--lc-r-md);color:var(--lc-ink-2);font-size:12.5px;padding:20px 24px}
+.fine strong{color:var(--lc-ink);font-weight:600}
+
+/* pie: banda pálida r32 con el logo SDI del kit; se jubilan las 3 barras inventadas */
+.sdi-foot{background:var(--lc-band);border-radius:var(--lc-r-xl);color:var(--lc-ink-2);padding:32px 30px}
+.sdi-mark{display:block;margin:0 auto 14px}
+.sdi-mark::before{content:"";display:block;width:70px;height:34px;margin:0 auto;background:url("img/sdi-logo-compacto.svg") center/contain no-repeat}
+.sdi-word,.sdi-bars{display:none}                                   /* el wordmark queda en el logo oficial */
+.sdi-line{color:var(--lc-ink-2);font-size:12.5px}
+.sdi-line strong{color:var(--lc-ink)}
+.sdi-line.sub{color:var(--lc-ink-3);font-size:11.5px}
+
+/* ---------- [hidden] y estilos en línea que el JS escribe ------------- */
+[hidden]{display:none!important}
+
+/* ---------- movimiento: entrada suave, sin rebote -------------------- */
+@keyframes lcIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+[data-view="cliente"] .cv-hero-body,[data-view="cliente"] .cmp-wrap{animation:lcIn .5s var(--lc-ease) both}
+@media (prefers-reduced-motion:reduce){
+  [data-view="cliente"] .cv-hero-body,[data-view="cliente"] .cmp-wrap{animation:none!important}
+}
+
+/* ---------- responsive ---------------------------------------------- */
+@media (max-width:900px){
+  .hdr{padding:0 16px}
+  .stepper{padding:0 16px;height:auto;min-height:56px}
+  .step{height:56px;margin-right:14px;font-size:13px}
+  .main{padding:22px 18px 40px}
+  .cli-form,.aseg-section,.send-band{padding:22px 18px}
+  .cv-hero-body{padding:40px 20px 32px}
+  .cv-sub{font-size:15.5px}
+  .cmp-wrap:has(.price-cards){padding:36px 20px 32px}
+  .cmp-ttl{font-size:24px}
+  .cta-strip{padding:44px 20px}
+  .cta-title{font-size:26px}
+  .wait-hd,.docs-hd{padding:22px 20px 18px}
+  .wait-grid,.docs-body{padding:18px 20px}
+  .wait-note{padding:14px 20px}
+}
+
+/* ---------- filete SDI en el encabezado (pedido de JC, 11 sep 2026) ----------
+   Los 4 colores de la barra del logo del kit (azul · verde · naranja · dorado),
+   en una línea de 4 px a lo ancho, arriba de la barra: consola y vista cliente. */
+:root{--sdi-azul:#0369A1;--sdi-verde:#0D9488;--sdi-naranja:#EA580C;--sdi-dorado:#C9A227;
+  --lc-filete:linear-gradient(90deg,var(--sdi-azul) 0 25%,var(--sdi-verde) 25% 50%,var(--sdi-naranja) 50% 75%,var(--sdi-dorado) 75% 100%)}
+.hdr,.ins-topbar{border-top:4px solid transparent;background-clip:padding-box;position:relative}
+.hdr::before,.ins-topbar::before{content:"";position:absolute;left:0;right:0;top:-4px;height:4px;background:var(--lc-filete)}
+.login-card,.bloq-card{position:relative;overflow:hidden}
+.login-card::before,.bloq-card::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--lc-filete)}
+
+/* ajustes tras la 1.ª captura (11 sep) */
+.price-card.reg .price-card-cta,.price-card.gd .price-card-cta{background:#fff;color:var(--lc-blue);border:1px solid var(--lc-blue)}   /* la hoja vieja los pintaba de azul/verde por producto */
+.price-card.reg .price-card-cta:hover,.price-card.gd .price-card-cta:hover{background:var(--lc-blue-soft)}
+.data-warn::before{flex-shrink:0;margin-top:8px}
+.price-cards{align-items:stretch}
+.price-card{display:flex;flex-direction:column;align-items:center}
+.price-card-cta{margin-top:auto;padding-top:0}
+.price-card-psub{margin-bottom:18px}
+
+/* ---------- pie de la consola del agente + registro de cambios ---------- */
+.sdi-foot-agente{margin-top:44px;background:var(--lc-band);border-radius:var(--lc-r-xl);padding:30px 30px 24px;text-align:center;color:var(--lc-ink-2)}
+.sdi-foot-agente img{height:32px;width:auto;display:block;margin:0 auto 12px}
+.sdi-foot-agente .l1{font-size:12.5px;margin:0}
+.sdi-foot-agente .l1 strong,.sdi-foot-agente .l2 strong{color:var(--lc-ink);font-weight:600}
+.sdi-foot-agente .l2{font-size:11.5px;color:var(--lc-ink-3);margin:4px 0 0}
+.sdi-changelog{margin-top:16px;padding-top:14px;border-top:1px solid var(--lc-line);font-size:12px;color:var(--lc-ink-3);text-align:center}
+.sdi-changelog summary{cursor:pointer;list-style-position:inside}
+.sdi-changelog summary:hover{color:var(--lc-blue)}
+.sdi-changelog ul{text-align:left;max-width:78ch;margin:12px auto 0;padding-left:18px;line-height:1.6}
+.sdi-changelog li{margin-bottom:8px}
+.sdi-changelog li strong{color:var(--lc-ink);font-weight:600}
