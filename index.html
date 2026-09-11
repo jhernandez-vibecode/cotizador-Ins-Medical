@@ -1264,6 +1264,7 @@ a:hover { text-decoration: underline; }
       <details class="sdi-changelog">
         <summary>Última actualización: 11 sep 2026 — cara nueva en toda la aplicación y en los dos correos</summary>
         <ul>
+          <li><strong>11 sep 2026</strong> — Corregido el nombre del remitente en los correos: con tilde salía como "HernÃƒÂ¡ndez" en la bandeja del cliente. Ahora el nombre viaja bien codificado. Lo mismo para los nombres de archivos adjuntos con tilde o ñ.</li>
           <li><strong>11 sep 2026</strong> — El correo de póliza emitida también estrena la cara nueva: los pasos de uso del seguro con número, los contactos del INS en una sola caja y los derechos como texto. Los plazos, cláusulas, teléfonos y correos del INS dicen exactamente lo mismo que antes.</li>
           <li><strong>11 sep 2026</strong> — Cara nueva (línea clara SDI) en la consola, en la página del cliente y en el correo de la cotización: fondo blanco, más aire, botones en píldora y un solo color de acento. El correo presenta las opciones como tarjetas, con la propuesta marcada como "Opción a valorar" y el aporte de cada asegurado. Fuera los emojis de los botones. El pie lleva el logo SDI oficial. Las primas, los deducibles y las coberturas son exactamente los mismos.</li>
           <li><strong>11 sep 2026</strong> — Corregido el aviso legal del correo: decía que las primas no incluyen el IVA, cuando sí lo incluyen desde el inicio.</li>
@@ -3043,11 +3044,17 @@ function buildMime({ to, from, subject, html, attachments }) {
   const segs = [`--${mixBoundary}`, altBlock];
   atts.forEach(a => {
     const safeName = String(a.name || "documento").replace(/[\r\n"]/g, "");
+    const safeType = String(a.type || "application/octet-stream").replace(/[\r\n;]/g, "");
+    // Nombre con tilde/ñ: RFC 2231 (filename*=UTF-8''…); ASCII puro va entre comillas como siempre
+    const nameParam = /^[\x20-\x7E]*$/.test(safeName)
+      ? `name="${safeName}"`
+      : `name*=UTF-8''${encodeURIComponent(safeName)}`;
+    const fileParam = nameParam.replace(/^name/, "filename");
     const data = (String(a.b64 || "").replace(/\s+/g, "").match(/.{1,76}/g) || []).join("\r\n");
     segs.push(`--${mixBoundary}`);
-    segs.push(`Content-Type: ${a.type || "application/octet-stream"}; name="${safeName}"`);
+    segs.push(`Content-Type: ${safeType}; ${nameParam}`);
     segs.push("Content-Transfer-Encoding: base64");
-    segs.push(`Content-Disposition: attachment; filename="${safeName}"`);
+    segs.push(`Content-Disposition: attachment; ${fileParam}`);
     segs.push("");
     segs.push(data);
   });
@@ -3059,7 +3066,8 @@ function buildMime({ to, from, subject, html, attachments }) {
 
 function sendEmailViaGmail({ to, subject, html, attachments }, onSuccess, onError) {
   ensureGmailToken(() => {
-    const from = agenteActual ? `${agenteActual.nombre} <${agenteActual.email}>` : "Cotizador INS Medical";
+    // Encabezado From: el nombre va codificado (RFC 2047) — con tilde cruda el cliente veía "HernÃƒÂ¡ndez" (JC, 11 sep 2026)
+    const from = agenteActual ? `${_encodeRFC2047(agenteActual.nombre)} <${agenteActual.email}>` : "Cotizador INS Medical";
     const atts = (attachments || []).filter(a => a && a.b64);
     // El endpoint de subida (/upload/...) NO permite CORS desde el navegador → "Failed to fetch".
     // Usamos siempre el endpoint clásico: el adjunto viaja dentro del MIME (multipart/mixed) en `raw`.
