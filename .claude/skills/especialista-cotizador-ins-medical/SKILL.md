@@ -96,8 +96,25 @@ cotización completa encontrará" con los 5 renglones transcritos; cierre; pie c
 - El correo conserva el `?c=` largo (no hay enlace corto en este proyecto todavía).
 - **Falta el smoke real de JC en Gmail del teléfono** — mandarse una cotización de prueba a
   `segurosjhernandez@outlook.com`, nunca al corporativo.
-- **El correo de póliza emitida (`buildEmailPolizaVigenteMedical`) sigue con el estilo viejo** (navy).
-  Va aparte si JC lo pide.
+
+### El correo de póliza emitida · `buildEmailPolizaVigenteMedical` (11 sep 2026, segundo commit)
+JC lo pidió el mismo día. **El texto se TRANSCRIBIÓ, no se redactó**: se guardó la salida de la
+plantilla vieja con un payload fijo (Internacional $500, 2 asegurados) y se comparó palabra por
+palabra con la nueva → **0 palabras perdidas** (la única diferencia es el pie, que pasó al estándar
+de Vital: "Propiedad intelectual de Juan Carlos Hernández Vargas"). Plazos (5 días hábiles, 60 días
+naturales, 48 horas, 30 días), cláusulas XXIII/XXIV, Ley 8956 art. 16, los 6 teléfonos y los 4
+correos del INS vienen de `INS_CONTACTOS` como antes. Si alguien "mejora" la redacción, está
+tocando texto legal aprobado.
+- Forma = criterio de JC para la B de Vital 360 (10 sep): las **4-5 modalidades pierden su color**
+  propio (verde/teal/azul/naranja/violeta) y llevan **número en círculo neutro**; "Números y correos
+  clave" es la **única caja** de su zona (antes navy) con las cifras grandes en tinta; "Sus derechos"
+  va como texto abierto con su regla de 28×3 (antes caja ámbar). No reproponer la variante en color.
+- La modalidad 5 (emergencia internacional) sigue condicionada a `esInternacional` (Internacional y
+  GD); verificado que Regional no la trae.
+- Barra, filete, píldora "Póliza emitida y vigente", tarjeta de la póliza sobre banda pálida y pie con
+  `sdi-logo-color.png`: mismas piezas que el correo de cotización (constantes `EMAIL_IMG`, `_LC_F`, `_LC_M`).
+- Fuera el 📱 de la firma. Con esto **no queda ningún emoji** en la app salvo ✓ ✕ ★.
+- **Falta el smoke real de JC en Gmail** (a `segurosjhernandez@outlook.com`), igual que el de cotización.
 
 ## Stack
 

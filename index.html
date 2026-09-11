@@ -1262,8 +1262,9 @@ a:hover { text-decoration: underline; }
       <p class="l1">Un producto de <strong>SDI · Seguros Digitales</strong></p>
       <p class="l2">© 2026 · Propiedad intelectual de <strong>Juan Carlos Hernández Vargas</strong></p>
       <details class="sdi-changelog">
-        <summary>Última actualización: 11 sep 2026 — cara nueva en toda la aplicación y en el correo de la cotización</summary>
+        <summary>Última actualización: 11 sep 2026 — cara nueva en toda la aplicación y en los dos correos</summary>
         <ul>
+          <li><strong>11 sep 2026</strong> — El correo de póliza emitida también estrena la cara nueva: los pasos de uso del seguro con número, los contactos del INS en una sola caja y los derechos como texto. Los plazos, cláusulas, teléfonos y correos del INS dicen exactamente lo mismo que antes.</li>
           <li><strong>11 sep 2026</strong> — Cara nueva (línea clara SDI) en la consola, en la página del cliente y en el correo de la cotización: fondo blanco, más aire, botones en píldora y un solo color de acento. El correo presenta las opciones como tarjetas, con la propuesta marcada como "Opción a valorar" y el aporte de cada asegurado. Fuera los emojis de los botones. El pie lleva el logo SDI oficial. Las primas, los deducibles y las coberturas son exactamente los mismos.</li>
           <li><strong>11 sep 2026</strong> — Corregido el aviso legal del correo: decía que las primas no incluyen el IVA, cuando sí lo incluyen desde el inicio.</li>
           <li><strong>16 jul 2026</strong> — Respaldo del historial: exportar e importar un archivo JSON desde "Mis cotizaciones".</li>
@@ -3699,6 +3700,13 @@ function openPolizaModal(h) {
   setTimeout(() => { const el = document.getElementById("pvm-numero"); if (el) el.focus(); }, 80);
 }
 
+// Correo de póliza emitida — línea clara (11 sep 2026). El TEXTO se transcribió
+// tal cual de la versión anterior (plazos, cláusulas, correos y teléfonos del INS,
+// Ley 8956): solo cambió la forma. Criterio de JC (Vital 360, 10 sep): las 4-5
+// modalidades pierden su color propio (número en círculo neutro); los contactos
+// se destacan por aislamiento (única caja de su zona), no por color; los
+// derechos van como texto abierto con su regla de 28×3. Tablas y estilos en
+// línea, sin webfonts; logos PNG con URL absoluta (EMAIL_IMG, img/ de este repo).
 function buildEmailPolizaVigenteMedical(st, polizaData) {
   const productoKey = polizaData.productoKey || polizaData.producto || "regional";
   const prod = PRODUCTOS[productoKey] || PRODUCTOS.regional;
@@ -3706,6 +3714,7 @@ function buildEmailPolizaVigenteMedical(st, polizaData) {
   const esInternacional = (productoKey === "internacional" || productoKey === "grandes_deducibles");
   const agente = agenteActual || {};
   const _esc = s => escapeHtml(String(s || ""));
+  const F = _LC_F, M = _LC_M;
 
   const cli = (st && st.cliente) || {};
   const nombreCorto = (cli.nombre || "").split(/\s+/)[0] || "cliente";
@@ -3717,154 +3726,200 @@ function buildEmailPolizaVigenteMedical(st, polizaData) {
     return `${parseInt(d,10)} de ${meses[parseInt(m,10)-1]} de ${y}`;
   })() : "—";
 
-  const headerGrad = productoKey === "grandes_deducibles"
-    ? "linear-gradient(135deg,#047857 0%,#065F46 100%)"
-    : productoKey === "regional"
-    ? "linear-gradient(135deg,#2E6FA8 0%,#1E4D7B 100%)"
-    : "linear-gradient(135deg,#2563EB 0%,#1E3A8A 100%)";
-
   const sumaDisplay = (productoKey === "regional") ? "USD 200,000" : "USD 2,000,000";
 
+  // Piezas
+  const regla = `<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 0 12px;"><tr><td bgcolor="#1E3A8A" style="background:#1E3A8A;width:28px;height:3px;font-size:0;line-height:0;">&nbsp;</td></tr></table>`;
+  const numero = n => `<table cellpadding="0" cellspacing="0" border="0" role="presentation"><tr><td width="28" height="28" align="center" valign="middle" bgcolor="#EEF4F9" style="background:#EEF4F9;border-radius:50%;width:28px;height:28px;font-size:13px;font-weight:bold;color:#1B1F23;">${n}</td></tr></table>`;
+  // Modalidad: número neutro + título + cuerpo + viñetas (texto transcrito)
+  const modalidad = (n, titulo, cuerpo, items, ultima, extra) => `
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="${ultima ? "" : "border-bottom:1px solid #EDEFF2;"}margin:0 0 ${ultima ? "0" : "18px"};">
+    <tr>
+      <td width="40" valign="top" style="padding:0 12px 18px 0;">${numero(n)}</td>
+      <td valign="top" style="padding:0 0 18px;">
+        <p style="margin:4px 0 6px;font-size:14.5px;font-weight:bold;color:#1B1F23;line-height:1.3;">${titulo}</p>
+        <p style="margin:0 0 8px;font-size:13px;color:#5A6570;line-height:1.6;">${cuerpo}</p>
+        ${items ? `<ul style="margin:0;padding-left:18px;font-size:12.5px;color:#5A6570;line-height:1.9;">${items}</ul>` : ""}${extra || ""}
+      </td>
+    </tr>
+  </table>`;
+  const dato = (k, v, mono, top) => `<tr><td style="color:#6B7681;padding:${top ? "8px" : "4px"} 14px 4px 0;font-size:13px;width:140px;vertical-align:top;">${k}</td><td style="padding:${top ? "8px" : "4px"} 0 4px;font-size:13px;color:#1B1F23;font-weight:bold;${mono ? "font-family:" + M + ";" : ""}line-height:1.5;">${v}</td></tr>`;
+
+  const modalidades = [
+    modalidad(1, "Medicina Virtual &middot; Incluida en su p&oacute;liza",
+      `Consultas m&eacute;dicas virtuales 24/7 sin costo adicional. Descargue la <strong style="color:#1B1F23;">App INS 24/7</strong> (Android e iOS) o ingrese en <strong style="color:#1B1F23;">medicinavirtual.ins-cr.com</strong>`, ""),
+    modalidad(2, "Atenci&oacute;n m&eacute;dica inmediata &middot; Red de proveedores INS",
+      `Acuda directamente a cualquier hospital o cl&iacute;nica de la <strong style="color:#1B1F23;">Red de Proveedores del INS</strong>. El proveedor gestiona la atenci&oacute;n y la coordina con el INS. Si la cobertura es aprobada, usted primero cubre su <strong style="color:#1B1F23;">deducible anual</strong> (p.ej. $200); una vez superado ese monto, el seguro cubre los gastos y usted <strong style="color:#1B1F23;">paga &uacute;nicamente el coaseguro</strong>.`,
+      `<li>Identif&iacute;quese como asegurado INS Medical al llegar al proveedor.</li>
+      <li>Para verificar o localizar un proveedor de la red: <strong style="color:#1B1F23;">${INS_CONTACTOS.red_medica}</strong> (800-MEDICAL).</li>`),
+    modalidad(3, "Hospitalizaci&oacute;n o cirug&iacute;a electiva &middot; Pre-autorizaci&oacute;n obligatoria",
+      `El INS coordina el pago directamente con el hospital (red de proveedores).`,
+      `<li>Solicite la pre-autorizaci&oacute;n con al menos <strong style="color:#1B1F23;">${INS_CONTACTOS.preautorizacion_dias_habiles} d&iacute;as h&aacute;biles de anticipaci&oacute;n</strong> (Cl&aacute;usula XXIII).</li>
+      <li>Env&iacute;e a <strong style="color:#1B1F23;">${INS_CONTACTOS.autorizaciones_email}</strong>: formulario de pre-autorizaci&oacute;n + orden de hospitalizaci&oacute;n del m&eacute;dico tratante + ex&aacute;menes que la justifican.</li>
+      <li>Tambi&eacute;n puede llamar al <strong style="color:#1B1F23;">${INS_CONTACTOS.red_medica}</strong> (800-MEDICAL) para ubicar un proveedor en la red.</li>`),
+    modalidad(4, "Consultas ambulatorias y ex&aacute;menes &middot; Reembolso",
+      `Para consultas m&eacute;dicas, ex&aacute;menes y tratamientos ambulatorios, usted paga primero y luego solicita el reembolso. Tiene <strong style="color:#1B1F23;">${INS_CONTACTOS.plazo_reembolso_dias} d&iacute;as naturales desde el inicio del tratamiento</strong> para presentar el reclamo ante el INS (Cl&aacute;usula XXIV).`,
+      `<li>Guarde <strong style="color:#1B1F23;">todas las facturas electr&oacute;nicas canceladas</strong>, recetas m&eacute;dicas y resultados de ex&aacute;menes.</li>
+      <li>Llene el formulario <strong style="color:#1B1F23;">Solicitud de Beneficios</strong> y la <strong style="color:#1B1F23;">Autorizaci&oacute;n de Consulta de Expediente</strong>.</li>
+      <li>Env&iacute;e el expediente completo a: <strong style="color:#1B1F23;">clientescgsp@grupoins.com</strong></li>
+      <li>Para consultar el estado del reclamo: <strong style="color:#1B1F23;">${INS_CONTACTOS.consultas_email}</strong></li>`, !esInternacional)
+  ];
+  if (esInternacional) {
+    const tel = (k, v) => `<tr><td style="color:#6B7681;padding:2px 14px 2px 0;font-size:12px;">${k}</td><td style="font-family:${M};color:#1B1F23;font-weight:bold;font-size:12px;">${v}</td></tr>`;
+    modalidades.push(modalidad(5, `Emergencia fuera del pa&iacute;s &middot; Aviso en ${INS_CONTACTOS.plazo_emergencia_intl_horas} horas`,
+      `En caso de emergencia m&eacute;dica fuera de Costa Rica, notifique al INS o al Administrador de Servicios M&eacute;dicos <strong style="color:#1B1F23;">dentro de las ${INS_CONTACTOS.plazo_emergencia_intl_horas} horas siguientes</strong> a la emergencia (Cl&aacute;usula XXIII):`, "", true,
+      `<table cellpadding="0" cellspacing="0" border="0" role="presentation">
+          ${tel("USA (gratuito)", INS_CONTACTOS.asistencia_usa_gratis)}
+          ${tel("Espa&ntilde;a (gratuito)", INS_CONTACTOS.asistencia_esp_gratis)}
+          ${tel("USA / Am&eacute;ricas (directo)", INS_CONTACTOS.asistencia_directo_usa)}
+          ${tel("Europa / Mundo (directo)", INS_CONTACTOS.asistencia_directo_esp)}
+          ${tel("Email", INS_CONTACTOS.internacional_email)}
+        </table>`));
+  }
+
   return `<!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><title>Su póliza INS Medical está vigente</title></head>
-<body style="margin:0;padding:0;background:#F1F5F9;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#F1F5F9;padding:20px 0;">
-<tr><td>
-<table width="600" cellpadding="0" cellspacing="0" align="center" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08);">
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Su póliza INS Medical está vigente</title>
+</head>
+<body style="margin:0;padding:0;background:#F4F7FA;font-family:${F};color:#1B1F23;-webkit-text-size-adjust:100%;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background:#F4F7FA;padding:26px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background:#ffffff;border:1px solid #DADCE0;border-radius:16px;max-width:600px;">
 
-<!-- HEADER -->
-<tr><td style="background:${headerGrad};padding:32px 40px 28px;">
-  <table width="100%" cellpadding="0" cellspacing="0"><tr>
-    <td><img src="${LOGO_INS_URL}" alt="INS" height="32" style="height:32px;filter:brightness(0) invert(1);display:block;" /></td>
-    <td style="text-align:right;"><span style="font-size:11px;color:rgba(255,255,255,.7);font-family:'Courier New',Courier,monospace;">N.º ${_esc(polizaData.numero)}</span></td>
-  </tr></table>
-  <h1 style="margin:14px 0 4px;font-size:26px;font-weight:700;color:#ffffff;letter-spacing:-0.015em;line-height:1.15;">Su póliza está vigente</h1>
-  <p style="margin:0;font-size:13px;color:rgba(255,255,255,.85);">${_esc(prod.nombre)} · ${_esc(deducibleLabel)}</p>
-</td></tr>
+          <!-- filete SDI + barra en dos niveles -->
+          <tr>
+            <td style="padding:0;border-radius:16px 16px 0 0;overflow:hidden;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"><tr>
+                <td width="25%" bgcolor="#0369A1" style="background:#0369A1;height:4px;font-size:0;line-height:0;">&nbsp;</td>
+                <td width="25%" bgcolor="#0D9488" style="background:#0D9488;height:4px;font-size:0;line-height:0;">&nbsp;</td>
+                <td width="25%" bgcolor="#EA580C" style="background:#EA580C;height:4px;font-size:0;line-height:0;">&nbsp;</td>
+                <td width="25%" bgcolor="#C9A227" style="background:#C9A227;height:4px;font-size:0;line-height:0;">&nbsp;</td>
+              </tr></table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:14px 26px;border-bottom:1px solid #EDEFF2;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td valign="middle"><img src="${EMAIL_IMG}/img/ins-logo-tinta.png" alt="Instituto Nacional de Seguros" width="120" height="28" style="display:block;border:0;width:120px;height:28px;" /></td>
+                  <td valign="middle" align="right" style="font-family:${M};font-size:11px;color:#6B7681;white-space:nowrap;">P&oacute;liza N.&ordm; ${_esc(polizaData.numero)}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:11px 26px;border-bottom:1px solid #EDEFF2;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td valign="middle" style="font-size:18px;font-weight:bold;color:#1B1F23;letter-spacing:-0.02em;">INS Medical</td>
+                  <td valign="middle" align="right" style="font-size:12px;color:#6B7681;">Seguro de gastos m&eacute;dicos &middot; INS Costa Rica</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-<!-- BODY -->
-<tr><td style="padding:32px 40px 0;">
-  <p style="margin:0 0 22px;font-size:14.5px;color:#1E293B;line-height:1.7;">Estimado(a) <strong>${_esc(nombreCorto)}</strong>, su póliza INS Medical quedó emitida y está vigente. A continuación los datos de su contrato y una guía de uso para cuando la necesite.</p>
+          <!-- titular -->
+          <tr>
+            <td align="center" style="padding:40px 34px 8px;">
+              <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" style="margin:0 auto 20px;">
+                <tr><td bgcolor="#E9F5F0" style="background:#E9F5F0;border-radius:999px;padding:7px 15px;font-size:12px;font-weight:bold;color:#037D61;white-space:nowrap;">&bull;&nbsp; P&oacute;liza emitida y vigente</td></tr>
+              </table>
+              <h1 style="margin:0;font-size:30px;line-height:1.15;font-weight:bold;color:#1B1F23;letter-spacing:-0.02em;">Su p&oacute;liza est&aacute; vigente</h1>
+              <p style="margin:10px 0 0;font-size:13px;color:#6B7681;">${_esc(prod.nombre)} &middot; ${_esc(deducibleLabel)}</p>
+              <p style="margin:18px auto 0;font-size:14.5px;line-height:1.7;color:#5A6570;max-width:460px;">Estimado(a) <strong style="color:#1B1F23;">${_esc(nombreCorto)}</strong>, su p&oacute;liza INS Medical qued&oacute; emitida y est&aacute; vigente. A continuaci&oacute;n los datos de su contrato y una gu&iacute;a de uso para cuando la necesite.</p>
+            </td>
+          </tr>
 
-  <!-- TARJETA PÓLIZA -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:8px;margin-bottom:28px;">
-  <tr><td style="padding:20px 24px;">
-    <p style="margin:0 0 12px;font-size:10px;color:#64748B;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;">Datos de su póliza</p>
-    <table cellpadding="0" cellspacing="0">
-      <tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;width:140px;">N.º de póliza</td><td style="font-family:'Courier New',Courier,monospace;color:#0F172A;font-weight:700;font-size:14px;">${_esc(polizaData.numero)}</td></tr>
-      <tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;">Producto</td><td style="color:#0F172A;font-size:13px;font-weight:600;">${_esc(prod.nombre)}</td></tr>
-      <tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;">Deducible</td><td style="color:#0F172A;font-size:13px;">${_esc(deducibleLabel)}</td></tr>
-      <tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;">Vigencia desde</td><td style="font-family:'Courier New',Courier,monospace;color:#0F172A;font-weight:600;font-size:13px;">${_esc(fechaDisplay)}</td></tr>
-      <tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;">Suma asegurada</td><td style="color:#0F172A;font-size:13px;font-weight:600;">${sumaDisplay}</td></tr>
-      ${aseguradosList ? `<tr><td style="color:#64748B;padding:3px 14px 3px 0;font-size:13px;vertical-align:top;">Asegurados</td><td style="color:#0F172A;font-size:12px;line-height:1.6;">${_esc(aseguradosList)}</td></tr>` : ""}
-    </table>
-  </td></tr></table>
+          <!-- tarjeta de la póliza: panel blanco sobre banda pálida -->
+          <tr>
+            <td bgcolor="#EEF4F9" style="background:#EEF4F9;padding:26px 22px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background:#ffffff;border:1px solid #DADCE0;border-radius:20px;">
+                <tr>
+                  <td style="padding:22px 24px 18px;">
+                    <p style="margin:0 0 12px;font-size:12px;color:#6B7681;">Datos de su p&oacute;liza</p>
+                    <table cellpadding="0" cellspacing="0" border="0" role="presentation" width="100%">
+                      ${dato("N.&ordm; de p&oacute;liza", _esc(polizaData.numero), true)}
+                      ${dato("Producto", _esc(prod.nombre))}
+                      ${dato("Deducible", _esc(deducibleLabel))}
+                      ${dato("Vigencia desde", _esc(fechaDisplay), true)}
+                      ${dato("Suma asegurada", sumaDisplay)}
+                      ${aseguradosList ? dato("Asegurados", `<span style="font-weight:normal;color:#5A6570;font-size:12.5px;">${_esc(aseguradosList)}</span>`) : ""}
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-  <h2 style="margin:0 0 16px;font-size:17px;font-weight:700;color:#0F172A;">¿Cómo usar su seguro INS Medical?</h2>
+          <!-- cómo usar el seguro: modalidades con número neutro -->
+          <tr>
+            <td style="padding:32px 34px 6px;">
+              ${regla}
+              <p style="margin:0 0 20px;font-size:20px;font-weight:bold;color:#1B1F23;letter-spacing:-0.02em;">&iquest;C&oacute;mo usar su seguro INS Medical?</p>
+              ${modalidades.join("")}
+            </td>
+          </tr>
 
-  <!-- MODALIDAD 1: MEDICINA VIRTUAL -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F0FDF4;border-left:4px solid #16A34A;border-radius:0 4px 4px 0;margin-bottom:12px;">
-  <tr><td style="padding:16px 20px;">
-    <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#15803D;text-transform:uppercase;letter-spacing:0.04em;">① Medicina Virtual · Incluida en su póliza</p>
-    <p style="margin:0 0 8px;font-size:13px;color:#166534;line-height:1.6;">Consultas médicas virtuales 24/7 sin costo adicional. Descargue la <strong>App INS 24/7</strong> (Android e iOS) o ingrese en <strong>medicinavirtual.ins-cr.com</strong></p>
-  </td></tr></table>
+          <!-- contactos clave: la única caja de su zona, cifras en tinta -->
+          <tr>
+            <td style="padding:26px 34px 8px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background:#ffffff;border:1px solid #DADCE0;border-radius:20px;">
+                <tr>
+                  <td style="padding:20px 24px 16px;">
+                    <p style="margin:0 0 12px;font-size:12px;color:#6B7681;">N&uacute;meros y correos clave</p>
+                    <table cellpadding="0" cellspacing="0" border="0" role="presentation" width="100%">
+                      <tr><td style="color:#6B7681;padding:3px 16px 3px 0;font-size:12.5px;width:190px;">Tele-INS (800-TELEINS)</td><td style="font-family:${M};color:#1B1F23;font-weight:bold;font-size:15px;">${INS_CONTACTOS.tele_ins}</td></tr>
+                      <tr><td style="color:#6B7681;padding:3px 16px 3px 0;font-size:12.5px;">Red M&eacute;dica (800-MEDICAL)</td><td style="font-family:${M};color:#1B1F23;font-weight:bold;font-size:15px;">${INS_CONTACTOS.red_medica}</td></tr>
+                      <tr><td style="color:#6B7681;padding:3px 16px 3px 0;font-size:12.5px;">Tel&eacute;fono central INS</td><td style="font-family:${M};color:#1B1F23;font-weight:bold;font-size:15px;">${INS_CONTACTOS.linea_central}</td></tr>
+                      <tr><td style="color:#6B7681;padding:10px 16px 3px 0;font-size:12.5px;">Autorizaciones</td><td style="font-family:${M};color:#1B1F23;font-weight:bold;font-size:13px;padding-top:10px;">${INS_CONTACTOS.autorizaciones_email}</td></tr>
+                      <tr><td style="color:#6B7681;padding:3px 16px 3px 0;font-size:12.5px;">Consultas / reclamos</td><td style="font-family:${M};color:#1B1F23;font-weight:bold;font-size:13px;">${INS_CONTACTOS.consultas_email}</td></tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-  <!-- MODALIDAD 2: ATENCIÓN MÉDICA INMEDIATA -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F0FDFA;border-left:4px solid #0D9488;border-radius:0 4px 4px 0;margin-bottom:12px;">
-  <tr><td style="padding:16px 20px;">
-    <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#0F766E;text-transform:uppercase;letter-spacing:0.04em;">② Atención médica inmediata · Red de proveedores INS</p>
-    <p style="margin:0 0 8px;font-size:13px;color:#134E4A;line-height:1.6;">Acuda directamente a cualquier hospital o clínica de la <strong>Red de Proveedores del INS</strong>. El proveedor gestiona la atención y la coordina con el INS. Si la cobertura es aprobada, usted primero cubre su <strong>deducible anual</strong> (p.ej. $200); una vez superado ese monto, el seguro cubre los gastos y usted <strong>paga únicamente el coaseguro</strong>.</p>
-    <ul style="margin:0;padding-left:18px;font-size:12.5px;color:#134E4A;line-height:1.9;">
-      <li>Identifíquese como asegurado INS Medical al llegar al proveedor.</li>
-      <li>Para verificar o localizar un proveedor de la red: <strong>${INS_CONTACTOS.red_medica}</strong> (800-MEDICAL).</li>
-    </ul>
-  </td></tr></table>
+          <!-- derechos: texto abierto con su regla -->
+          <tr>
+            <td style="padding:28px 34px 8px;">
+              ${regla}
+              <p style="margin:0 0 10px;font-size:16px;font-weight:bold;color:#1B1F23;letter-spacing:-0.01em;">Sus derechos como asegurado</p>
+              <p style="margin:0;font-size:13px;color:#5A6570;line-height:1.7;">El INS resuelve cada reclamo en m&aacute;ximo <strong style="color:#1B1F23;">${INS_CONTACTOS.plazo_resolucion_dias} d&iacute;as naturales</strong> (Ley 8956, art. 16). Si su reclamo es declinado parcial o totalmente, tiene derecho a presentar <strong style="color:#1B1F23;">recurso de revocatoria</strong> ante el departamento que dict&oacute; la resoluci&oacute;n y, despu&eacute;s, <strong style="color:#1B1F23;">apelaci&oacute;n</strong> al superior jer&aacute;rquico.</p>
+            </td>
+          </tr>
 
-  <!-- MODALIDAD 3: HOSPITALIZACIÓN ELECTIVA -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#EFF6FF;border-left:4px solid #2563EB;border-radius:0 4px 4px 0;margin-bottom:12px;">
-  <tr><td style="padding:16px 20px;">
-    <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#1D4ED8;text-transform:uppercase;letter-spacing:0.04em;">③ Hospitalización o cirugía electiva · Pre-autorización obligatoria</p>
-    <p style="margin:0 0 8px;font-size:13px;color:#1E3A8A;line-height:1.6;">El INS coordina el pago directamente con el hospital (red de proveedores).</p>
-    <ul style="margin:0;padding-left:18px;font-size:12.5px;color:#1E3A8A;line-height:1.9;">
-      <li>Solicite la pre-autorización con al menos <strong>${INS_CONTACTOS.preautorizacion_dias_habiles} días hábiles de anticipación</strong> (Cláusula XXIII).</li>
-      <li>Envíe a <strong>${INS_CONTACTOS.autorizaciones_email}</strong>: formulario de pre-autorización + orden de hospitalización del médico tratante + exámenes que la justifican.</li>
-      <li>También puede llamar al <strong>${INS_CONTACTOS.red_medica}</strong> (800-MEDICAL) para ubicar un proveedor en la red.</li>
-    </ul>
-  </td></tr></table>
+          <!-- cierre -->
+          <tr>
+            <td style="padding:28px 34px 34px;">
+              <p style="margin:0;font-size:14.5px;color:#1B1F23;font-weight:bold;">${_esc(agente.nombre || "Agente INS")}</p>
+              <p style="margin:3px 0 0;font-size:12.5px;color:#6B7681;">Lic. SUGESE ${_esc(agente.licencia || "08-1318")} &middot; Seguros Digitales SDI</p>
+              ${agente.whatsapp ? `<p style="margin:4px 0 0;font-size:12.5px;color:#6B7681;">WhatsApp ${_esc(agente.whatsapp)}</p>` : ""}
+              ${agente.email ? `<p style="margin:2px 0 0;font-size:12.5px;color:#6B7681;">${_esc(agente.email)}</p>` : ""}
+            </td>
+          </tr>
 
-  <!-- MODALIDAD 4: AMBULATORIO / REEMBOLSO -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFF7ED;border-left:4px solid #EA580C;border-radius:0 4px 4px 0;margin-bottom:12px;">
-  <tr><td style="padding:16px 20px;">
-    <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#C2410C;text-transform:uppercase;letter-spacing:0.04em;">④ Consultas ambulatorias y exámenes · Reembolso</p>
-    <p style="margin:0 0 8px;font-size:13px;color:#9A3412;line-height:1.6;">Para consultas médicas, exámenes y tratamientos ambulatorios, usted paga primero y luego solicita el reembolso. Tiene <strong>${INS_CONTACTOS.plazo_reembolso_dias} días naturales desde el inicio del tratamiento</strong> para presentar el reclamo ante el INS (Cláusula XXIV).</p>
-    <ul style="margin:0;padding-left:18px;font-size:12.5px;color:#9A3412;line-height:1.9;">
-      <li>Guarde <strong>todas las facturas electrónicas canceladas</strong>, recetas médicas y resultados de exámenes.</li>
-      <li>Llene el formulario <strong>Solicitud de Beneficios</strong> y la <strong>Autorización de Consulta de Expediente</strong>.</li>
-      <li>Envíe el expediente completo a: <strong>clientescgsp@grupoins.com</strong></li>
-      <li>Para consultar el estado del reclamo: <strong>${INS_CONTACTOS.consultas_email}</strong></li>
-    </ul>
-  </td></tr></table>
+          <!-- pie -->
+          <tr>
+            <td bgcolor="#EEF4F9" style="background:#EEF4F9;padding:28px 26px 24px;text-align:center;border-radius:0 0 16px 16px;">
+              <img src="${EMAIL_IMG}/img/sdi-logo-color.png" alt="Seguros Digitales SDI" width="118" height="41" style="display:block;border:0;width:118px;height:41px;margin:0 auto 14px;" />
+              <p style="margin:0;font-size:12.5px;color:#6B7681;">Lic. SUGESE ${_esc(agente.licencia || "08-1318")} &middot; C&oacute;d. ${_esc(agente.codigo || "110113")} &middot; INS Costa Rica</p>
+              <p style="margin:12px 0 0;font-size:11px;color:#6B7681;line-height:1.6;">Esta comunicaci&oacute;n es de car&aacute;cter informativo y se basa en las Condiciones Generales del seguro INS Medical (norma SUGESE P16-35-A01-113). La operaci&oacute;n de las coberturas se rige por dichas condiciones generales y por las condiciones particulares de su p&oacute;liza.</p>
+              <p style="margin:12px 0 0;font-size:11.5px;color:#5A6570;">Un producto de <strong style="color:#1B1F23;">SDI &middot; Seguros Digitales</strong></p>
+              <p style="margin:4px 0 0;font-size:11px;color:#6B7681;">&copy; 2026 &middot; Propiedad intelectual de <strong style="color:#5A6570;">Juan Carlos Hern&aacute;ndez Vargas</strong></p>
+            </td>
+          </tr>
 
-  ${esInternacional ? `<!-- MODALIDAD 5: EMERGENCIA INTERNACIONAL -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F3FF;border-left:4px solid #7C3AED;border-radius:0 4px 4px 0;margin-bottom:12px;">
-  <tr><td style="padding:16px 20px;">
-    <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#6D28D9;text-transform:uppercase;letter-spacing:0.04em;">⑤ Emergencia fuera del país · Aviso en ${INS_CONTACTOS.plazo_emergencia_intl_horas} horas</p>
-    <p style="margin:0 0 8px;font-size:13px;color:#4C1D95;line-height:1.6;">En caso de emergencia médica fuera de Costa Rica, notifique al INS o al Administrador de Servicios Médicos <strong>dentro de las ${INS_CONTACTOS.plazo_emergencia_intl_horas} horas siguientes</strong> a la emergencia (Cláusula XXIII):</p>
-    <table cellpadding="0" cellspacing="0">
-      <tr><td style="color:#6B7280;padding:2px 14px 2px 0;font-size:12px;">USA (gratuito)</td><td style="font-family:'Courier New',Courier,monospace;color:#4C1D95;font-weight:600;font-size:12px;">${INS_CONTACTOS.asistencia_usa_gratis}</td></tr>
-      <tr><td style="color:#6B7280;padding:2px 14px 2px 0;font-size:12px;">España (gratuito)</td><td style="font-family:'Courier New',Courier,monospace;color:#4C1D95;font-weight:600;font-size:12px;">${INS_CONTACTOS.asistencia_esp_gratis}</td></tr>
-      <tr><td style="color:#6B7280;padding:2px 14px 2px 0;font-size:12px;">USA / Américas (directo)</td><td style="font-family:'Courier New',Courier,monospace;color:#4C1D95;font-weight:600;font-size:12px;">${INS_CONTACTOS.asistencia_directo_usa}</td></tr>
-      <tr><td style="color:#6B7280;padding:2px 14px 2px 0;font-size:12px;">Europa / Mundo (directo)</td><td style="font-family:'Courier New',Courier,monospace;color:#4C1D95;font-weight:600;font-size:12px;">${INS_CONTACTOS.asistencia_directo_esp}</td></tr>
-      <tr><td style="color:#6B7280;padding:2px 14px 2px 0;font-size:12px;">Email</td><td style="font-family:'Courier New',Courier,monospace;color:#4C1D95;font-weight:600;font-size:12px;">${INS_CONTACTOS.internacional_email}</td></tr>
-    </table>
-  </td></tr></table>` : ""}
-
-  <!-- CONTACTOS CLAVE -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0F172A;border-radius:8px;margin-bottom:16px;">
-  <tr><td style="padding:20px 24px;">
-    <p style="margin:0 0 12px;font-size:10px;color:#94A3B8;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;">Números y correos clave</p>
-    <table cellpadding="0" cellspacing="0">
-      <tr><td style="color:#94A3B8;padding:2px 16px 2px 0;font-size:12px;width:170px;">Tele-INS (800-TELEINS)</td><td style="font-family:'Courier New',Courier,monospace;color:#ffffff;font-weight:600;font-size:13px;">${INS_CONTACTOS.tele_ins}</td></tr>
-      <tr><td style="color:#94A3B8;padding:2px 16px 2px 0;font-size:12px;">Red Médica (800-MEDICAL)</td><td style="font-family:'Courier New',Courier,monospace;color:#ffffff;font-weight:600;font-size:13px;">${INS_CONTACTOS.red_medica}</td></tr>
-      <tr><td style="color:#94A3B8;padding:2px 16px 2px 0;font-size:12px;">Teléfono central INS</td><td style="font-family:'Courier New',Courier,monospace;color:#ffffff;font-weight:600;">${INS_CONTACTOS.linea_central}</td></tr>
-      <tr><td style="color:#94A3B8;padding:6px 16px 2px 0;font-size:12px;">Autorizaciones</td><td style="font-family:'Courier New',Courier,monospace;color:#ffffff;font-weight:600;padding-top:6px;">${INS_CONTACTOS.autorizaciones_email}</td></tr>
-      <tr><td style="color:#94A3B8;padding:2px 16px 2px 0;font-size:12px;">Consultas / reclamos</td><td style="font-family:'Courier New',Courier,monospace;color:#ffffff;font-weight:600;">${INS_CONTACTOS.consultas_email}</td></tr>
-    </table>
-  </td></tr></table>
-
-  <!-- DERECHOS -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFBEB;border:1.5px solid #FCD34D;border-radius:8px;margin-bottom:28px;">
-  <tr><td style="padding:16px 20px;">
-    <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:0.04em;">Sus derechos como asegurado</p>
-    <p style="margin:0;font-size:12.5px;color:#78350F;line-height:1.7;">El INS resuelve cada reclamo en máximo <strong>${INS_CONTACTOS.plazo_resolucion_dias} días naturales</strong> (Ley 8956, art. 16). Si su reclamo es declinado parcial o totalmente, tiene derecho a presentar <strong>recurso de revocatoria</strong> ante el departamento que dictó la resolución y, después, <strong>apelación</strong> al superior jerárquico.</p>
-  </td></tr></table>
-
-  <!-- FIRMA AGENTE -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
-  <tr>
-    <td style="vertical-align:top;">
-      <p style="margin:0;font-size:13.5px;font-weight:700;color:#0F172A;">${_esc(agente.nombre || "Agente INS")}</p>
-      <p style="margin:2px 0 0;font-size:12px;color:#64748B;">Lic. SUGESE ${_esc(agente.licencia || "08-1318")} · Seguros Digitales SDI</p>
-      ${agente.whatsapp ? `<p style="margin:4px 0 0;font-size:12px;color:#16A34A;">📱 ${_esc(agente.whatsapp)}</p>` : ""}
-      ${agente.email ? `<p style="margin:2px 0 0;font-size:12px;color:#64748B;">${_esc(agente.email)}</p>` : ""}
-    </td>
-  </tr>
+        </table>
+      </td>
+    </tr>
   </table>
-</td></tr>
-
-<!-- DISCLAIMER -->
-<tr><td style="padding:0 40px 16px;">
-  <p style="font-size:10.5px;color:#94A3B8;font-style:italic;line-height:1.55;margin:0;">Esta comunicación es de carácter informativo y se basa en las Condiciones Generales del seguro INS Medical (norma SUGESE P16-35-A01-113). La operación de las coberturas se rige por dichas condiciones generales y por las condiciones particulares de su póliza.</p>
-</td></tr>
-
-<!-- FOOTER SDI -->
-<tr><td style="background:#0F172A;padding:20px 40px;border-radius:0 0 10px 10px;">
-  <p style="margin:0;font-size:12px;color:#94A3B8;line-height:1.6;"><strong style="color:#E2E8F0;">Seguros Digitales SDI</strong> · Propiedad intelectual Juan Carlos Hernández<br>Lic. SUGESE ${_esc(agente.licencia || "08-1318")} · Cód. ${_esc(agente.codigo || "110113")} · INS Costa Rica</p>
-</td></tr>
-
-</table>
-</td></tr></table>
-</body></html>`;
+</body>
+</html>`;
 }
 
 /* ═══════════════════════════════════════════════════════════════
