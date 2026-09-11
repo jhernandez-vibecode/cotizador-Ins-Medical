@@ -1264,6 +1264,7 @@ a:hover { text-decoration: underline; }
       <details class="sdi-changelog">
         <summary>Última actualización: 11 sep 2026 — cara nueva en toda la aplicación y en los dos correos</summary>
         <ul>
+          <li><strong>11 sep 2026</strong> — En el correo de la cotización, el botón "Ver mi cotización completa" pasa a ir justo debajo de las tarjetas de opciones.</li>
           <li><strong>11 sep 2026</strong> — Corregido el nombre del remitente en los correos: con tilde salía como "HernÃƒÂ¡ndez" en la bandeja del cliente. Ahora el nombre viaja bien codificado. Lo mismo para los nombres de archivos adjuntos con tilde o ñ.</li>
           <li><strong>11 sep 2026</strong> — El correo de póliza emitida también estrena la cara nueva: los pasos de uso del seguro con número, los contactos del INS en una sola caja y los derechos como texto. Los plazos, cláusulas, teléfonos y correos del INS dicen exactamente lo mismo que antes.</li>
           <li><strong>11 sep 2026</strong> — Cara nueva (línea clara SDI) en la consola, en la página del cliente y en el correo de la cotización: fondo blanco, más aire, botones en píldora y un solo color de acento. El correo presenta las opciones como tarjetas, con la propuesta marcada como "Opción a valorar" y el aporte de cada asegurado. Fuera los emojis de los botones. El pie lleva el logo SDI oficial. Las primas, los deducibles y las coberturas son exactamente los mismos.</li>
@@ -2868,7 +2869,7 @@ function buildEmailHTML(payload, link) {
 
           <!-- titular -->
           <tr>
-            <td align="center" style="padding:40px 34px 6px;">
+            <td align="center" style="padding:40px 34px 36px;">
               <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" style="margin:0 auto 20px;">
                 <tr><td bgcolor="#E9F5F0" style="background:#E9F5F0;border-radius:999px;padding:7px 15px;font-size:12px;font-weight:bold;color:#037D61;white-space:nowrap;">&bull;&nbsp; Cotizaci&oacute;n vigente ${escapeHtml(p.vigenciaDias)} d&iacute;as</td></tr>
               </table>
@@ -2878,17 +2879,7 @@ function buildEmailHTML(payload, link) {
               </p>
             </td>
           </tr>
-          <tr>
-            <td align="center" style="padding:26px 34px 36px;">
-              <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" style="margin:0 auto;">
-                <tr>
-                  <td bgcolor="#0369A1" style="background:#0369A1;border-radius:999px;">
-                    <a href="${escAttr(link)}" style="display:inline-block;padding:15px 32px;font-family:${F};font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">Ver mi cotizaci&oacute;n completa &rarr;</a>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
+
 
           <!-- las opciones en tarjetas -->
           <tr>
@@ -2898,6 +2889,17 @@ function buildEmailHTML(payload, link) {
               ${anchaHtml}
               ${paresHtml ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">${paresHtml}</table>` : ""}
               <p style="margin:4px 0 0;font-size:11.5px;color:#6B7681;line-height:1.6;">En la cotizaci&oacute;n completa ver&aacute; las coberturas de cada plan lado a lado y el pago anual, semestral o trimestral.</p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:28px 34px 6px;">
+              <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" style="margin:0 auto;">
+                <tr>
+                  <td bgcolor="#0369A1" style="background:#0369A1;border-radius:999px;">
+                    <a href="${escAttr(link)}" style="display:inline-block;padding:15px 32px;font-family:${F};font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">Ver mi cotizaci&oacute;n completa &rarr;</a>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 
