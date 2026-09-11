@@ -14,17 +14,90 @@ Cotizador online del **Seguro INS Medical** del INS (gastos médicos), operado p
 1. **Vista agente** (con auth): cotiza los 3 productos (Regional, Internacional, Grandes Deducibles), selecciona deducible por producto, marca recomendado, envía al cliente por email/WhatsApp/link.
 2. **Vista cliente** (stateless, vía link `?c=BASE64URL`): hero con logo INS, price cards de productos cotizados, tabla comparativa con tooltips, opciones de pago, períodos de espera, documentos de emisión, material informativo, CTA WhatsApp, footer SDI.
 
-## Estado actual (27 jul 2026)
+## Estado actual (11 sep 2026)
 
 - **EN PROD:** [insmedical.appsegurosdigitales.com](https://insmedical.appsegurosdigitales.com) (auto-deploy desde `main`)
 - **URL Netlify:** [cotizador-ins-medical.netlify.app](https://cotizador-ins-medical.netlify.app)
 - **Repo:** [jhernandez-vibecode/cotizador-Ins-Medical](https://github.com/jhernandez-vibecode/cotizador-Ins-Medical)
 - **Repo local:** `C:/Users/segur/cotizador-Ins-Medical`
-- **Preview local:** `npx serve` puerto 8801 — nombre `cotizador-insmedical` en `~/.claude/launch.json`
+- **Preview local:** `npx http-server -c-1` puerto 8801 — nombre `insmedical` en `~/.claude/launch.json` (desde 11 sep; ver "Línea clara")
 - **Versión:** v1.0.0 commit inicial `4187324`
 - **24 jun 2026 (commit `080837d`):** correo de póliza emitida con **adjuntos** (botón "Agregar documentos", hasta 20 MB) + **firma sin círculo de iniciales** en ambas plantillas. Ver sección "Plantilla de correo HTML".
 - **jun 2026 (commit `698c444`):** fix adjuntos — se descartó el endpoint de subida por CORS y quedó el clásico + correo del cliente editable. Ver "Plantilla de correo HTML".
-- **16 jul 2026 (commit `51d6240`, último):** respaldo del historial — exportar / importar JSON. `main` sincronizada con origin.
+- **16 jul 2026 (commit `51d6240`):** respaldo del historial — exportar / importar JSON.
+- **11 sep 2026 (commit `e24bbd2`, último):** **línea clara SDI en toda la cara** (consola, página del cliente y correo de cotización). Ver la sección "Línea clara". `main` sincronizada con origin.
+
+## Línea clara · el estilo de la cara (11 sep 2026 · `e24bbd2`)
+
+JC pidió "la misma línea de diseño" de Vital 360 y EBI. Reglas, tokens y procedimiento viven en el
+skill `imagen-de-marca-sdi` (invocarlo junto con este). Acá solo lo propio de INS Medical.
+
+- **Cómo está aplicada:** UNA hoja de sobreescritura, `linea-clara.css`, cargada **al final del `<head>`**
+  (gana por orden). El `<style>` de la app quedó intacto. Los `!important` de la hoja van SOLO contra
+  estilos en línea (botón "+ Nueva cotización", `filter` del logo del login, `padding-top:0` de la tabla,
+  el aviso de telesuscripción con `style=""`) y cada uno lo dice en su comentario. No agregar más.
+- **Solo la cara:** verificado función por función contra `main` con extracción por nombre: `renderCliente`,
+  `renderCliHero`, `renderCliCovTable`, `renderCliPayment`, `renderCliWaiting`, `renderCliInfoDocs`,
+  `renderCliDisclaimer`, `renderProductCard`, `renderAsegList`, `renderPaso2/3`, `buildClientPayload`,
+  `calcPrimaProducto`, `lookupPrima`, `buildMime`, `sendEmailViaGmail`, `buildEmailPolizaVigenteMedical`,
+  `encodePayload/decodePayload`, `calcRecargo`, `calcularDocumentos` → **byte a byte idénticas**. Cambiaron
+  solo las que llevan cadenas: `renderCliPriceCards` (etiqueta), `renderCliDocs` (📞), `renderCliCta` y
+  `renderCliFooter` (emojis y pie), `renderHistorial`/`renderPolizasVigentes`/`openPolizaModal` (emojis) y
+  `buildEmailHTML` (reescrita).
+- **Cambios de HTML permitidos (los únicos):** logo SDI del kit (`img/sdi-logo-compacto.svg`) en la barra de
+  la consola y en el login (antes iba el INS blanco con `filter`); la etiqueta del plan recomendado pasa
+  de "RECOMENDADO" a **"Opción a valorar"** con estrella amarilla `#F4B400` (decisión de JC, misma que en
+  el correo de Vital 360: no volver a "Lo que le recomiendo" ni "Recomendado"); `<footer
+  class="sdi-foot-agente">` al final de `.main` de la consola con el **registro de cambios**
+  (`<details class="sdi-changelog">`, entrada más reciente arriba — **todo update futuro agrega su
+  entrada ahí antes del commit**, regla del 5 ago 2026; la cara del cliente NO lo lleva).
+- **Filete SDI (pedido de JC el 11 sep):** línea de 4 px con los cuatro colores de la barra del logo
+  (`#0369A1` · `#0D9488` · `#EA580C` · `#C9A227`, tomados del SVG del kit) arriba de la barra de la
+  consola, del encabezado del cliente, de la tarjeta de login y del correo. Vital 360 no lo tiene todavía
+  (queda anotado en su SKILL). Vive en la variable `--lc-filete` al final de `linea-clara.css`.
+- **Las dos marcas:** consola con SDI a color arriba; cliente con el INS en tinta arriba
+  (`ins-logo.png` hosteado es BLANCO → `filter:brightness(0)`) y SDI al pie. En el correo, `ins-logo-tinta.png`.
+- **Pie del cliente = el de Vital 360** (decisión de JC, 11 sep): línea del agente (nombre · Lic. SUGESE ·
+  Cód. · WhatsApp · correo), "Un producto de **SDI · Seguros Digitales**" y "© 2026 · Propiedad
+  intelectual de **Juan Carlos Hernández Vargas**" **FIJA** (antes decía "de {agente}" y traía la línea
+  "Esta cotización pertenece a Seguros Digitales SDI®", que se quitó). El pie de la consola dice lo mismo
+  sin la línea del agente. Al tocar la leyenda, tocar los tres: cliente, consola y `buildEmailHTML`.
+- **Emojis fuera** de botones y avisos (consola y cliente): solo se quitó la cadena, verificado con el diff
+  de funciones. Quedan a propósito los símbolos ✓ ✕ ★ y el ♀ ♂ del modal (oculto por CSS). El correo de
+  póliza emitida conserva su 📱 porque **no se tocó** (alcance literal).
+- **Mockup previo aprobado por JC** con 5 capturas headless (consola pasos 1-3, cliente arriba y completo).
+  Un arnés `?mock=agente&paso=N` / `?mock=cliente` en una copia de `index.html` hizo el login local y cargó
+  una familia de ejemplo (42/39/12/8, Regional y Internacional $500, GD $5.000, recomendado Internacional).
+  🔴 La primera copia se rompió porque el script se insertó en el **primer** `</body>` del archivo, que
+  está dentro de la plantilla del correo: insertar siempre antes del **último**. La copia se borró.
+- **Preview local:** `npx http-server -c-1` en el puerto 8801, entrada `insmedical` en
+  `~/.claude/launch.json` (nueva; antes no existía y el skill decía `npx serve`). Con `http.server` o `serve`
+  se sirve el HTML viejo por caché heurística.
+- **Verificado en prod el 11 sep (no repetir):** `linea-clara.css` 200 `text/css` · los 3 assets de `img/`
+  200 con su Content-Type (SVG como `image/svg+xml`) · vista cliente con `?c=` real: Google Sans Flex
+  cargada, filete presente, "Opción a valorar", logo SDI en el pie, `scrollWidth == clientWidth`, consola en 0.
+  En localhost además: 375 px sin scroll horizontal, tabla de coberturas con scroll propio, `[hidden]`
+  respetado (`getComputedStyle`, nunca `.hidden`).
+
+### El correo de cotización · `buildEmailHTML` (11 sep 2026)
+Reescrito en línea clara con la **misma forma que la Plantilla A de Vital 360** (barra INS en tinta +
+N.º, filete SDI, píldora "Cotización vigente N días", titular, botón, banda pálida con las opciones en
+**tarjetas**: la propuesta ancha con borde azul, "★ Opción a valorar", prima familiar con IVA y el
+**aporte por asegurado** (`primasPorAseg[i].primaConIVA`), las demás en pares de 50 %; "En la
+cotización completa encontrará" con los 5 renglones transcritos; cierre; pie con `sdi-logo-color.png`).
+- Constantes nuevas: `EMAIL_IMG = "https://insmedical.appsegurosdigitales.com"`, `_LC_F` (Arial),
+  `_LC_M` (Courier New). **Las dos imágenes viven en `img/` de ESTE repo** y se despliegan con la
+  plantilla: sin ellas salen los dos logos rotos (en localhost siempre se ven rotos, es lo esperado).
+- Sin webfonts: Gmail/Outlook caen a Arial y Courier New; Outlook cuadra las píldoras (degradación aceptada).
+- Sin recomendado (`planRecomendado` vacío) no hay tarjeta ancha: las 3 van en pares (2 + 1).
+- 🔴 **Bug cerrado de paso:** el pie del correo decía "Las primas **no** incluyen IVA (2%, Ley 9635)",
+  cuando la app muestra TODO con IVA (regla operativa #1). Ahora dice "Las primas ya incluyen el IVA".
+  Es el mismo defecto que Vital 360 tuvo en su aviso legal (`54ee093`).
+- El correo conserva el `?c=` largo (no hay enlace corto en este proyecto todavía).
+- **Falta el smoke real de JC en Gmail del teléfono** — mandarse una cotización de prueba a
+  `segurosjhernandez@outlook.com`, nunca al corporativo.
+- **El correo de póliza emitida (`buildEmailPolizaVigenteMedical`) sigue con el estilo viejo** (navy).
+  Va aparte si JC lo pide.
 
 ## Stack
 
@@ -33,8 +106,8 @@ Cotizador online del **Seguro INS Medical** del INS (gastos médicos), operado p
 - **Google Identity Services (GIS)** — mismo Client ID compartido con Cotizador Autos SDI y Vital 360: `255791314248-apgnrs0tiii72ogau5dpsjm2eie6d2hu.apps.googleusercontent.com` (vive en proyecto Google Cloud "Cotizador Autos SDI")
 - **Gmail API directo** desde el browser para envío de correos (scope `gmail.send`)
 - **localStorage** para borrador (`insmedical.borrador.<email>`) + historial (`insmedical.historial.<email>`) namespaced por agente
-- **Tipografía:** Plus Jakarta Sans (UI, todas las fuentes) · JetBrains Mono (números/primas)
-- **Paleta:** Azul navy/electric INS Medical + emerald green para Grandes Deducibles + soft sky blue para Regional
+- **Tipografía (desde 11 sep 2026, marca SDI v1.3):** Google Sans Flex (títulos y texto) · Google Sans Code (cifras) · Inter solo para prestar el ₡. El `:root` viejo del `<style>` sigue declarando Plus Jakarta Sans / JetBrains Mono, pero `linea-clara.css` lo pisa y esas fuentes ya no están en el `<link>`.
+- **Paleta (desde 11 sep 2026):** la de la línea clara SDI — acento único azul `#0369A1`, banda `#EEF4F9`, hairline `#DADCE0`; color del producto navy `#1E3A8A` solo en chips y regla 28×3. Los tokens viejos (`--blue`, `--reg`, `--green`…) siguen en el `<style>` pero `linea-clara.css` los re-mapea a la paleta clara, así que **ningún producto tiene ya color propio**: Regional, Internacional y GD se distinguen por nombre, no por color. Histórico (pre-11 sep): navy/electric + emerald GD + sky Regional.
   - Internacional (default blue): `--blue #2563EB`, `--blue-dark #1E3A8A`
   - Regional (azul tenue diferenciado): `--reg #5B91D0`, `--reg-dark #2E6FA8`
   - Grandes Deducibles (verde): `--green #059669`, `--green-dark #047857`
