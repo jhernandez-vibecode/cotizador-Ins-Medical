@@ -219,6 +219,20 @@ Además del correo de cotización, hay un **segundo flujo** que la skill origina
 - **Adjuntos en Gmail:** `buildMime({..., attachments})` arma `multipart/mixed` (envuelve el `multipart/alternative` del HTML + cada adjunto base64 con `Content-Disposition: attachment`) **solo si hay adjuntos**; sin adjuntos mantiene el `multipart/alternative` original intacto. Plomería compartida por ambos correos, pero el botón de adjuntar **solo está en el de póliza emitida**.
 - ⚠️ **El endpoint de subida NO sirve (commit `698c444`, jun 2026):** `upload/.../messages/send?uploadType=media` **no permite CORS desde el navegador** → "Failed to fetch". `sendEmailViaGmail` usa **siempre** el endpoint clásico `messages/send` con `{raw}` en JSON, haya o no adjuntos; el adjunto viaja dentro del MIME. Ver comentario en [index.html:2947](../../cotizador-Ins-Medical/index.html). **No volver a intentar el endpoint de subida.**
 
+### 🔴 Encabezado From con tilde: "HernÃƒÂ¡ndez" (bug de origen, cerrado el 11 sep 2026 · `97e6935`)
+JC mandó un correo real y en la bandeja del cliente el remitente decía **"Juan Carlos HernÃƒÂ¡ndez"**
+("parece estafa"). Causa: `sendEmailViaGmail` armaba `From: ${nombre} <${email}>` con el nombre
+CRUDO; los encabezados MIME son ASCII y Gmail leía los bytes UTF-8 como Latin-1. El **asunto** sí iba
+por `_encodeRFC2047` desde el inicio; el From no. Estaba así desde el primer commit, no lo causó la
+línea clara. Fix: `_encodeRFC2047(agenteActual.nombre)` en el From. De paso, los adjuntos con
+tilde/ñ van en **RFC 2231** (`filename*=UTF-8''…`), la lección de Vital 360 del 22 jun.
+- Verificado: bloque de encabezados 100 % ASCII, From decodifica al nombre correcto, "Póliza
+  María.pdf" → `filename*=UTF-8''P%C3%B3liza%20Mar%C3%ADa.pdf`, "plain.pdf" sigue entre comillas.
+- **Los otros cotizadores ya lo hacían bien** (Vital `fromEnc`, autos `mime-builder.js`, hogar
+  `encFrom`): revisado por grep el mismo día. Regla: **todo encabezado con texto libre (From, To con
+  nombre, Subject, filename) pasa por RFC 2047/2231; nunca crudo.**
+- **Falta que JC confirme con un correo real** que el remitente ya sale bien.
+
 ## Documentos del producto
 
 PDFs en `docs/` del repo:
