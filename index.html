@@ -3743,7 +3743,8 @@ function buildEmailPolizaVigenteMedical(st, polizaData) {
       </td>
     </tr>
   </table>`;
-  const dato = (k, v, mono, top) => `<tr><td style="color:#6B7681;padding:${top ? "8px" : "4px"} 14px 4px 0;font-size:13px;width:140px;vertical-align:top;">${k}</td><td style="padding:${top ? "8px" : "4px"} 0 4px;font-size:13px;color:#1B1F23;font-weight:bold;${mono ? "font-family:" + M + ";" : ""}line-height:1.5;">${v}</td></tr>`;
+  // Una sola letra en la tarjeta (JC, 11 sep): el número y la fecha NO van en Courier New.
+  const dato = (k, v, mono, top) => `<tr><td style="color:#6B7681;padding:${top ? "8px" : "4px"} 14px 4px 0;font-size:13px;width:140px;vertical-align:top;">${k}</td><td style="padding:${top ? "8px" : "4px"} 0 4px;font-size:13px;color:#1B1F23;font-weight:bold;line-height:1.5;">${v}</td></tr>`;
 
   const modalidades = [
     modalidad(1, "Medicina Virtual &middot; Incluida en su p&oacute;liza",
