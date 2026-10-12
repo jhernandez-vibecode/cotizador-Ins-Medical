@@ -26,6 +26,7 @@ Cotizador online del **Seguro INS Medical** del INS (gastos médicos), operado p
 - **jun 2026 (commit `698c444`):** fix adjuntos — se descartó el endpoint de subida por CORS y quedó el clásico + correo del cliente editable. Ver "Plantilla de correo HTML".
 - **16 jul 2026 (commit `51d6240`):** respaldo del historial — exportar / importar JSON.
 - **11 sep 2026 (commit `e24bbd2`, último):** **línea clara SDI en toda la cara** (consola, página del cliente y correo de cotización). Ver la sección "Línea clara". `main` sincronizada con origin.
+- **12 oct 2026 (commit `marca: SDI Seguros Digitales INS (leyenda del logo v1.4 y textos)`):** marca **SDI Seguros Digitales INS**: `<title>`, meta description, `alt` del logo (login, consola, pie, 2 correos), textos de acceso y bloqueado, `hdr-badge` (oculto por CSS), pies de consola y cliente ("Un producto de SDI Seguros Digitales INS"; `sdi-word` → "Seguros Digitales INS", oculto por CSS), firma del correo de póliza; `img/sdi-logo-compacto.svg` = 02 del kit v1.4 (solo `aria-label`); `sdi-logo-color.png` no cambia; entrada en el registro de cambios.
 
 ## Línea clara · el estilo de la cara (11 sep 2026 · `e24bbd2`)
 

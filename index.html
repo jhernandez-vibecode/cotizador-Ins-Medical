@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="description" content="Cotizador INS Medical — Seguros Digitales SDI. Cotización familiar de seguros de gastos médicos." />
-<title>INS Medical · Cotizador · Seguros Digitales</title>
+<meta name="description" content="Cotizador INS Medical — SDI Seguros Digitales INS. Cotización familiar de seguros de gastos médicos." />
+<title>INS Medical · Cotizador · SDI Seguros Digitales INS</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link rel="apple-touch-icon" href="favicon.svg" />
 <meta name="theme-color" content="#1E3A8A" />
@@ -1018,9 +1018,9 @@ a:hover { text-decoration: underline; }
 <div data-view="login">
   <div class="login-wrap">
     <div class="login-card">
-      <img class="ins-logo" src="img/sdi-logo-compacto.svg" alt="Seguros Digitales SDI" />
+      <img class="ins-logo" src="img/sdi-logo-compacto.svg" alt="SDI Seguros Digitales INS" />
       <h1>INS Medical · Cotizador</h1>
-      <div class="sub">Acceso exclusivo para agentes autorizados de Seguros Digitales SDI</div>
+      <div class="sub">Acceso exclusivo para agentes autorizados de SDI Seguros Digitales INS</div>
       <button class="gsi-btn" id="btn-login">
         <svg class="gsi-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -1046,7 +1046,7 @@ a:hover { text-decoration: underline; }
     <div class="bloq-card">
       <div class="icon"></div>
       <h1>Acceso restringido</h1>
-      <p>Este cotizador está reservado para agentes autorizados de Seguros Digitales SDI.</p>
+      <p>Este cotizador está reservado para agentes autorizados de SDI Seguros Digitales INS.</p>
       <div class="ag-email" id="bloq-email">—</div>
       <p>Si cree que esto es un error, contacte al administrador.</p>
       <button class="btn-logout" id="btn-logout-bloq">Cerrar sesión</button>
@@ -1059,11 +1059,11 @@ a:hover { text-decoration: underline; }
 
   <header class="hdr">
     <div class="hdr-logo">
-      <img src="img/sdi-logo-compacto.svg" alt="Seguros Digitales SDI" class="hdr-ins-logo" />
+      <img src="img/sdi-logo-compacto.svg" alt="SDI Seguros Digitales INS" class="hdr-ins-logo" />
       <div class="hdr-sep"></div>
       <span class="hdr-prod">INS Medical <span>/ Cotizador</span></span>
     </div>
-    <div class="hdr-badge">Seguros Digitales SDI</div>
+    <div class="hdr-badge">SDI Seguros Digitales INS</div>
     <span class="hdr-user">Agente: <strong id="hdr-agent-email">—</strong></span>
     <button class="hdr-out" id="btn-new-hdr" style="background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.32)">+ Nueva cotización</button>
     <button class="hdr-out" id="btn-logout">Cerrar sesión</button>
@@ -1258,12 +1258,13 @@ a:hover { text-decoration: underline; }
     </section>
 
     <footer class="sdi-foot-agente">
-      <img src="img/sdi-logo-compacto.svg" alt="Seguros Digitales SDI" />
-      <p class="l1">Un producto de <strong>SDI · Seguros Digitales</strong></p>
+      <img src="img/sdi-logo-compacto.svg" alt="SDI Seguros Digitales INS" />
+      <p class="l1">Un producto de <strong>SDI Seguros Digitales INS</strong></p>
       <p class="l2">© 2026 · Propiedad intelectual de <strong>Juan Carlos Hernández Vargas</strong></p>
       <details class="sdi-changelog">
-        <summary>Última actualización: 11 sep 2026 — cara nueva en toda la aplicación y en los dos correos</summary>
+        <summary>Última actualización: 12 oct 2026 — la plataforma pasa a llamarse SDI Seguros Digitales INS</summary>
         <ul>
+          <li><strong>12 oct 2026</strong> — La plataforma pasa a llamarse <strong>SDI Seguros Digitales INS</strong>: el nombre nuevo va en la pestaña del navegador, en la pantalla de acceso, en los pies de la consola y de la página del cliente, y en los dos correos. El logo SDI no cambia.</li>
           <li><strong>11 sep 2026</strong> — En el correo de la cotización, el botón "Ver mi cotización completa" pasa a ir justo debajo de las tarjetas de opciones.</li>
           <li><strong>11 sep 2026</strong> — Corregido el nombre del remitente en los correos: con tilde salía como "HernÃƒÂ¡ndez" en la bandeja del cliente. Ahora el nombre viaja bien codificado. Lo mismo para los nombres de archivos adjuntos con tilde o ñ.</li>
           <li><strong>11 sep 2026</strong> — El correo de póliza emitida también estrena la cara nueva: los pasos de uso del seguro con número, los contactos del INS en una sola caja y los derechos como texto. Los plazos, cláusulas, teléfonos y correos del INS dicen exactamente lo mismo que antes.</li>
@@ -2697,11 +2698,11 @@ function renderCliFooter(p) {
     <div class="sdi-foot-wrap">
       <div class="sdi-foot">
         <div class="sdi-mark">
-          <span class="sdi-word">Seguros Digitales</span>
+          <span class="sdi-word">Seguros Digitales INS</span>
           <span class="sdi-bars"><i></i><i></i><i></i></span>
         </div>
         <p class="sdi-line sub">Agente ${escapeHtml(p.agente.nombre)} · Lic. SUGESE ${escapeHtml(p.agente.licencia || "08-1318")} · Cód. ${escapeHtml(p.agente.codigo || "—")} · ${escapeHtml(p.agente.whatsapp || "")} · ${escapeHtml(p.agente.email || "")}</p>
-        <p class="sdi-line">Un producto de <strong>SDI · Seguros Digitales</strong></p>
+        <p class="sdi-line">Un producto de <strong>SDI Seguros Digitales INS</strong></p>
         <p class="sdi-line sub">© 2026 · Propiedad intelectual de <strong>Juan Carlos Hernández Vargas</strong></p>
       </div>
     </div>
@@ -2930,10 +2931,10 @@ function buildEmailHTML(payload, link) {
           <!-- pie -->
           <tr>
             <td bgcolor="#EEF4F9" style="background:#EEF4F9;padding:28px 26px 24px;text-align:center;border-radius:0 0 16px 16px;">
-              <img src="${EMAIL_IMG}/img/sdi-logo-color.png" alt="Seguros Digitales SDI" width="118" height="41" style="display:block;border:0;width:118px;height:41px;margin:0 auto 14px;" />
+              <img src="${EMAIL_IMG}/img/sdi-logo-color.png" alt="SDI Seguros Digitales INS" width="118" height="41" style="display:block;border:0;width:118px;height:41px;margin:0 auto 14px;" />
               <p style="margin:0;font-size:12.5px;color:#6B7681;">Agente ${escapeHtml(a.nombre)} &middot; Lic. SUGESE ${escapeHtml(a.licencia || "08-1318")} &middot; C&oacute;d. ${escapeHtml(a.codigo || "—")} &middot; ${escapeHtml(a.whatsapp || "")}${a.email ? " &middot; " + escapeHtml(a.email) : ""}</p>
               <p style="margin:12px 0 0;font-size:11px;color:#6B7681;line-height:1.6;">Cotizaci&oacute;n informativa basada en tarifas oficiales del INS vigentes a la fecha. Vigencia ${escapeHtml(p.vigenciaDias)} d&iacute;as. Las primas ya incluyen el IVA (2 %, Ley 9635). Producto registrado bajo norma SUGESE P16-35-A01-113.</p>
-              <p style="margin:12px 0 0;font-size:11.5px;color:#5A6570;">Un producto de <strong style="color:#1B1F23;">SDI &middot; Seguros Digitales</strong></p>
+              <p style="margin:12px 0 0;font-size:11.5px;color:#5A6570;">Un producto de <strong style="color:#1B1F23;">SDI Seguros Digitales INS</strong></p>
               <p style="margin:4px 0 0;font-size:11px;color:#6B7681;">&copy; 2026 &middot; Propiedad intelectual de <strong style="color:#5A6570;">Juan Carlos Hern&aacute;ndez Vargas</strong></p>
             </td>
           </tr>
@@ -3908,7 +3909,7 @@ function buildEmailPolizaVigenteMedical(st, polizaData) {
           <tr>
             <td style="padding:28px 34px 34px;">
               <p style="margin:0;font-size:14.5px;color:#1B1F23;font-weight:bold;">${_esc(agente.nombre || "Agente INS")}</p>
-              <p style="margin:3px 0 0;font-size:12.5px;color:#6B7681;">Lic. SUGESE ${_esc(agente.licencia || "08-1318")} &middot; Seguros Digitales SDI</p>
+              <p style="margin:3px 0 0;font-size:12.5px;color:#6B7681;">Lic. SUGESE ${_esc(agente.licencia || "08-1318")} &middot; SDI Seguros Digitales INS</p>
               ${agente.whatsapp ? `<p style="margin:4px 0 0;font-size:12.5px;color:#6B7681;">WhatsApp ${_esc(agente.whatsapp)}</p>` : ""}
               ${agente.email ? `<p style="margin:2px 0 0;font-size:12.5px;color:#6B7681;">${_esc(agente.email)}</p>` : ""}
             </td>
@@ -3917,10 +3918,10 @@ function buildEmailPolizaVigenteMedical(st, polizaData) {
           <!-- pie -->
           <tr>
             <td bgcolor="#EEF4F9" style="background:#EEF4F9;padding:28px 26px 24px;text-align:center;border-radius:0 0 16px 16px;">
-              <img src="${EMAIL_IMG}/img/sdi-logo-color.png" alt="Seguros Digitales SDI" width="118" height="41" style="display:block;border:0;width:118px;height:41px;margin:0 auto 14px;" />
+              <img src="${EMAIL_IMG}/img/sdi-logo-color.png" alt="SDI Seguros Digitales INS" width="118" height="41" style="display:block;border:0;width:118px;height:41px;margin:0 auto 14px;" />
               <p style="margin:0;font-size:12.5px;color:#6B7681;">Lic. SUGESE ${_esc(agente.licencia || "08-1318")} &middot; C&oacute;d. ${_esc(agente.codigo || "110113")} &middot; INS Costa Rica</p>
               <p style="margin:12px 0 0;font-size:11px;color:#6B7681;line-height:1.6;">Esta comunicaci&oacute;n es de car&aacute;cter informativo y se basa en las Condiciones Generales del seguro INS Medical (norma SUGESE P16-35-A01-113). La operaci&oacute;n de las coberturas se rige por dichas condiciones generales y por las condiciones particulares de su p&oacute;liza.</p>
-              <p style="margin:12px 0 0;font-size:11.5px;color:#5A6570;">Un producto de <strong style="color:#1B1F23;">SDI &middot; Seguros Digitales</strong></p>
+              <p style="margin:12px 0 0;font-size:11.5px;color:#5A6570;">Un producto de <strong style="color:#1B1F23;">SDI Seguros Digitales INS</strong></p>
               <p style="margin:4px 0 0;font-size:11px;color:#6B7681;">&copy; 2026 &middot; Propiedad intelectual de <strong style="color:#5A6570;">Juan Carlos Hern&aacute;ndez Vargas</strong></p>
             </td>
           </tr>
